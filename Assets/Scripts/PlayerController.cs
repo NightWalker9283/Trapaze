@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float Multiplier = 10f;
     [SerializeField] float Scale = 0.25f;
     [SerializeField] float offset_z, offset_y;
+    [SerializeField] bool jump;
 
     // PRIVATE
 
@@ -23,8 +24,64 @@ public class PlayerController : MonoBehaviour
     Vector3 destination;    //目的地のワールド座標
     LineRenderer line;
     GameObject parent;
+    List<GameObject> parts;
+    List<Component> clingJoints;
+    bool jumped=false;
 
 
+    List<GameObject> GetAllChildren(GameObject obj)
+    {
+        List<GameObject> allChildren = new List<GameObject>();
+        GetChildren(obj, ref allChildren);
+        return allChildren;
+    }
+
+    void GetChildren(GameObject obj, ref List<GameObject> allChildren)
+    {
+        Transform children = obj.GetComponentInChildren<Transform>();
+        //子要素がいなければ終了
+        if (children.childCount == 0)
+        {
+            return;
+        }
+        foreach (Transform ob in children)
+        {
+            allChildren.Add(ob.gameObject);
+            GetChildren(ob.gameObject, ref allChildren);
+        }
+    }
+
+    List<Component> GetAllClingJoint()
+    {
+        List<Component> allClingJoint = new List<Component>();
+        
+        foreach (GameObject obj in parts)
+        {
+            ConfigurableJoint[] cjs= obj.GetComponents<ConfigurableJoint>();
+            SpringJoint[] sjs= obj.GetComponents<SpringJoint>();
+
+            foreach (ConfigurableJoint cj in cjs) {
+                if (cj.connectedBody == rb_Trapaze) allClingJoint.Add(cj);
+            }
+            foreach (SpringJoint sj in sjs) {
+                if (sj.connectedBody == rb_Trapaze) allClingJoint.Add(sj);
+            }
+
+
+        }
+        return allClingJoint;
+
+    }
+
+    void Preparation()
+    {
+        parent = transform.root.gameObject;
+        parts = GetAllChildren(parent);
+        clingJoints = GetAllClingJoint();
+
+        rb = GetComponent<Rigidbody>();
+        base_pos = rb_Trapaze.transform.InverseTransformPoint(rb.position);
+    }
 
     void SetDestination()
     {
@@ -33,20 +90,24 @@ public class PlayerController : MonoBehaviour
             base_pos.z - (Controller.GetTouchPosition.x*Scale)+offset_z);
     }
 
+    void Jump()
+    {
+        Vector3 force = new Vector3(0f, 300f, 300f);
+        foreach (Component joint in clingJoints)
+        {
+            Destroy(joint);
+        }
+        rb.AddForceAtPosition(force, rb.position,ForceMode.Impulse);
+        rb_Trapaze.AddForceAtPosition(-force, rb.position, ForceMode.Impulse);
+    }
+
 	void Awake()
 	{
-        parent = transform.root.gameObject;
-        
-		rb = GetComponent<Rigidbody>();
-        line=this.gameObject.AddComponent<LineRenderer>();
-        line.startWidth = 0.1f;
-        line.endWidth = 0.1f;
-
-        base_pos = rb_Trapaze.transform.InverseTransformPoint(rb.position);
-        //old_ct_pos = Controller.GetTouchPosition;
-        SetDestination();
-        
-
+        Preparation();
+		SetDestination();
+        //line=this.gameObject.AddComponent<LineRenderer>();
+        //line.startWidth = 0.1f;
+        //line.endWidth = 0.1f;
         //line = GetComponent<LineRenderer>();
         
 	}
@@ -54,8 +115,13 @@ public class PlayerController : MonoBehaviour
 
 	void Update()
 	{
-
         SetDestination();
+
+        if (jump && !jumped)
+        {
+            Jump();
+            jumped = true;
+        }
     }
     
     void PointDraw(Vector3 pos)
@@ -72,22 +138,21 @@ public class PlayerController : MonoBehaviour
 
         Vector3 force =destination - rb.position; //ワールド座標差分ベクトル
         Vector3 force_pos = rb.position;
-        //force.x = 0;
-        //PointDraw(destination);
-        //Vector3 anchor_pos = rb_Trapaze.transform.TransformPoint(cj_Foot.connectedAnchor);
-        //anchor_pos.x = 0;
-        //Vector3 reaction_pos = anchor_pos * 2 - (new Vector3(0,rb.position.y,rb.position.z));
-        //LineDraw(reaction_pos);
-        //rb.transform.localPosition = destination;
-        rb.AddForceAtPosition(force * Multiplier, force_pos);
-        rb_Trapaze.AddForceAtPosition(-force * Multiplier, force_pos);
+       
+       
 
-
+        if(!jumped)
+        {
+            rb.AddForceAtPosition(force * Multiplier, force_pos);
+            rb_Trapaze.AddForceAtPosition(-force * Multiplier, force_pos);
+        }
+        
+        /*
         Debug.Log(Controller.GetTouchPosition + " "
         + rb_Trapaze.transform.InverseTransformPoint(destination)
-
-        ) ;
         
+        ) ;
+        */
     }
 
 
