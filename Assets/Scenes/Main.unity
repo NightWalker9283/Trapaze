@@ -351,7 +351,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2058155859}
   serializedVersion: 2
-  m_Mass: 12
+  m_Mass: 4
   m_Drag: 0
   m_AngularDrag: 0
   m_UseGravity: 1
@@ -593,6 +593,7 @@ GameObject:
   m_Component:
   - component: {fileID: 184963783}
   - component: {fileID: 184963787}
+  - component: {fileID: 184963791}
   - component: {fileID: 184963790}
   - component: {fileID: 184963785}
   - component: {fileID: 184963784}
@@ -839,13 +840,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea758981948044b04bb248e73bbef5ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  JUMP_on: 0
   Controller: {fileID: 6083915611844203223}
   rb_Trapaze: {fileID: 2020679185}
-  Multiplier: 600
+  Multiplier: 800
+  JumpMultiplier: 0.0015
   Scale: 0.5
   offset_z: 0
   offset_y: -0.5
-  jump: 0
   rb_tracePoint: {fileID: 842887297}
 --- !u!145 &184963788
 SpringJoint:
@@ -901,7 +903,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPush: 0
-  multiplier: 300
+  multiplier: 3000
+--- !u!114 &184963791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 184963782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acaa824ae0e4b4c058b2c200b341d9cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &309794063
 GameObject:
   m_ObjectHideFlags: 0
@@ -2346,7 +2360,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 13ea7b9db28144d52b6d10b08919752e, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.000000021855694
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 13ea7b9db28144d52b6d10b08919752e, type: 3}
       propertyPath: m_LocalRotation.y
@@ -2354,7 +2368,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 13ea7b9db28144d52b6d10b08919752e, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 13ea7b9db28144d52b6d10b08919752e, type: 3}
       propertyPath: m_LocalRotation.w
@@ -3154,6 +3168,8 @@ MonoBehaviour:
   textObject: {fileID: 1943956278}
   ac_on: {fileID: 8300000, guid: 85d70fd854d654e07b38a559e4796950, type: 3}
   ac_off: {fileID: 8300000, guid: dcac7cde81cc84128916016449626560, type: 3}
+  PlayerControllPoint: {fileID: 184963782}
+  Joystick: {fileID: 6194955158351391773}
 --- !u!114 &1733627248
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3764,12 +3780,12 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2058155817}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 9000000, guid: a0818b0360e8f436eb1ed5cb62e6f5f1, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 4a6e14ca2621741d188135c2b43d10ef, type: 2}
   m_CullingMode: 1
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_UpdateMode: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1

@@ -11,6 +11,9 @@ public class uiJUMP : MonoBehaviour
     [SerializeField] Text textObject;
     [SerializeField] AudioClip ac_on;
     [SerializeField] AudioClip ac_off;
+    [SerializeField] GameObject PlayerControllPoint;
+    [SerializeField] GameObject Joystick;
+    
     AudioSource audioSource;
     float oldVal = 0f;
 
@@ -44,6 +47,8 @@ public class uiJUMP : MonoBehaviour
             }
             sld_JUMP.value = 1f;
             textObject.color = txtcol_JUMPon;
+            Joystick.SetActive(false);
+            PlayerControllPoint.GetComponent<PlayerController>().JUMP_on = true;
         }
         else
         {
@@ -52,7 +57,9 @@ public class uiJUMP : MonoBehaviour
                 audioSource.PlayOneShot(ac_off);
             }
             sld_JUMP.value = 0f;
+            Joystick.SetActive(true);
             textObject.color = txtcol_JUMPoff;
+            PlayerControllPoint.GetComponent<PlayerController>().JUMP_on = false;
         }
         oldVal = sld_JUMP.value;
     }

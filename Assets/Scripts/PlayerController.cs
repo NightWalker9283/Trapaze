@@ -8,27 +8,30 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     // PUBLIC
-    [SerializeField] SimpleTouchController Controller;
-    [SerializeField] Rigidbody rb_Trapaze;
-
-    [SerializeField] float Multiplier = 10f;
-    [SerializeField] float Scale = 0.25f;
-    [SerializeField] float offset_z, offset_y;
-    [SerializeField] bool jump;
-    [SerializeField] Rigidbody rb_tracePoint;
+    public bool JUMP_on = false;
+    public float velocity { get; protected set; }
 
     // PRIVATE
 
+    [SerializeField] SimpleTouchController Controller;
+    [SerializeField] Rigidbody rb_Trapaze;
+    [SerializeField] float Multiplier = 10f;
+    [SerializeField] float JumpMultiplier = 100f;
+    [SerializeField] float Scale = 0.25f;
+    [SerializeField] float offset_z, offset_y;
+    [SerializeField] Rigidbody rb_tracePoint;
+
+
     Rigidbody rb;
     Vector3 base_pos;
-    //Vector2 old_ct_pos;
     Vector3 destination;    //目的地のワールド座標
     LineRenderer line;
     GameObject parent;
     List<GameObject> parts;
     List<Component> clingJoints;
-    bool jumped = false;
-    public float velocity { get; protected set; }
+    enum stat_enum { row, pre_jump, jump, fly, finish };
+    stat_enum stat = stat_enum.row;
+    Rigidbody L_UpLeg, R_UpLeg, Spine1;
 
     List<GameObject> GetAllChildren(GameObject obj)
     {
@@ -76,16 +79,41 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    GameObject FindChild(string targetName)
+    {
+        foreach (var item in parts)
+        {
+            if (item.name == targetName)
+            {
+                return item;
+
+            }
+        }
+        return null;
+    }
+
     void Preparation()
     {
         parent = transform.root.gameObject;
         parts = GetAllChildren(parent);
         clingJoints = GetAllClingJoint();
+        foreach (GameObject obj in parts)
+        {
+            var tmpRb = obj.GetComponent<Rigidbody>();
+            if (tmpRb != null)
+            {
+                tmpRb.maxAngularVelocity = 20f;
+            }
+        }
 
-        
+        L_UpLeg = FindChild("L_UpLeg").GetComponent<Rigidbody>();
+        R_UpLeg = FindChild("R_UpLeg").GetComponent<Rigidbody>();
+        Spine1 = FindChild("Spine1").GetComponent<Rigidbody>();
+
 
         rb = GetComponent<Rigidbody>();
         base_pos = rb_Trapaze.transform.InverseTransformPoint(rb.position);
+        base_pos.x = 0f;
     }
 
     void SetDestination()
@@ -97,15 +125,89 @@ public class PlayerController : MonoBehaviour
 
     void Jump()
     {
-        Vector3 force = new Vector3(0f, 300f, 300f);
+
+        StartCoroutine(PreJumpProc());
+        //rb.AddForceAtPosition(force, rb.position, ForceMode.Impulse);
+        //rb_Trapaze.AddForceAtPosition(-force, rb.position, ForceMode.Impulse);
+    }
+    IEnumerator PreJumpProc()
+    {
+        bool oldDrag = false;
+        float draggingSpan = 0f;
+        float draggingSpanLimit = 0.5f;
+        Vector3 jumpForce;
+
+        while (DragMonitor.Drag)
+        {
+            yield return null;
+        }
+        while (JUMP_on)
+        {
+            //待機モーション生成
+            Vector3 force_pos = rb.position;
+            force_pos.x = 0f;
+            Vector3 preForce = rb_Trapaze.transform.TransformPoint(new Vector3(0f, -1f, -0.2f) + base_pos) - force_pos;
+            //Debug.Log(preForce);
+            rb.AddForceAtPosition(preForce * Multiplier, force_pos);
+            rb_Trapaze.AddForceAtPosition(-preForce * Multiplier, force_pos);
+
+            //フリック監視
+            if (DragMonitor.Drag)
+            {
+                if (Vector3.Distance(DragMonitor.TapPosition, DragMonitor.DragPosition) > 30f)
+                {
+                    draggingSpan += Time.deltaTime;
+                }
+            }
+
+
+            if (oldDrag && !DragMonitor.Drag)
+            {
+                if (draggingSpan <= draggingSpanLimit)
+                {
+                    jumpForce = (DragMonitor.DragPosition - DragMonitor.TapPosition) * JumpMultiplier / draggingSpan;
+                    jumpForce.z = -jumpForce.x;
+                    jumpForce.x = 0;
+                    //if (jumpForce.magnitude > 10f) jumpForce.magnitude = 10f;
+                    Debug.Log(jumpForce);
+                    StartCoroutine(JumpProc(jumpForce, force_pos));
+                    yield break;
+                }
+                else
+                {
+                    draggingSpan = 0f;
+                }
+
+            }
+            oldDrag = DragMonitor.Drag;
+
+            yield return new WaitForFixedUpdate();
+
+        }
+    }
+
+    IEnumerator JumpProc(Vector3 jumpForce, Vector3 forcePos)
+    {
+        jumpForce.y *= 3;
+        rb.AddForceAtPosition(jumpForce * Multiplier, forcePos, ForceMode.Force);
+        Spine1.AddForceAtPosition(jumpForce * Multiplier, forcePos, ForceMode.Force);
+        R_UpLeg.AddForceAtPosition(jumpForce * Multiplier / 2, forcePos, ForceMode.Force);
+        L_UpLeg.AddForceAtPosition(jumpForce * Multiplier / 2, forcePos, ForceMode.Force);
+        rb_Trapaze.mass = 115f;
+        rb_Trapaze.AddForceAtPosition(-jumpForce * Multiplier * 3, forcePos, ForceMode.Force);
+        FreeClingJoints();
+        yield break;
+
+    }
+
+    void FreeClingJoints()
+    {
         foreach (Component joint in clingJoints)
         {
             Destroy(joint);
         }
-        rb.AddForceAtPosition(force, rb.position, ForceMode.Impulse);
-        rb_Trapaze.AddForceAtPosition(-force, rb.position, ForceMode.Impulse);
-    }
 
+    }
     void Awake()
     {
         Preparation();
@@ -122,36 +224,30 @@ public class PlayerController : MonoBehaviour
     {
         SetDestination();
         this.velocity = rb_tracePoint.velocity.magnitude * 3.6f;
-        //Debug.Log(this.velocity);
-        if (jump && !jumped)
+        if (stat == stat_enum.row && JUMP_on)
         {
             Jump();
-            jumped = true;
+            stat = stat_enum.pre_jump;
         }
+
+
+        if (stat == stat_enum.pre_jump && !JUMP_on) stat = stat_enum.row;
+        //Debug.Log(this.velocity);
     }
 
-    void PointDraw(Vector3 pos)
-    {
-
-
-        line.SetPosition(0, pos); // オブジェクトの位置情
-    }
 
     private void FixedUpdate()
     {
 
-
-
         Vector3 force = destination - rb.position; //ワールド座標差分ベクトル
         Vector3 force_pos = rb.position;
-
-
-
-        if (!jumped)
+        if (stat == stat_enum.row)
         {
             rb.AddForceAtPosition(force * Multiplier, force_pos);
             rb_Trapaze.AddForceAtPosition(-force * Multiplier, force_pos);
         }
+
+
 
         /*
         Debug.Log(Controller.GetTouchPosition + " "
@@ -161,6 +257,12 @@ public class PlayerController : MonoBehaviour
         */
     }
 
+    void PointDraw(Vector3 pos)
+    {
+
+
+        line.SetPosition(0, pos); // オブジェクトの位置情
+    }
 
 
 }
