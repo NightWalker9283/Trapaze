@@ -4,16 +4,24 @@ using UnityEngine;
 
 public class test : MonoBehaviour
 {
-    Rigidbody rb;
-    // Start is called before the first frame update
+    [SerializeField]
+    private float a = 1000f;
+
+    [SerializeField]
+    private Vector3 Direction;
+
+   
+
+    private Rigidbody rb;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-       // Debug.Log(rb.angularVelocity);   
+        var force = (Direction - rb.position)*Vector3.Distance(Direction,rb.position);
+        rb.velocity = force;
     }
 }

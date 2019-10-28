@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float Scale = 0.25f;
     [SerializeField] float offset_z, offset_y;
     [SerializeField] Rigidbody rb_tracePoint;
+    [SerializeField] float y, z;
 
 
     Rigidbody rb;
@@ -29,6 +30,7 @@ public class PlayerController : MonoBehaviour
     GameObject parent;
     List<GameObject> parts;
     List<Component> clingJoints;
+    List<mascle> mascles;
     enum stat_enum { row, pre_jump, jump, fly, finish };
     stat_enum stat = stat_enum.row;
     Rigidbody L_UpLeg, R_UpLeg, Spine1;
@@ -79,6 +81,20 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    List<mascle> GetAllMascle()
+    {
+        List<mascle> allMascles = new List<mascle>();
+
+        foreach(GameObject obj in parts)
+        {
+            var _rb = obj.GetComponent<Rigidbody>();
+            var _masle = obj.GetComponent<mascle>();
+            if (_masle != null) allMascles.Add(_masle);
+        }
+        return allMascles;
+
+    }
+
     GameObject FindChild(string targetName)
     {
         foreach (var item in parts)
@@ -92,36 +108,6 @@ public class PlayerController : MonoBehaviour
         return null;
     }
 
-    void Preparation()
-    {
-        parent = transform.root.gameObject;
-        parts = GetAllChildren(parent);
-        clingJoints = GetAllClingJoint();
-        foreach (GameObject obj in parts)
-        {
-            var tmpRb = obj.GetComponent<Rigidbody>();
-            if (tmpRb != null)
-            {
-                tmpRb.maxAngularVelocity = 20f;
-            }
-        }
-
-        L_UpLeg = FindChild("L_UpLeg").GetComponent<Rigidbody>();
-        R_UpLeg = FindChild("R_UpLeg").GetComponent<Rigidbody>();
-        Spine1 = FindChild("Spine1").GetComponent<Rigidbody>();
-
-
-        rb = GetComponent<Rigidbody>();
-        base_pos = rb_Trapaze.transform.InverseTransformPoint(rb.position);
-        base_pos.x = 0f;
-    }
-
-    void SetDestination()
-    {
-        destination = rb_Trapaze.transform.TransformPoint(base_pos.x,
-            base_pos.y + (Controller.GetTouchPosition.y * Scale) + offset_y,
-            base_pos.z - (Controller.GetTouchPosition.x * Scale) + offset_z);
-    }
 
     void Jump()
     {
@@ -208,6 +194,34 @@ public class PlayerController : MonoBehaviour
         }
 
     }
+    void Preparation()
+    {
+        parent = transform.root.gameObject;
+        parts = GetAllChildren(parent);
+        clingJoints = GetAllClingJoint();
+        mascles = GetAllMascle();
+        foreach (GameObject obj in parts)
+        {
+            var tmpRb = obj.GetComponent<Rigidbody>();
+            if (tmpRb != null)
+            {
+                tmpRb.maxAngularVelocity = 20f;
+            }
+        }
+
+    
+
+        rb = GetComponent<Rigidbody>();
+        base_pos = rb_Trapaze.transform.InverseTransformPoint(rb.position);
+        base_pos.x = 0f;
+    }
+
+    void SetDestination()
+    {
+        destination = rb_Trapaze.transform.TransformPoint(base_pos.x,
+            base_pos.y + (Controller.GetTouchPosition.y * Scale) + offset_y,
+            base_pos.z - (Controller.GetTouchPosition.x * Scale) + offset_z);
+    }
     void Awake()
     {
         Preparation();
@@ -239,12 +253,25 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
 
-        Vector3 force = destination - rb.position; //ワールド座標差分ベクトル
-        Vector3 force_pos = rb.position;
+
+
+
+        //Vector3 force = destination - rb.position; //ワールド座標差分ベクトル
+        //Vector3 force_pos = rb.position;
+        //force.y = y;
+        //force.z *= z;
         if (stat == stat_enum.row)
         {
-            rb.AddForceAtPosition(force * Multiplier, force_pos);
-            rb_Trapaze.AddForceAtPosition(-force * Multiplier, force_pos);
+            foreach (var _mascle in mascles)
+            {
+                Vector3 _targetDirection = destination - _mascle.rb.position;
+                
+                _mascle.Hold(Vector3.Angle(_mascle.direction, _targetDirection));
+
+            }
+
+        //    rb.AddForceAtPosition(force * Multiplier, force_pos);
+        //    rb_Trapaze.AddForceAtPosition(-force * Multiplier, force_pos);
         }
 
 
@@ -264,5 +291,27 @@ public class PlayerController : MonoBehaviour
         line.SetPosition(0, pos); // オブジェクトの位置情
     }
 
+    private class MascalSim
+    {
+        List<GameObject> _parts;
 
+        public MascalSim(List<GameObject> parts)
+        {
+            _parts = parts;
+            
+        }
+
+        GameObject FindChild(string targetName)
+        {
+            foreach (var item in _parts)
+            {
+                if (item.name == targetName)
+                {
+                    return item;
+
+                }
+            }
+            return null;
+        }
+    }
 }
