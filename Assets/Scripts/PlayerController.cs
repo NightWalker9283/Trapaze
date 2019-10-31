@@ -31,8 +31,8 @@ public class PlayerController : MonoBehaviour
     List<GameObject> parts;
     List<Component> clingJoints;
     List<mascle> mascles;
-    enum stat_enum { row, pre_jump, jump, fly, finish };
-    stat_enum stat = stat_enum.row;
+    public enum stat_enum { row, pre_jump, jump, fly, finish };
+    public stat_enum stat { get; private set; } = stat_enum.row;
     Rigidbody L_UpLeg, R_UpLeg, Spine1;
 
     List<GameObject> GetAllChildren(GameObject obj)
@@ -132,11 +132,9 @@ public class PlayerController : MonoBehaviour
             //待機モーション生成
             Vector3 force_pos = rb.position;
             force_pos.x = 0f;
-            Vector3 preForce = rb_Trapaze.transform.TransformPoint(new Vector3(0f, -1f, -0.2f) + base_pos) - force_pos;
+            SetDestination(1f,-1f);
             //Debug.Log(preForce);
-            rb.AddForceAtPosition(preForce * Multiplier, force_pos);
-            rb_Trapaze.AddForceAtPosition(-preForce * Multiplier, force_pos);
-
+           
             //フリック監視
             if (DragMonitor.Drag)
             {
@@ -149,7 +147,7 @@ public class PlayerController : MonoBehaviour
 
             if (oldDrag && !DragMonitor.Drag)
             {
-                if (draggingSpan <= draggingSpanLimit)
+                if (draggingSpan <= draggingSpanLimit && draggingSpan > 0)
                 {
                     jumpForce = (DragMonitor.DragPosition - DragMonitor.TapPosition) * JumpMultiplier / draggingSpan;
                     jumpForce.z = -jumpForce.x;
@@ -205,9 +203,14 @@ public class PlayerController : MonoBehaviour
             var tmpRb = obj.GetComponent<Rigidbody>();
             if (tmpRb != null)
             {
-                tmpRb.maxAngularVelocity = 20f;
+                tmpRb.maxAngularVelocity = 10f;
             }
         }
+
+        Spine1 = FindChild("Spine1").GetComponent<Rigidbody>();
+        R_UpLeg = FindChild("R_UpLeg").GetComponent<Rigidbody>();
+        L_UpLeg = FindChild("L_UpLeg").GetComponent<Rigidbody>();
+
 
     
 
@@ -221,6 +224,13 @@ public class PlayerController : MonoBehaviour
         destination = rb_Trapaze.transform.TransformPoint(base_pos.x,
             base_pos.y + (Controller.GetTouchPosition.y * Scale) + offset_y,
             base_pos.z - (Controller.GetTouchPosition.x * Scale) + offset_z);
+    }
+
+    void SetDestination(float z,float y)
+    {
+        destination = rb_Trapaze.transform.TransformPoint(base_pos.x,
+            base_pos.y + (y * Scale) + offset_y,
+            base_pos.z - (z * Scale) + offset_z);
     }
     void Awake()
     {
@@ -236,7 +246,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        SetDestination();
+        if(stat==stat_enum.row) SetDestination();
         this.velocity = rb_tracePoint.velocity.magnitude * 3.6f;
         if (stat == stat_enum.row && JUMP_on)
         {
@@ -260,7 +270,7 @@ public class PlayerController : MonoBehaviour
         //Vector3 force_pos = rb.position;
         //force.y = y;
         //force.z *= z;
-        if (stat == stat_enum.row)
+        if (stat == stat_enum.row || stat==stat_enum.pre_jump)
         {
             foreach (var _mascle in mascles)
             {
