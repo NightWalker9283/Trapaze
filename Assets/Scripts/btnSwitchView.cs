@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class uiSwitchView : MonoBehaviour
+public class btnSwitchView : MonoBehaviour
 {
     enum stat_view { playerView, publicView };
     stat_view stat = stat_view.publicView;

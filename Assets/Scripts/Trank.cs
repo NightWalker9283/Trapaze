@@ -22,6 +22,7 @@ public class Trank : MonoBehaviour
     [SerializeField] float BendMp = 5000f; //係数
     [SerializeField] float StretchMp = 5000f;
     [SerializeField] GameObject objTrapeze;
+    [SerializeField] mascle mslL_Leg, mslR_Leg,mslL_Foot,mslR_Foot;
     
 
     void Start()
@@ -71,7 +72,11 @@ public class Trank : MonoBehaviour
     void Stretch(float mp)
     {
 
-
+        if(mslL_Foot.angle>10f||mslR_Foot.angle > 10f &&
+           mslL_Leg.angle>100f || mslR_Leg.angle>100f)
+        {
+            return;
+        }
         var force = (center - parentCenter) * mp;
 
         rb.AddForceAtPosition(force, center);

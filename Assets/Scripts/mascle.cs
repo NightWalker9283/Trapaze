@@ -39,6 +39,7 @@ public class mascle : MonoBehaviour
     {
         center = rb.transform.TransformPoint(rb.centerOfMass);
         parentCenter = rb_parent.transform.TransformPoint(rb_parent.centerOfMass);
+        parentCenter.Set(center.x, parentCenter.y, parentCenter.z);
         direction = center - rb.position;
         parentDirection = parentCenter - rb.position;
         angle = Vector3.Angle(direction, parentDirection);
