@@ -7,7 +7,7 @@ public class GameController : MonoBehaviour
 {
     [SerializeField] uiDistance txtDistance;
     [SerializeField] CanvasGroup ugForPlay, ugController, ugForAfterJump;
-    [SerializeField] Camera cmrPlayerView, cmrPublic, cmrPlayer;
+    [SerializeField] Camera cmrPlayerView, cmrPublic, cmrPlayer,cmrUI;
     [SerializeField] Rigidbody Player;
     [SerializeField] uiVelocity txtVelocity;
 
@@ -34,12 +34,13 @@ public class GameController : MonoBehaviour
                 case stat_global.jump:
                     StartCoroutine(fadein(ugForAfterJump));
                     StartCoroutine(fadeout(ugForPlay));
+                    StartCoroutine(cameraRectChangeRight(cmrUI, 1f));
                     StartCoroutine(cameraRectChangeRight(cmrPublic, 1f));
                     StartCoroutine(cameraRectChangeRight(cmrPlayerView, 1f));
                     StartCoroutine(cameraRectChangeLeft(cmrPlayer, 0f));
                     txtDistance.StartMessDistance();
                     cmrPlayerView.transform.parent = Player.transform;
-                    cmrPublic.transform.parent = null;
+                    
                     cmrPublic.GetComponent<PublicCamera>().stat = PublicCamera.stat_publicCamera.jump;
                     txtVelocity.MassPoint = Player;
                     break;

@@ -10,23 +10,27 @@ public class btnSwitchView : MonoBehaviour
     [SerializeField] Image image;
     [SerializeField] Sprite sprPlayerView, sprPublicView;
     [SerializeField] Camera cmrPlayerView, cmrPublicView;
-    [SerializeField] Canvas cnvsPublic;
+    
         // Start is called before the first frame update
     void Start()
     {
         GetComponent<Button>().onClick.AddListener(SwitchView);
     }
-
+    private void Update()
+    {
+        
+    }
     // Update is called once per frame
     void SwitchView()
     {
+        
         if (stat == stat_view.playerView)
         {
             stat = stat_view.publicView;
             image.sprite = sprPlayerView;
             cmrPlayerView.depth = -1f;
             cmrPublicView.depth = 0f;
-            cnvsPublic.worldCamera = cmrPublicView;
+            //cnvsPublic.worldCamera = cmrPublicView;
         }
         else if (stat == stat_view.publicView)
         {
@@ -34,7 +38,7 @@ public class btnSwitchView : MonoBehaviour
             image.sprite = sprPublicView;
             cmrPlayerView.depth = 0f;
             cmrPublicView.depth = -1f;
-            cnvsPublic.worldCamera = cmrPlayerView;
+            //cnvsPublic.worldCamera = cmrPlayerView;
         }
     }
 }

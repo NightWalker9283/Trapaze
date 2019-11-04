@@ -144,6 +144,7 @@ public class PublicCamera : MonoBehaviour
 
     IEnumerator tracePlayer()
     {
+        sizeChanger.ChangeSize(maxSize);
         var offset_z = transform.position.z - Player.position.z;
         while (transform.position.y < Player.position.y + Player.velocity.y * Time.deltaTime +20f)
         {
@@ -152,7 +153,6 @@ public class PublicCamera : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
         var offset_y = transform.position.y - Player.position.y;
-        sizeChanger.ChangeSize(maxSize);
 
         while (stat == stat_publicCamera.jump)
         {
