@@ -7,6 +7,13 @@ using UnityEngine;
 
 public class PublicCamera : MonoBehaviour
 {
+    public enum stat_publicCamera
+    {
+        play, jump
+    }
+
+    public stat_publicCamera stat = stat_publicCamera.play;
+    stat_publicCamera oldStat;
 
     Rect rect = new Rect(0, 0, 1, 1);
 
@@ -28,7 +35,9 @@ public class PublicCamera : MonoBehaviour
     [SerializeField] float maxSize = 10f;
     [SerializeField] float minSize = 2f;
     [SerializeField] float variation = 0.3f;
-    
+    [SerializeField] float rotationDamping = 1f;
+    [SerializeField] Rigidbody Player;
+
     // Start is called before the first frame update
 
 
@@ -47,6 +56,7 @@ public class PublicCamera : MonoBehaviour
 
         sizeChanger = GetComponent<SizeChanger>();
         sizeChanger.Init(publicCamera);
+
         publicCoroutine = StartCoroutine(monitorPublicCamera());
         prevCoroutine = StartCoroutine(monitorPrevCamera());
 
@@ -56,14 +66,24 @@ public class PublicCamera : MonoBehaviour
     void Update()
     // Update is called once per frame
     {
-       
+        if (stat != oldStat)
+        {
+            if (stat == stat_publicCamera.jump)
+            {
+                StopCoroutine(prevCoroutine);
+                StopCoroutine(publicCoroutine);
+                StartCoroutine(tracePlayer());
+            }
+        }
+
+        oldStat = stat;
     }
 
     IEnumerator monitorPublicCamera()
     {
         Vector3 viewportPos = publicCamera.WorldToViewportPoint(tracePoint.position);
 
-        while (rect.Contains(viewportPos)||sizeChanger.processing)
+        while (rect.Contains(viewportPos) || sizeChanger.processing)
         {
             viewportPos = publicCamera.WorldToViewportPoint(tracePoint.position);
 
@@ -71,7 +91,7 @@ public class PublicCamera : MonoBehaviour
 
         }
 
-       
+
         if (publicCamera.orthographicSize <= maxSize)
         {
             StopCoroutine(prevCoroutine);
@@ -122,8 +142,28 @@ public class PublicCamera : MonoBehaviour
         }
     }
 
+    IEnumerator tracePlayer()
+    {
+        var offset_z = transform.position.z - Player.position.z;
+        while (transform.position.y < Player.position.y + Player.velocity.y * Time.deltaTime +20f)
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y, Player.position.z + offset_z);
+            transform.LookAt(Player.transform);
+            yield return new WaitForEndOfFrame();
+        }
+        var offset_y = transform.position.y - Player.position.y;
+        sizeChanger.ChangeSize(maxSize);
+
+        while (stat == stat_publicCamera.jump)
+        {
+            transform.position = new Vector3(transform.position.x, Player.position.y + offset_y, Player.position.z + offset_z);
+            transform.LookAt(Player.transform);
+
+            yield return new WaitForEndOfFrame();
+        }
 
 
+    }
 
 }
 

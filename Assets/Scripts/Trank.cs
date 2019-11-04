@@ -16,14 +16,14 @@ public class Trank : MonoBehaviour
     Vector3 center;
     Vector3 parentCenter;
 
-    Coroutine holdCoroutine;
+    IEnumerator holdCoroutine;
     float oldAngle, oldDeltaAngle;
     bool oldHd;
     [SerializeField] float BendMp = 5000f; //係数
     [SerializeField] float StretchMp = 5000f;
     [SerializeField] GameObject objTrapeze;
-    [SerializeField] mascle mslL_Leg, mslR_Leg,mslL_Foot,mslR_Foot;
-    
+    [SerializeField] mascle mslL_Leg, mslR_Leg, mslL_Foot, mslR_Foot;
+
 
     void Start()
     {
@@ -37,21 +37,26 @@ public class Trank : MonoBehaviour
     {
         center = rb.transform.TransformPoint(rb.centerOfMass);
         parentCenter = rb_parent.transform.TransformPoint(rb_parent.centerOfMass);
-        parentCenter.Set(center.x, parentCenter.y, parentCenter.z);
+        //parentCenter.Set(center.x, parentCenter.y, parentCenter.z);
         direction = center - rb.position;
         parentDirection = parentCenter - rb.position;
         TrapezeDirection = objTrapeze.GetComponent<ConfigurableJoint>().anchor - rb.position;
         angle = Vector3.Angle(direction, parentDirection);
 
         Hold(Vector3.Angle(direction, TrapezeDirection));
-       
+
     }
 
-    public void Hold(float holdAngle)
+    public void Free()
     {
         if (holdCoroutine != null) StopCoroutine(holdCoroutine);
-        holdCoroutine = StartCoroutine(HoldProc(holdAngle));
-       
+        holdCoroutine = null;
+    }
+    public void Hold(float holdAngle)
+    {
+        Free();
+        holdCoroutine = HoldProc(holdAngle);
+        StartCoroutine(holdCoroutine);
     }
 
     IEnumerator HoldProc(float holdAngle)
@@ -64,7 +69,7 @@ public class Trank : MonoBehaviour
             float deffAngle = holdAngle - angle;
             if (angle >= holdAngle) Bend(BendMp * Mathf.Sin(-deffAngle * Mathf.Deg2Rad));
             if (angle < holdAngle) Stretch(StretchMp * Mathf.Sin(deffAngle * Mathf.Deg2Rad));
-
+            //Debug.Log(name);
             yield return new WaitForFixedUpdate();
         }
     }
@@ -72,15 +77,15 @@ public class Trank : MonoBehaviour
     void Stretch(float mp)
     {
 
-        if(mslL_Foot.angle>10f||mslR_Foot.angle > 10f &&
-           mslL_Leg.angle>100f || mslR_Leg.angle>100f)
+        if (mslL_Foot.angle > 10f || mslR_Foot.angle > 10f &&
+           mslL_Leg.angle > 100f || mslR_Leg.angle > 100f)
         {
             return;
         }
         var force = (center - parentCenter) * mp;
 
         rb.AddForceAtPosition(force, center);
-        
+
         rb_parent.AddForceAtPosition(-force, parentCenter);
 
     }

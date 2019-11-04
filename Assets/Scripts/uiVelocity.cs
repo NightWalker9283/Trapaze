@@ -6,7 +6,7 @@ using UnityEngine;
 public class uiVelocity : MonoBehaviour
 {
     TextMeshProUGUI textVelocity;
-    [SerializeField] Rigidbody MassPoint;
+    public Rigidbody MassPoint;
     // Start is called before the first frame update
     void Start()
     {

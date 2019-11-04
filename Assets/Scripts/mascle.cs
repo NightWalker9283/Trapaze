@@ -19,7 +19,7 @@ public class mascle : MonoBehaviour
     Vector3 center;
     Vector3 parentCenter;
     
-    Coroutine holdCoroutine;
+    IEnumerator holdCoroutine;
     float oldAngle, oldDeltaAngle;
     bool oldHd;
     [SerializeField] float BendMp = 5000f; //係数
@@ -39,17 +39,23 @@ public class mascle : MonoBehaviour
     {
         center = rb.transform.TransformPoint(rb.centerOfMass);
         parentCenter = rb_parent.transform.TransformPoint(rb_parent.centerOfMass);
-        parentCenter.Set(center.x, parentCenter.y, parentCenter.z);
+        //parentCenter.Set(center.x, parentCenter.y, parentCenter.z);
         direction = center - rb.position;
         parentDirection = parentCenter - rb.position;
         angle = Vector3.Angle(direction, parentDirection);
 
     }
 
-    public void Hold(float holdAngle)
+    public void Free()
     {
         if (holdCoroutine != null) StopCoroutine(holdCoroutine);
-        holdCoroutine = StartCoroutine(HoldProc(holdAngle));
+        holdCoroutine = null;
+    }
+    public void Hold(float holdAngle)
+    {
+        Free();
+        holdCoroutine = HoldProc(holdAngle);
+        StartCoroutine(holdCoroutine);
     }
 
     IEnumerator HoldProc(float holdAngle)
@@ -62,7 +68,7 @@ public class mascle : MonoBehaviour
             float deffAngle = holdAngle - angle;
             if (angle >= holdAngle) Bend(BendMp*Mathf.Sin(-deffAngle*Mathf.Deg2Rad));
             if (angle < holdAngle) Stretch(StretchMp*Mathf.Sin(deffAngle*Mathf.Deg2Rad));
-
+            //Debug.Log(name);
             yield return new WaitForFixedUpdate();
         }
     }

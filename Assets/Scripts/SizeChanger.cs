@@ -45,7 +45,7 @@ class SizeChanger : MonoBehaviour
         while (this.now < this.span)
         {
             targetCamera.orthographicSize = Mathf.Lerp(this.prevSize, this.nextSize, this.now);
-            this.now = Mathf.Clamp01(this.now+Time.deltaTime);
+            this.now = Mathf.Clamp01(this.now+Time.deltaTime/2f);
             yield return null;
         }
         this.processing = false;

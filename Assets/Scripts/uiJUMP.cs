@@ -77,7 +77,7 @@ public class uiJUMP : MonoBehaviour
 
     IEnumerator fadeout_proc(GameObject obj)
     {
-        for (float f = 1; f > 0f; f-=0.2f)
+        for (float f = 1f; f > 0f; f-=0.2f)
         {
             Color color=obj.GetComponent<Image>().color;
             Color newColor = new Color(color.r, color.g, color.b, f);

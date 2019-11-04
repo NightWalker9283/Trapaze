@@ -28,6 +28,7 @@ public class TracePlayer : MonoBehaviour
         transform.position = targetCamPos;
         transform.rotation = trapaze_angle*right90deg;
 
+
         //Debug.Log(trapaze.rotation.eulerAngles + "|" + trapaze.localEulerAngles);
         
     }

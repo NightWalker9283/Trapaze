@@ -34,6 +34,8 @@ public class PlayerController : MonoBehaviour
     public enum stat_enum { row, pre_jump, jump, fly, finish };
     public stat_enum stat { get; private set; } = stat_enum.row;
     Rigidbody L_UpLeg, R_UpLeg, Spine1;
+    mascle mslL_Leg, mslR_Leg;
+    Trank mslL_UpLeg, mslR_UpLeg;
 
     List<GameObject> GetAllChildren(GameObject obj)
     {
@@ -154,6 +156,7 @@ public class PlayerController : MonoBehaviour
                     jumpForce.x = 0;
                     //if (jumpForce.magnitude > 10f) jumpForce.magnitude = 10f;
                     Debug.Log(jumpForce);
+                    stat = stat_enum.jump;
                     StartCoroutine(JumpProc(jumpForce, force_pos));
                     yield break;
                 }
@@ -180,6 +183,12 @@ public class PlayerController : MonoBehaviour
         rb_Trapaze.mass = 115f;
         rb_Trapaze.AddForceAtPosition(-jumpForce * Multiplier * 3, forcePos, ForceMode.Force);
         FreeClingJoints();
+        FreeHoldMascles();
+        mslL_UpLeg.Hold(180f);
+        mslR_UpLeg.Hold(180f);
+        mslL_Leg.Hold(160f);
+        mslR_Leg.Hold(160f);
+        GameController.stat = GameController.stat_global.jump;
         yield break;
 
     }
@@ -192,6 +201,14 @@ public class PlayerController : MonoBehaviour
         }
 
     }
+    void FreeHoldMascles()
+    {
+        foreach (var _mascle in mascles)
+        {
+             _mascle.Free();
+
+        }
+    }
     void Preparation()
     {
         parent = transform.root.gameObject;
@@ -203,7 +220,7 @@ public class PlayerController : MonoBehaviour
             var tmpRb = obj.GetComponent<Rigidbody>();
             if (tmpRb != null)
             {
-                tmpRb.maxAngularVelocity = 10f;
+                tmpRb.maxAngularVelocity = 20f;
             }
         }
 
@@ -211,8 +228,11 @@ public class PlayerController : MonoBehaviour
         R_UpLeg = FindChild("R_UpLeg").GetComponent<Rigidbody>();
         L_UpLeg = FindChild("L_UpLeg").GetComponent<Rigidbody>();
 
+        mslL_Leg = FindChild("L_Leg").GetComponent<mascle>();
+        mslR_Leg = FindChild("R_Leg").GetComponent<mascle>();
+        mslL_UpLeg = FindChild("L_UpLeg").GetComponent<Trank>();
+        mslR_UpLeg = FindChild("R_UpLeg").GetComponent<Trank>();
 
-    
 
         rb = GetComponent<Rigidbody>();
         base_pos = rb_Trapaze.transform.InverseTransformPoint(rb.position);

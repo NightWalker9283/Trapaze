@@ -6,8 +6,8 @@ namespace UnityStandardAssets.Utility
 {
     public class DragRigidbody : MonoBehaviour
     {
-        const float k_Spring = 150.0f;
-        const float k_Damper = 15.0f;
+        const float k_Spring = 50.0f;
+        const float k_Damper = 5.0f;
         const float k_Drag = 10.0f;
         const float k_AngularDrag = 5.0f;
         const float k_Distance = 0.2f;
