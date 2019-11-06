@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float offset_z, offset_y;
     [SerializeField] Rigidbody rb_tracePoint;
     [SerializeField] float y, z;
-
+    [SerializeField] float parachuteCoefficient = 70f;   // 空気抵抗係数
 
     Rigidbody rb;
     Vector3 base_pos;
@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
     List<GameObject> parts;
     List<Component> clingJoints;
     List<mascle> mascles;
+    public bool isOpenParachute { get; set; }=false;
     public enum stat_enum { row, pre_jump, jump, fly, finish };
     public stat_enum stat { get; private set; } = stat_enum.row;
     Rigidbody L_UpLeg, R_UpLeg, Spine1;
@@ -134,7 +135,7 @@ public class PlayerController : MonoBehaviour
             //待機モーション生成
             Vector3 force_pos = rb.position;
             force_pos.x = 0f;
-            SetDestination(1f,-1f);
+            SetDestination(0.7f,-1f);
             //Debug.Log(preForce);
            
             //フリック監視
@@ -186,11 +187,20 @@ public class PlayerController : MonoBehaviour
         FreeHoldMascles();
         mslL_UpLeg.Hold(180f);
         mslR_UpLeg.Hold(180f);
-        mslL_Leg.Hold(160f);
-        mslR_Leg.Hold(160f);
+        mslL_Leg.Hold(180f);
+        mslR_Leg.Hold(180f);
         GameController.stat = GameController.stat_global.jump;
+        StartCoroutine(DelayFreeHoldMasclesProc());
         yield break;
 
+    }
+
+    IEnumerator DelayFreeHoldMasclesProc()
+    {
+        yield return new WaitForSeconds(1f);
+        FreeHoldMascles();
+        mslL_UpLeg.Free();
+        mslR_UpLeg.Free();
     }
 
     void FreeClingJoints()
@@ -302,7 +312,17 @@ public class PlayerController : MonoBehaviour
 
         //    rb.AddForceAtPosition(force * Multiplier, force_pos);
         //    rb_Trapaze.AddForceAtPosition(-force * Multiplier, force_pos);
+        }else if (stat == stat_enum.jump)
+        {
+            if (isOpenParachute)
+            {
+                var resistance = Spine1.velocity;
+                resistance.Set(resistance.x * -parachuteCoefficient * 0.1f, resistance.y * -parachuteCoefficient, resistance.z * -parachuteCoefficient * 0.1f);
+                Spine1.AddForce(resistance);
+            }
         }
+
+
 
 
 

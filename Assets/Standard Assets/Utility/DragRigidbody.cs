@@ -12,6 +12,7 @@ namespace UnityStandardAssets.Utility
         const float k_AngularDrag = 5.0f;
         const float k_Distance = 0.2f;
         const bool k_AttachToCenterOfMass = false;
+        [SerializeField] Camera mainCamera;
 
         private SpringJoint m_SpringJoint;
 
@@ -24,7 +25,7 @@ namespace UnityStandardAssets.Utility
                 return;
             }
 
-            var mainCamera = FindCamera();
+            
 
             // We need to actually hit an object
             RaycastHit hit = new RaycastHit();
