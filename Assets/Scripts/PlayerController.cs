@@ -220,7 +220,7 @@ public class PlayerController : MonoBehaviour
             var tmpRb = obj.GetComponent<Rigidbody>();
             if (tmpRb != null)
             {
-                tmpRb.maxAngularVelocity = 20f;
+                tmpRb.maxAngularVelocity = 30f;
             }
         }
 

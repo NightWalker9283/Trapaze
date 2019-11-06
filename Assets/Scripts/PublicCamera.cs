@@ -144,23 +144,35 @@ public class PublicCamera : MonoBehaviour
 
     IEnumerator tracePlayer()
     {
-        sizeChanger.ChangeSize(maxSize);
+        sizeChanger.ChangeSize(20f, 0.2f);
         var offset_z = transform.position.z - Player.position.z;
-        while (transform.position.y < Player.position.y + Player.velocity.y * Time.deltaTime +20f)
+        while (transform.position.y < Player.position.y + Player.velocity.y * Time.deltaTime)
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y, Player.position.z + offset_z);
+            //transform.LookAt(Player.transform);
+            yield return new WaitForFixedUpdate();
+        }
+
+        while (transform.position.y < Player.position.y + Player.velocity.y * Time.deltaTime + 5f)
         {
             transform.position = new Vector3(transform.position.x, transform.position.y, Player.position.z + offset_z);
             transform.LookAt(Player.transform);
-            yield return new WaitForEndOfFrame();
+            yield return new WaitForFixedUpdate();
         }
+
+
         var offset_y = transform.position.y - Player.position.y;
 
-        while (stat == stat_publicCamera.jump)
+        while (true)
         {
-            transform.position = new Vector3(transform.position.x, Player.position.y + offset_y, Player.position.z + offset_z);
-            transform.LookAt(Player.transform);
+            var _y = Player.position.y + offset_y;
+            if (_y < -93f) _y = -93;
+            transform.position = new Vector3(transform.position.x, _y, Player.position.z + offset_z);
+            if (transform.eulerAngles.x > 1.4f) transform.LookAt(Player.transform);
 
-            yield return new WaitForEndOfFrame();
+            yield return new WaitForFixedUpdate();
         }
+
 
 
     }

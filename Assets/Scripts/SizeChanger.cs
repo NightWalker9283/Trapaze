@@ -11,7 +11,7 @@ class SizeChanger : MonoBehaviour
     public float now { get; protected set; }
     float span = 1f; //s
 
-    
+
 
     IEnumerator corutine;
 
@@ -32,7 +32,19 @@ class SizeChanger : MonoBehaviour
         this.nextSize = size;
         this.now = 0f;
         corutine = null;
-        corutine = ChangingSize();
+        corutine = ChangingSize(2f);
+        //corutine.MoveNext();
+        this.StartCoroutine(corutine);
+
+    }
+    public void ChangeSize(float size, float damp)
+    {
+        this.processing = true;
+        this.prevSize = targetCamera.orthographicSize;
+        this.nextSize = size;
+        this.now = 0f;
+        corutine = null;
+        corutine = ChangingSize(damp);
         //corutine.MoveNext();
         this.StartCoroutine(corutine);
 
@@ -40,12 +52,12 @@ class SizeChanger : MonoBehaviour
 
 
 
-    IEnumerator ChangingSize()
+    IEnumerator ChangingSize(float damp)
     {
         while (this.now < this.span)
         {
             targetCamera.orthographicSize = Mathf.Lerp(this.prevSize, this.nextSize, this.now);
-            this.now = Mathf.Clamp01(this.now+Time.deltaTime/2f);
+            this.now = Mathf.Clamp01(this.now + Time.deltaTime / damp);
             yield return null;
         }
         this.processing = false;

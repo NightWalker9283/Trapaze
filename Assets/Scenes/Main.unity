@@ -787,7 +787,7 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 0.46647236, b: 0.28773582, a: 1}
+  m_Color: {r: 1, g: 0.4959569, b: 0.3254717, a: 1}
   m_Intensity: 2.78
   m_Range: 10
   m_SpotAngle: 30
@@ -1869,7 +1869,7 @@ TerrainCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 410035665}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 9f93f63d068b08c459038c40fce897d8, type: 2}
   m_Enabled: 1
   m_TerrainData: {fileID: 15600000, guid: 7f877356ad8e34f0d8c0e65cdb6a57b0, type: 2}
   m_EnableTreeColliders: 1
@@ -4763,7 +4763,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -71.000015, y: -20}
+  m_AnchoredPosition: {x: -71, y: -20}
   m_SizeDelta: {x: 35, y: 35}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1450405211
