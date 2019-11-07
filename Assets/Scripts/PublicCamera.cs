@@ -144,7 +144,7 @@ public class PublicCamera : MonoBehaviour
 
     IEnumerator tracePlayer()
     {
-        sizeChanger.ChangeSize(20f, 0.2f);
+        sizeChanger.ChangeSize(15f, 0.2f);
         var offset_z = transform.position.z - Player.position.z;
         while (transform.position.y < Player.position.y + Player.velocity.y * Time.deltaTime)
         {

@@ -21,13 +21,16 @@ public class btnParachute : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!btn.interactable && Player.velocity.y < -1f)
+        if (!isOpen)
         {
-            btn.interactable = true;
-        }
-        if (!isOpen && btn.interactable && Player.velocity.y > -1f)
-        {
-            btn.interactable = false;
+            if (!btn.interactable && Player.velocity.y < -1f)
+            {
+                btn.interactable = true;
+            }
+            if (btn.interactable && Player.velocity.y > -1f)
+            {
+                btn.interactable = false;
+            }
         }
     }
 
