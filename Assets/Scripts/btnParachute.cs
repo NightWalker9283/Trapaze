@@ -5,22 +5,35 @@ using UnityEngine.UI;
 
 public class btnParachute : MonoBehaviour
 {
-    [SerializeField] PlayerController pc;
+
+    [SerializeField] Rigidbody Player;
+
+    Button btn;
+    bool isOpen = false;
     // Start is called before the first frame update
     void Start()
     {
-        GetComponent<Button>().onClick.AddListener(callOpenParachute);   
+        btn = GetComponent<Button>();
+        btn.onClick.AddListener(callOpenParachute);
+        btn.interactable = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (!btn.interactable && Player.velocity.y < -1f)
+        {
+            btn.interactable = true;
+        }
+        if (!isOpen && btn.interactable && Player.velocity.y > -1f)
+        {
+            btn.interactable = false;
+        }
     }
 
     void callOpenParachute()
     {
-        pc.isOpenParachute = true;
         GetComponent<Button>().interactable = false;
+        isOpen = true;
     }
 }

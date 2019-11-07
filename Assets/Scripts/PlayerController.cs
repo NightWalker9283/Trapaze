@@ -21,7 +21,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float offset_z, offset_y;
     [SerializeField] Rigidbody rb_tracePoint;
     [SerializeField] float y, z;
-    [SerializeField] float parachuteCoefficient = 70f;   // 空気抵抗係数
+    //[SerializeField] float parachuteCoefficient = 70f;   // 空気抵抗係数
+    [SerializeField] Transform Parachute;
 
     Rigidbody rb;
     Vector3 base_pos;
@@ -31,7 +32,7 @@ public class PlayerController : MonoBehaviour
     List<GameObject> parts;
     List<Component> clingJoints;
     List<mascle> mascles;
-    public bool isOpenParachute { get; set; }=false;
+    public bool isOpenParachute { get; set; } = false;
     public enum stat_enum { row, pre_jump, jump, fly, finish };
     public stat_enum stat { get; private set; } = stat_enum.row;
     Rigidbody L_UpLeg, R_UpLeg, Spine1;
@@ -88,7 +89,7 @@ public class PlayerController : MonoBehaviour
     {
         List<mascle> allMascles = new List<mascle>();
 
-        foreach(GameObject obj in parts)
+        foreach (GameObject obj in parts)
         {
             var _rb = obj.GetComponent<Rigidbody>();
             var _masle = obj.GetComponent<mascle>();
@@ -135,9 +136,9 @@ public class PlayerController : MonoBehaviour
             //待機モーション生成
             Vector3 force_pos = rb.position;
             force_pos.x = 0f;
-            SetDestination(0.7f,-1f);
+            SetDestination(0.7f, -1f);
             //Debug.Log(preForce);
-           
+
             //フリック監視
             if (DragMonitor.Drag)
             {
@@ -215,7 +216,7 @@ public class PlayerController : MonoBehaviour
     {
         foreach (var _mascle in mascles)
         {
-             _mascle.Free();
+            _mascle.Free();
 
         }
     }
@@ -256,7 +257,7 @@ public class PlayerController : MonoBehaviour
             base_pos.z - (Controller.GetTouchPosition.x * Scale) + offset_z);
     }
 
-    void SetDestination(float z,float y)
+    void SetDestination(float z, float y)
     {
         destination = rb_Trapaze.transform.TransformPoint(base_pos.x,
             base_pos.y + (y * Scale) + offset_y,
@@ -276,7 +277,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if(stat==stat_enum.row) SetDestination();
+        if (stat == stat_enum.row) SetDestination();
         this.velocity = rb_tracePoint.velocity.magnitude * 3.6f;
         if (stat == stat_enum.row && JUMP_on)
         {
@@ -300,25 +301,28 @@ public class PlayerController : MonoBehaviour
         //Vector3 force_pos = rb.position;
         //force.y = y;
         //force.z *= z;
-        if (stat == stat_enum.row || stat==stat_enum.pre_jump)
+        if (stat == stat_enum.row || stat == stat_enum.pre_jump)
         {
             foreach (var _mascle in mascles)
             {
                 Vector3 _targetDirection = destination - _mascle.rb.position;
-                
+
                 _mascle.Hold(Vector3.Angle(_mascle.direction, _targetDirection));
 
             }
 
-        //    rb.AddForceAtPosition(force * Multiplier, force_pos);
-        //    rb_Trapaze.AddForceAtPosition(-force * Multiplier, force_pos);
-        }else if (stat == stat_enum.jump)
+            //    rb.AddForceAtPosition(force * Multiplier, force_pos);
+            //    rb_Trapaze.AddForceAtPosition(-force * Multiplier, force_pos);
+        }
+        else if (stat == stat_enum.jump)
         {
             if (isOpenParachute)
             {
-                var resistance = Spine1.velocity;
-                resistance.Set(resistance.x * -parachuteCoefficient * 0.1f, resistance.y * -parachuteCoefficient, resistance.z * -parachuteCoefficient * 0.1f);
-                Spine1.AddForce(resistance);
+                //var resistance = Spine1.velocity;
+                //resistance.Set(resistance.x * -parachuteCoefficient * 0.1f, resistance.y * -parachuteCoefficient, resistance.z * -parachuteCoefficient * 0.1f);
+                //Spine1.AddForce(resistance);
+                
+                
             }
         }
 
@@ -332,6 +336,17 @@ public class PlayerController : MonoBehaviour
         
         ) ;
         */
+    }
+
+    public void OpenParachute()
+    {
+        StartCoroutine(openParachuteProc());
+    }
+
+    IEnumerator openParachuteProc()
+    {
+        Parachute.gameObject.SetActive(true);
+        yield break ;
     }
 
     void PointDraw(Vector3 pos)
@@ -348,7 +363,7 @@ public class PlayerController : MonoBehaviour
         public MascalSim(List<GameObject> parts)
         {
             _parts = parts;
-            
+
         }
 
         GameObject FindChild(string targetName)
