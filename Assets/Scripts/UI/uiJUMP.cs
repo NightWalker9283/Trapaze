@@ -7,7 +7,7 @@ using TMPro;
 
 public class uiJUMP : MonoBehaviour
 {
-    public static Color txtcol_JUMPoff = new Color(180f / 255f, 180f / 255f, 180f / 255f);
+    public static Color txtcol_JUMPoff = new Color(80f / 255f, 80f / 255f, 80f / 255f);
     public static Color txtcol_JUMPon = new Color(255f / 255f, 32f / 255f, 140f / 255f);
     [SerializeField] TextMeshProUGUI textJUMP;
     [SerializeField] AudioClip ac_on;

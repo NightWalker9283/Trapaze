@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class GameMaster : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public static GameMode gameMode;
+
     void Start()
     {
         

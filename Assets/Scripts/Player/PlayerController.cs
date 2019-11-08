@@ -190,7 +190,7 @@ public class PlayerController : MonoBehaviour
         mslR_UpLeg.Hold(180f);
         mslL_Leg.Hold(180f);
         mslR_Leg.Hold(180f);
-        GameController.stat = GameController.stat_global.jump;
+        PlayingManager.stat = PlayingManager.stat_global.jump;
         StartCoroutine(DelayFreeHoldMasclesProc());
 
 

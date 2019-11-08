@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class GameController : MonoBehaviour
+public class PlayingManager : MonoBehaviour
 {
     [SerializeField] uiDistance txtDistance;
     [SerializeField] CanvasGroup ugForPlay, ugController, ugForAfterJump;
