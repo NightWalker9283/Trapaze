@@ -1129,6 +1129,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 040b27fecfdb444579f6485a207ec2d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isCrackSound: 1
   ac:
   - {fileID: 8300000, guid: 86ac2f354c04d41588426ecb45154dff, type: 3}
   - {fileID: 8300000, guid: 6f3e769c8f7ad4735ae28937c45195b9, type: 3}
@@ -4399,9 +4400,9 @@ Camera:
   m_projectionMatrixMode: 2
   m_GateFitMode: 2
   m_FOVAxisMode: 0
-  m_SensorSize: {x: 54.12, y: 25.59}
+  m_SensorSize: {x: 70.41, y: 52.63}
   m_LensShift: {x: 0, y: 0}
-  m_FocalLength: 50
+  m_FocalLength: 22.395823
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -4410,7 +4411,7 @@ Camera:
     height: 1
   near clip plane: 0.01
   far clip plane: 1000
-  field of view: 28.707916
+  field of view: 99.2
   orthographic: 0
   orthographic size: 4
   m_Depth: -1
@@ -4435,13 +4436,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1228713589}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0.29312262, y: 0, z: 0, w: 0.95607483}
   m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1321682926}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 34.09, y: 0, z: 0}
 --- !u!114 &1228713593
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7684,6 +7685,7 @@ MonoBehaviour:
   mslR_Leg: {fileID: 2058155870}
   mslL_Foot: {fileID: 2058155832}
   mslR_Foot: {fileID: 2058155810}
+  isHold: 1
 --- !u!1 &2058155821
 GameObject:
   m_ObjectHideFlags: 0
@@ -8078,6 +8080,7 @@ MonoBehaviour:
   mslR_Leg: {fileID: 2058155870}
   mslL_Foot: {fileID: 2058155832}
   mslR_Foot: {fileID: 2058155810}
+  isHold: 1
 --- !u!1 &2058155863
 GameObject:
   m_ObjectHideFlags: 0
