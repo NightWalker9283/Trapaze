@@ -153,9 +153,10 @@ public class PlayerController : MonoBehaviour
             {
                 if (draggingSpan <= draggingSpanLimit && draggingSpan > 0)
                 {
-                    jumpForce = (DragMonitor.DragPosition - DragMonitor.TapPosition) * JumpMultiplier / draggingSpan;
+                    jumpForce = (DragMonitor.DragPosition - DragMonitor.TapPosition).normalized * JumpMultiplier;
                     jumpForce.z = -jumpForce.x;
                     jumpForce.x = 0;
+                    jumpForce = rb_Trapaze.transform.TransformDirection(jumpForce);
                     //if (jumpForce.magnitude > 10f) jumpForce.magnitude = 10f;
                     Debug.Log(jumpForce);
                     stat = stat_enum.jump;
@@ -177,11 +178,12 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator JumpProc(Vector3 jumpForce, Vector3 forcePos)
     {
-        jumpForce.y *= 3;
+        //jumpForce.y *= 3;
+
         rb.AddForceAtPosition(jumpForce * Multiplier, forcePos, ForceMode.Force);
         Spine1.AddForceAtPosition(jumpForce * Multiplier, forcePos, ForceMode.Force);
-        R_UpLeg.AddForceAtPosition(jumpForce * Multiplier / 2, forcePos, ForceMode.Force);
-        L_UpLeg.AddForceAtPosition(jumpForce * Multiplier / 2, forcePos, ForceMode.Force);
+        //R_UpLeg.AddForceAtPosition(jumpForce * Multiplier / 2, forcePos, ForceMode.Force);
+        //L_UpLeg.AddForceAtPosition(jumpForce * Multiplier / 2, forcePos, ForceMode.Force);
         rb_Trapaze.mass = 115f;
         rb_Trapaze.AddForceAtPosition(-jumpForce * Multiplier * 3, forcePos, ForceMode.Force);
         FreeClingJoints();

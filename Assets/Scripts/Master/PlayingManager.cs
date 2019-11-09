@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class PlayingManager : MonoBehaviour
 {
@@ -10,12 +11,23 @@ public class PlayingManager : MonoBehaviour
     [SerializeField] Camera cmrPlayerView, cmrPublic, cmrPlayer,cmrUI;
     [SerializeField] Rigidbody Player;
     [SerializeField] uiVelocity txtVelocity;
-
+    [SerializeField] float testTrapezeLengs = 8f;
 
     public static stat_global stat { get; set; }
     public enum stat_global { play, pause, jump, result };
-    static stat_global _oldStat;
+    static stat_global _oldStat,statCache;
+    public static GameMaster gameMaster;
     // Start is called before the first frame update
+    private void Awake()
+    {
+        gameMaster = FindObjectOfType<GameMaster>();
+        if (gameMaster == null)
+        {
+            gameMaster = gameObject.AddComponent<GameMaster>();
+            gameMaster.gameMode = new GameMode("テスト", testTrapezeLengs, -1f, true, "");
+        }
+    }
+
     void Start()
     {
         ugForAfterJump.alpha = 0f;
@@ -45,6 +57,7 @@ public class PlayingManager : MonoBehaviour
                     txtVelocity.MassPoint = Player;
                     break;
                 case stat_global.pause:
+                    
 
                     break;
                 case stat_global.result:
@@ -57,7 +70,22 @@ public class PlayingManager : MonoBehaviour
 
         _oldStat = stat;
     }
-   
+
+    public void SwitchPause()
+    {
+
+        if (stat != stat_global.pause)
+        {
+            Time.timeScale = 0f;
+            statCache = stat;
+            stat = stat_global.pause;
+        }
+        else if (stat == stat_global.pause)
+        {
+            Time.timeScale = 1f;
+            stat = statCache;
+        }
+    }
 
     IEnumerator fadeout(CanvasGroup cg)
     {

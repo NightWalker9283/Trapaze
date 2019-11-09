@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class ModeChanger : MonoBehaviour
 {
+    [SerializeField] GameMaster gameMaster;
     [SerializeField] Text txtModeName, txtModeLength, txtModeTimeLimit, txtModeDetail;
 
     List<GameMode> gameModes = new List<GameMode>();
@@ -25,7 +26,7 @@ public class ModeChanger : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GameMaster.gameMode = gameModes[0];
+        gameMaster.gameMode = gameModes[0];
         SetModeTexts();
     }
 
@@ -37,24 +38,24 @@ public class ModeChanger : MonoBehaviour
 
     public void ChangeModeNext()
     {
-        GameMaster.gameMode = gameModes[idx];
+        gameMaster.gameMode = gameModes[idx];
         idx = (idx + 1) % gameModes.Count;
         SetModeTexts();
     }
 
     public void ChangeModePrev()
     {
-        GameMaster.gameMode = gameModes[idx];
+        gameMaster.gameMode = gameModes[idx];
         idx = (idx - 1 + gameModes.Count) % gameModes.Count;
         SetModeTexts();
     }
 
     private void SetModeTexts()
     {
-        txtModeName.text = GameMaster.gameMode.name;
-        txtModeLength.text = "長さ：" + GameMaster.gameMode.trapezeLength.ToString("F1") + "m";
+        txtModeName.text = gameMaster.gameMode.name;
+        txtModeLength.text = "長さ：" + gameMaster.gameMode.trapezeLength.ToString("F1") + "m";
 
-        var tl = GameMaster.gameMode.timeLimit;
+        var tl = gameMaster.gameMode.timeLimit;
         if (tl >= 0)
         {
             txtModeTimeLimit.text = "制限時間：" + ((int)(tl / 60f)).ToString("D1") + ":" + ((int)(tl % 60f)).ToString("D2");
@@ -63,6 +64,6 @@ public class ModeChanger : MonoBehaviour
         {
             txtModeTimeLimit.text = "制限時間：∞";
         }
-        txtModeDetail.text = GameMaster.gameMode.detail;
+        txtModeDetail.text = gameMaster.gameMode.detail;
     }
 }

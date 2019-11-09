@@ -1,19 +1,33 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameMaster : MonoBehaviour
 {
-    public static GameMode gameMode;
+    public GameMode gameMode;
+   
 
-    void Start()
+
+    void Awake()
     {
         
+        // 以降破棄しない
+        DontDestroyOnLoad(gameObject);
+
     }
 
-    // Update is called once per frame
-    void Update()
+    
+    public void GameStart()
     {
+        SceneManager.LoadScene("Main");
         
+    }
+   
+
+    public void Title()
+    {
+        SceneManager.LoadScene("Title");
     }
 }

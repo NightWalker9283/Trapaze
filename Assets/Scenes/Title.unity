@@ -1069,6 +1069,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ae49a7a8d9124bbeb8d395d47c17e86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  wndSettings: {fileID: 0}
+  wndBackGround: {fileID: 0}
+  playingManager: {fileID: 0}
 --- !u!222 &775577728
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1625,6 +1628,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e672a86246b8d4ccb8a62f857d905385, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameMaster: {fileID: 1021882139}
   txtModeName: {fileID: 1311842114}
   txtModeLength: {fileID: 1554060363}
   txtModeTimeLimit: {fileID: 1262704202}
@@ -2396,7 +2400,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1230974072}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1021882139}
+        m_MethodName: GameStart
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1734766495
 MonoBehaviour:
   m_ObjectHideFlags: 0

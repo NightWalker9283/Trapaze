@@ -7,6 +7,7 @@ public class Parachute : MonoBehaviour
     [SerializeField] Rigidbody Player;
     //Cloth polyCloth;
     bool isFinish = false;
+    bool isCollision = false;
 
     private void Start()
     {
@@ -23,17 +24,29 @@ public class Parachute : MonoBehaviour
 
     private void Update()
     {
-        if (!isFinish && Player.velocity.y > -1f)
+
+        if (!isFinish)
         {
-            GetComponent<Animator>().SetTrigger("isCollision");
-            StartCoroutine(desableParachute());
-            isFinish = true;
+
+            if (!isCollision && Player.velocity.y > -1f) isCollision = true;
+            if (isCollision)
+            {
+                isFinish = true;
+                StartCoroutine(desableParachute());
+                GetComponent<Animator>().SetTrigger("isCollision");
+
+            }
         }
     }
+
     IEnumerator desableParachute()
     {
         yield return new WaitForSeconds(2f);
         gameObject.SetActive(false);
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        isCollision = true;
     }
 
 }
