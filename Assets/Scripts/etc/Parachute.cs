@@ -41,7 +41,7 @@ public class Parachute : MonoBehaviour
 
     IEnumerator desableParachute()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(0.5f);
         gameObject.SetActive(false);
     }
     private void OnTriggerEnter(Collider other)

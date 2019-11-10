@@ -4,13 +4,19 @@ using UnityEngine;
 
 public class Trapaze : MonoBehaviour
 {
-    [SerializeField] float ConnectedHeight = 15f;
+    [SerializeField] float DebugConnectedHeight = 15f;
+    [SerializeField] bool Debug = false;
     // Start is called before the first frame update
     private void Awake()
     {
     }
     void Start()
     {
+        float ConnectedHeight;
+
+        if (Debug) ConnectedHeight = DebugConnectedHeight;
+        else ConnectedHeight = PlayingManager.gameMaster.gameMode.trapezeLength;
+
         var cj = GetComponent<ConfigurableJoint>();
         cj.anchor=new Vector3(cj.anchor.x, ConnectedHeight, cj.anchor.z);
         cj.connectedAnchor=new Vector3(cj.anchor.x, ConnectedHeight+transform.position.y, cj.anchor.z);

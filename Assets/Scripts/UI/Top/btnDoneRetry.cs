@@ -16,6 +16,6 @@ public class btnDoneRetry : MonoBehaviour
     void Done()
     {
         PlayingManager.gameMaster.GameStart();
-
+        Destroy(FindObjectOfType<PlayingManager>().gameObject);
     }
 }

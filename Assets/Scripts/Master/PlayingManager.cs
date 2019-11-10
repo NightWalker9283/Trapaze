@@ -7,16 +7,19 @@ using UnityEngine.SceneManagement;
 public class PlayingManager : MonoBehaviour
 {
     [SerializeField] uiDistance txtDistance;
-    [SerializeField] CanvasGroup ugForPlay, ugController, ugForAfterJump;
+    [SerializeField] CanvasGroup ugForPlay, ugController, ugForAfterJump,ugForResult;
     [SerializeField] Camera cmrPlayerView, cmrPublic, cmrPlayer,cmrUI;
     [SerializeField] Rigidbody Player;
+    [SerializeField] PlayerController playerController;
     [SerializeField] uiVelocity txtVelocity;
     [SerializeField] float testTrapezeLengs = 8f;
 
     public static stat_global stat { get; set; }
     public enum stat_global { play, pause, jump, result };
     static stat_global _oldStat,statCache;
+    PlayerController.stat_enum _oldPcStat;
     public static GameMaster gameMaster;
+
     // Start is called before the first frame update
     private void Awake()
     {
@@ -26,6 +29,11 @@ public class PlayingManager : MonoBehaviour
             gameMaster = gameObject.AddComponent<GameMaster>();
             gameMaster.gameMode = new GameMode("テスト", testTrapezeLengs, -1f, true, "");
         }
+
+        stat = stat_global.play;
+        _oldStat = stat;
+        _oldPcStat = playerController.stat;
+
     }
 
     void Start()
@@ -67,8 +75,13 @@ public class PlayingManager : MonoBehaviour
                     break;
             }
         }
-
+        if(playerController.stat!=_oldPcStat && playerController.stat==PlayerController.stat_enum.finish)
+        {
+            ugForResult.gameObject.SetActive(true);
+            stat = stat_global.result;
+        }
         _oldStat = stat;
+        _oldPcStat = playerController.stat;
     }
 
     public void SwitchPause()

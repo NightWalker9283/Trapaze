@@ -21,7 +21,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float offset_z, offset_y;
     [SerializeField] Rigidbody rb_tracePoint;
     [SerializeField] float y, z;
-    //[SerializeField] float parachuteCoefficient = 70f;   // 空気抵抗係数
     [SerializeField] Transform Parachute;
 
     Rigidbody rb;
@@ -106,7 +105,6 @@ public class PlayerController : MonoBehaviour
             if (item.name == targetName)
             {
                 return item;
-
             }
         }
         return null;
@@ -115,11 +113,9 @@ public class PlayerController : MonoBehaviour
 
     void Jump()
     {
-
         StartCoroutine(PreJumpProc());
-        //rb.AddForceAtPosition(force, rb.position, ForceMode.Impulse);
-        //rb_Trapaze.AddForceAtPosition(-force, rb.position, ForceMode.Impulse);
     }
+
     IEnumerator PreJumpProc()
     {
         bool oldDrag = false;
@@ -157,7 +153,6 @@ public class PlayerController : MonoBehaviour
                     jumpForce.z = -jumpForce.x;
                     jumpForce.x = 0;
                     jumpForce = rb_Trapaze.transform.TransformDirection(jumpForce);
-                    //if (jumpForce.magnitude > 10f) jumpForce.magnitude = 10f;
                     Debug.Log(jumpForce);
                     stat = stat_enum.jump;
                     StartCoroutine(JumpProc(jumpForce, force_pos));
@@ -178,8 +173,6 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator JumpProc(Vector3 jumpForce, Vector3 forcePos)
     {
-        //jumpForce.y *= 3;
-
         rb.AddForceAtPosition(jumpForce * Multiplier, forcePos, ForceMode.Force);
         Spine1.AddForceAtPosition(jumpForce * Multiplier, forcePos, ForceMode.Force);
         //R_UpLeg.AddForceAtPosition(jumpForce * Multiplier / 2, forcePos, ForceMode.Force);
@@ -193,22 +186,78 @@ public class PlayerController : MonoBehaviour
         mslL_Leg.Hold(180f);
         mslR_Leg.Hold(180f);
         PlayingManager.stat = PlayingManager.stat_global.jump;
+        stat = stat_enum.fly;
         StartCoroutine(DelayFreeHoldMasclesProc());
-
-
+        StartCoroutine(FlyProc());
         yield break;
+    }
 
+    IEnumerator FlyProc()
+    {
+        Vector3 stopPos;
+        float LIMIT_WDT = 3f;
+        float LIMIT_DISTANCE = 0.1f;
+        float LOWER_LIMIT_VELOCITY = 5f;
+        float wdt;
+        StartCoroutine(MonitorDistancefromTrapeze());
+        while (stat == stat_enum.fly)
+        {
+            Debug.Log(velocity);
+            if (velocity < LOWER_LIMIT_VELOCITY)
+            {
+                stopPos = rb.position;
+                wdt = 0f;
+                while (Vector3.Distance(rb.position, stopPos) < LIMIT_DISTANCE)
+                {
+                    Debug.Log("b");
+                    if (wdt > LIMIT_WDT)
+                    {
+                        stat = stat_enum.finish;
+                        yield break;
+                    }
+                    wdt += Time.deltaTime;
+                    yield return null;
+                }
+            }
+            yield return null;
+        }
+    }
+
+    IEnumerator MonitorDistancefromTrapeze()
+    {
+
+        float LIMIT_WDT = 5f;
+        float LIMIT_DISTANCE = 1f;
+
+        float wdt;
+
+        while (stat == stat_enum.fly)
+        {
+            wdt = 0f;
+            while (Vector3.Distance(rb.position, rb_tracePoint.position) < LIMIT_DISTANCE)
+            {
+                if (wdt > LIMIT_WDT)
+                {
+                    stat = stat_enum.finish;
+                    yield break;
+                }
+                wdt += Time.deltaTime;
+                yield return null;
+            }
+            yield return null;
+        }
     }
 
     IEnumerator DelayFreeHoldMasclesProc()
     {
         yield return new WaitForSeconds(1f);
         FreeHoldMascles();
-        mslL_UpLeg.isHold=false;
+        mslL_UpLeg.isHold = false;
         mslL_UpLeg.Free();
-        mslR_UpLeg.isHold=false;
+        mslR_UpLeg.isHold = false;
         mslR_UpLeg.Free();
         GetComponent<PlayerSound>().isCrackSound = false;
+        
     }
 
     void FreeClingJoints()
@@ -284,16 +333,34 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (stat == stat_enum.row) SetDestination();
-        this.velocity = rb_tracePoint.velocity.magnitude * 3.6f;
-        if (stat == stat_enum.row && JUMP_on)
+        if (stat == stat_enum.row || stat == stat_enum.pre_jump)
         {
-            Jump();
-            stat = stat_enum.pre_jump;
+            this.velocity = rb_tracePoint.velocity.magnitude * 3.6f;
+        }
+        else
+        {
+            this.velocity = rb.velocity.magnitude * 3.6f;
+        }
+        if (stat == stat_enum.row)
+        {
+            SetDestination();
+            if (JUMP_on)
+            {
+                Jump();
+                stat = stat_enum.pre_jump;
+            }
+
+        }
+        else if (stat == stat_enum.pre_jump)
+        {
+
+            if (!JUMP_on) stat = stat_enum.row;
+        }
+        else if (stat == stat_enum.fly)
+        {
+
         }
 
-
-        if (stat == stat_enum.pre_jump && !JUMP_on) stat = stat_enum.row;
         //Debug.Log(this.velocity);
     }
 
@@ -302,12 +369,6 @@ public class PlayerController : MonoBehaviour
     {
 
 
-
-
-        //Vector3 force = destination - rb.position; //ワールド座標差分ベクトル
-        //Vector3 force_pos = rb.position;
-        //force.y = y;
-        //force.z *= z;
         if (stat == stat_enum.row || stat == stat_enum.pre_jump)
         {
             foreach (var _mascle in mascles)
@@ -318,32 +379,21 @@ public class PlayerController : MonoBehaviour
 
             }
 
-            //    rb.AddForceAtPosition(force * Multiplier, force_pos);
-            //    rb_Trapaze.AddForceAtPosition(-force * Multiplier, force_pos);
-        }
-        else if (stat == stat_enum.jump)
-        {
-            if (isOpenParachute)
-            {
-                //var resistance = Spine1.velocity;
-                //resistance.Set(resistance.x * -parachuteCoefficient * 0.1f, resistance.y * -parachuteCoefficient, resistance.z * -parachuteCoefficient * 0.1f);
-                //Spine1.AddForce(resistance);
-                
-                
-            }
         }
 
-
-
-
-
-        /*
-        Debug.Log(Controller.GetTouchPosition + " "
-        + rb_Trapaze.transform.InverseTransformPoint(destination)
-        
-        ) ;
-        */
     }
+
+
+
+
+
+    /*
+    Debug.Log(Controller.GetTouchPosition + " "
+    + rb_Trapaze.transform.InverseTransformPoint(destination)
+
+    ) ;
+    */
+
 
     public void OpenParachute()
     {
@@ -353,7 +403,7 @@ public class PlayerController : MonoBehaviour
     IEnumerator openParachuteProc()
     {
         Parachute.gameObject.SetActive(true);
-        yield break ;
+        yield break;
     }
 
     void PointDraw(Vector3 pos)
