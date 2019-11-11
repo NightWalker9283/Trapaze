@@ -185,7 +185,7 @@ public class PlayerController : MonoBehaviour
         mslR_UpLeg.Hold(180f);
         mslL_Leg.Hold(180f);
         mslR_Leg.Hold(180f);
-        PlayingManager.stat = PlayingManager.stat_global.jump;
+        PlayingManager.playingManager.stat = PlayingManager.stat_global.jump;
         stat = stat_enum.fly;
         StartCoroutine(DelayFreeHoldMasclesProc());
         StartCoroutine(FlyProc());

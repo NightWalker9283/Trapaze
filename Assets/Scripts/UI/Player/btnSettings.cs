@@ -24,7 +24,7 @@ public class btnSettings : MonoBehaviour
     }
     public void OpenSettings()
     {
-        if (PlayingManager.stat != PlayingManager.stat_global.pause)
+        if (PlayingManager.playingManager.stat != PlayingManager.stat_global.pause)
         {
            
             

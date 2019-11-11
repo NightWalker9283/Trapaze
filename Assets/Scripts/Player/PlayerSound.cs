@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class PlayerSound : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class PlayerSound : MonoBehaviour
     float old_acceleration=0f;
     AudioSource audioSource;
     [SerializeField] AudioClip[] ac;
+    [SerializeField] AudioMixerGroup amgSE;
     [SerializeField] float threshhold = 5f;
     // Start is called before the first frame update
     void Start()
@@ -19,6 +21,7 @@ public class PlayerSound : MonoBehaviour
         rb=GetComponent<Rigidbody>();
         old_velocity = rb.velocity;
         audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.outputAudioMixerGroup = amgSE;
         StartCoroutine(CrackSound());
     }
     

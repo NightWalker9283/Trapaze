@@ -4,6 +4,7 @@ using UnityEngine;
 //using UnityEngine.Experimental.UIElements;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Audio;
 
 public class uiJUMP : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class uiJUMP : MonoBehaviour
     [SerializeField] TextMeshProUGUI textJUMP;
     [SerializeField] AudioClip ac_on;
     [SerializeField] AudioClip ac_off;
+    [SerializeField] AudioMixerGroup amgSE;
     [SerializeField] GameObject PlayerControllPoint;
     [SerializeField] GameObject Joystick;
     
@@ -28,8 +30,9 @@ public class uiJUMP : MonoBehaviour
         sld_JUMP = GetComponent<Slider>();
         audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.volume = 0.2f;
+        audioSource.outputAudioMixerGroup = amgSE;
 
-        
+
 
     }
 

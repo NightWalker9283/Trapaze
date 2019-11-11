@@ -19,14 +19,14 @@ public class btnPause : MonoBehaviour
     // Update is called once per frame
     void SwitchImage()
     {
-        if (PlayingManager.stat != PlayingManager.stat_global.pause)
+        if (PlayingManager.playingManager.stat != PlayingManager.stat_global.pause)
         {
             image.sprite = sprRun;
             wndSettings.gameObject.SetActive(true);
             
             
         }
-        else if (PlayingManager.stat == PlayingManager.stat_global.pause)
+        else if (PlayingManager.playingManager.stat == PlayingManager.stat_global.pause)
         {
             image.sprite = sprPause;
             wndSettings.gameObject.SetActive(false);

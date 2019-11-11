@@ -9,23 +9,18 @@ public class ModeChanger : MonoBehaviour
     [SerializeField] GameMaster gameMaster;
     [SerializeField] Text txtModeName, txtModeLength, txtModeTimeLimit, txtModeDetail;
 
-    List<GameMode> gameModes = new List<GameMode>();
+    List<GameMode> gameModes ;
 
     int idx = 0;
-    private void CreateGameModes()
-    {
-        gameModes.Add(new GameMode("サクッと", 4f, 60f, false, "少しの空き時間でサクッと遊びたいときに。"));
-        gameModes.Add(new GameMode("本気", 8f, -1f, false, "時間無制限1本勝負！"));
-        gameModes.Add(new GameMode("チャレンジャー", 20f, -1, false, "夢の超巨大ブランコ。異常に眠くなります。睡眠導入、精神安定などの用途にご利用ください。"));
-
-    }
+   
     private void Awake()
     {
-        CreateGameModes();
+        
     }
     // Start is called before the first frame update
     void Start()
     {
+        gameModes = gameMaster.gameModes;
         gameMaster.gameMode = gameModes[0];
         SetModeTexts();
     }
@@ -58,7 +53,7 @@ public class ModeChanger : MonoBehaviour
         var tl = gameMaster.gameMode.timeLimit;
         if (tl >= 0)
         {
-            txtModeTimeLimit.text = "制限時間：" + ((int)(tl / 60f)).ToString("D1") + ":" + ((int)(tl % 60f)).ToString("D2");
+            txtModeTimeLimit.text = "制限時間：" + tl.ToString("F0") + "秒";
         }
         else
         {

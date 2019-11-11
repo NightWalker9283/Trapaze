@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class BGMController : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class BGMController : MonoBehaviour
 
     AudioSource audioSource;
     [SerializeField] AudioClip[] acs;
+    [SerializeField] AudioMixerGroup amgSE;
     int playIdx = 0;
     bool inPreparation=false;   //準備中判定
 
@@ -17,7 +19,8 @@ public class BGMController : MonoBehaviour
     void Start()
     {
         audioSource = gameObject.AddComponent<AudioSource>();
-        audioSource.volume = 0.05f;
+        audioSource.outputAudioMixerGroup = amgSE;
+        
         for (int i = 0; i < acs.Length; i++)
         {
             acs[Random.Range(0, acs.Length)] = acs[Random.Range(0, acs.Length)];
