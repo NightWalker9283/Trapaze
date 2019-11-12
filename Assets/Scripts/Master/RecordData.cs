@@ -8,14 +8,17 @@ public class RecordData
     public float timespan_mindistance;
     public int play_count;
     public float total_time;
+    public float total_distance;
 
+    public RecordData() { }
     public RecordData(int game_mode_id,
         float max_distance,
         float timespan_maxdistance,
         float min_distance,
         float timespan_mindistance,
         int play_count,
-        float total_time)
+        float total_time,
+        float total_distance)
     {
         this.game_mode_id = game_mode_id;
         this.max_distance = max_distance;
@@ -24,6 +27,7 @@ public class RecordData
         this.timespan_mindistance = timespan_mindistance;
         this.play_count = play_count;
         this.total_time = total_time;
+        this.total_distance = total_distance;
     }
 
 

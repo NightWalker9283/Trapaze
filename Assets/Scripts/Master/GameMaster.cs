@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Data;
 
 [System.Serializable]
 public class GameMaster : MonoBehaviour
@@ -16,15 +17,17 @@ public class GameMaster : MonoBehaviour
     public List<GameMode> gameModes = new List<GameMode>();
 
     [SerializeField] Toggle tglModeOrigin;
+    [SerializeField] UiRecord uiRecord;
     private Transform tggModes;
     [SerializeField] AudioMixer am;
-   
+    [SerializeField] bool ResetSaveFile=false;
+    bool _oldResetSaveFile;
 
     void Awake()
     {
         gameMaster = this;
         CreateGameModes();
-        
+
         // 以降破棄しない
         DontDestroyOnLoad(gameObject);
         Load();
@@ -41,6 +44,16 @@ public class GameMaster : MonoBehaviour
         CreateRecordUI(tggModes);
     }
 
+    private void Update()
+    {
+        if (ResetSaveFile != _oldResetSaveFile && ResetSaveFile)
+        {
+            SaveData.Clear();
+        }
+
+        _oldResetSaveFile = ResetSaveFile;
+    }
+
     private void CreateGameModes()
     {
         gameModes.Add(new GameMode(1, "サクッと", 4f, 60f, false, "少しの空き時間でサクッと遊びたいときに。"));
@@ -51,26 +64,34 @@ public class GameMaster : MonoBehaviour
 
     private void CreateRecordUI(Transform toggleGroup)
     {
- 
 
-        for (int i = 1; i <= gameModes.Count; i++)
+
+        for (int i = 0; i < gameModes.Count; i++)
         {
-            var tglModeElement=Instantiate(tglModeOrigin);
-            var matchModeElementName = gameModes.Find(x => (x.id) == i).name;
-            tglModeElement.transform.GetComponentInChildren<Text>().text = (matchModeElementName!=null?matchModeElementName:"");
-            tglModeElement.transform.parent = toggleGroup;
-            tglModeElement.transform.localScale = tglModeOrigin.transform.localScale;
-            tglModeElement.isOn = false;
-        }
-        tglModeOrigin.isOn = true;
 
+            var tglModeElementObj = Instantiate(tglModeOrigin);
+            var modeElement = gameModes[i];
+            tglModeElementObj.transform.GetComponent<ModeElementForRecords>().id = modeElement.id;
+
+
+            tglModeElementObj.transform.GetComponentInChildren<Text>().text = (modeElement.name != null ? modeElement.name : "");
+            tglModeElementObj.transform.parent = toggleGroup;
+            tglModeElementObj.transform.localScale = tglModeOrigin.transform.localScale;
+            tglModeElementObj.isOn = false;
+            tglModeElementObj.GetComponent<Toggle>().onValueChanged.AddListener(tglModeElementObj.GetComponent<ModeElementForRecords>().OnChangeModeElement);
+        }
+        tglModeOrigin.GetComponent<Toggle>().onValueChanged.AddListener(tglModeOrigin.GetComponent<ModeElementForRecords>().OnChangeModeElement);
+        tglModeOrigin.isOn = true;
+        tglModeOrigin.GetComponent<ModeElementForRecords>().SetGeneralRecords();
     }
 
-    private List<RecordData> InitRecordDatas(List<RecordData> list) //セーブデータが存在しないときに使用するrecordDatas初期値の設定
+    private List<RecordData> InitRecordDatas(List<RecordData> list,int num) //セーブデータが存在しないときに使用するrecordDatas初期値の設定
     {
-        for(int i = 1; i <= list.Count; i++)
+        for (int i = 0; i < num; i++)
         {
-            list[i].game_mode_id = i;
+            var recordData = new RecordData();
+            recordData.game_mode_id = gameModes[i].id;
+            list.Add(recordData);
         }
         return list;
     }
@@ -98,7 +119,7 @@ public class GameMaster : MonoBehaviour
 
     public void SetBgmVolume(float volume)
     {
-        
+
         float decibel = 20.0f * Mathf.Log10(volume);
         if (float.IsNegativeInfinity(decibel))
         {
@@ -118,18 +139,19 @@ public class GameMaster : MonoBehaviour
 
     void Load()
     {
-        recordDatas= SaveData.GetList<RecordData>("recordDatas", InitRecordDatas(new List<RecordData>(gameModes.Count)));
-        settings=SaveData.GetClass<Settings>("settings", new Settings());
+        var list = new List<RecordData>(gameModes.Count);
+        recordDatas = SaveData.GetList<RecordData>("recordDatas", InitRecordDatas(list, gameModes.Count));
+        settings = SaveData.GetClass<Settings>("settings", new Settings());
     }
 
-    
+
     public void GameStart()
     {
         Save();
         SceneManager.LoadScene("Main");
-        
+
     }
-   
+
 
     public void Title()
     {
