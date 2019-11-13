@@ -202,14 +202,14 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(MonitorDistancefromTrapeze());
         while (stat == stat_enum.fly)
         {
-            Debug.Log(velocity);
+          //  Debug.Log(velocity);
             if (velocity < LOWER_LIMIT_VELOCITY)
             {
                 stopPos = rb.position;
                 wdt = 0f;
                 while (Vector3.Distance(rb.position, stopPos) < LIMIT_DISTANCE)
                 {
-                    Debug.Log("b");
+//                    Debug.Log("b");
                     if (wdt > LIMIT_WDT)
                     {
                         stat = stat_enum.finish;

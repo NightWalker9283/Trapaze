@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -14,6 +15,7 @@ public class PlayingManager : MonoBehaviour
     [SerializeField] PlayerController playerController;
     [SerializeField] uiVelocity txtVelocity;
     [SerializeField] float testTrapezeLengs = 8f;
+    [SerializeField] GameObject ugNewRecord;
     
 
     PlayerController.stat_enum _oldPcStat;
@@ -21,7 +23,7 @@ public class PlayingManager : MonoBehaviour
     public stat_global stat { get; set; }
     public enum stat_global { play, pause, jump, result };
     public stat_global _oldStat, statCache;
-    
+    public float elapseTime = 0f;
     public static GameMaster gameMaster;
     public static PlayingManager playingManager;
 
@@ -56,6 +58,7 @@ public class PlayingManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        elapseTime += Time.deltaTime;
         if (stat != _oldStat)
         {
             switch (stat)
@@ -89,11 +92,36 @@ public class PlayingManager : MonoBehaviour
         }
         if (playerController.stat != _oldPcStat && playerController.stat == PlayerController.stat_enum.finish)
         {
+            Result(playerController.transform.position.z,elapseTime);
             ugForResult.gameObject.SetActive(true);
             stat = stat_global.result;
         }
         _oldStat = stat;
         _oldPcStat = playerController.stat;
+    }
+    public void Result(float distance,float time)
+    {
+        bool isNewRecord = false;
+        var selectRecords = gameMaster.recordDatas.Find(x => x.game_mode_id == gameMaster.gameMode.id);
+        selectRecords.total_time += time;
+        selectRecords.play_count++;
+        if (distance > 0f) selectRecords.total_distance += distance;
+        if((distance>selectRecords.max_distance) || (distance==selectRecords.max_distance && time < selectRecords.timespan_maxdistance))
+        {
+            isNewRecord = true;
+            selectRecords.max_distance = distance;
+            selectRecords.timespan_maxdistance = time;
+        }
+        if ((distance < selectRecords.min_distance) || (distance == selectRecords.min_distance && time < selectRecords.timespan_mindistance))
+        {
+            isNewRecord = true;
+            selectRecords.min_distance = distance;
+            selectRecords.timespan_mindistance = time;
+        }
+        if(isNewRecord)
+        {
+            ugNewRecord.SetActive(true);
+        }
     }
 
     public void SwitchPause()

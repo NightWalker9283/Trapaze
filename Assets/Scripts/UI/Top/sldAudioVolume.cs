@@ -25,7 +25,7 @@ public class sldAudioVolume : MonoBehaviour
     void Update()
     {
 
-        Debug.Log(GameMaster.gameMaster.settings.audio_volume);
+        //Debug.Log(GameMaster.gameMaster.settings.audio_volume);
         if (oldVolume != GameMaster.gameMaster.settings.audio_volume)
         {
             sld.value = GameMaster.gameMaster.settings.audio_volume;

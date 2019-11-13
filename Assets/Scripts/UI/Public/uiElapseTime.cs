@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class uiElapseTime : MonoBehaviour
 {
-	float nowTime;
+	
     TextMeshProUGUI textElapsedTime;
 
     // Start is called before the first frame update
@@ -17,7 +17,7 @@ public class uiElapseTime : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        nowTime += Time.deltaTime;
+        var nowTime=PlayingManager.playingManager.elapseTime;
         textElapsedTime.text = ((int)(nowTime / 60f)).ToString("D2") + ":" + ((int)(nowTime % 60f)).ToString("D2");
     }   
 }

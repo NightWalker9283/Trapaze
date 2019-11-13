@@ -23,8 +23,8 @@ public class btnAudioSW : MonoBehaviour
 
     private void Update()
     {
-        //enabled =;
-        Debug.Log(oldEnabled);
+        
+        //Debug.Log(oldEnabled);
         if (oldEnabled !=GameMaster.gameMaster.settings.audio_enabled) {
             if (GameMaster.gameMaster.settings.audio_enabled) image.sprite = sprOn;
             else image.sprite = sprOff;

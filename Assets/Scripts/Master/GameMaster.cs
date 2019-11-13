@@ -83,6 +83,8 @@ public class GameMaster : MonoBehaviour
         tglModeOrigin.GetComponent<Toggle>().onValueChanged.AddListener(tglModeOrigin.GetComponent<ModeElementForRecords>().OnChangeModeElement);
         tglModeOrigin.isOn = true;
         tglModeOrigin.GetComponent<ModeElementForRecords>().SetGeneralRecords();
+
+        toggleGroup.GetComponentInChildren<Button>().transform.SetAsLastSibling();
     }
 
     private List<RecordData> InitRecordDatas(List<RecordData> list,int num) //セーブデータが存在しないときに使用するrecordDatas初期値の設定
