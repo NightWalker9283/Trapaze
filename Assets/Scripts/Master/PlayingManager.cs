@@ -2,9 +2,12 @@
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 using UnityEngine.Audio;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 public class PlayingManager : MonoBehaviour
 {
@@ -19,8 +22,9 @@ public class PlayingManager : MonoBehaviour
     [SerializeField] AudioMixer am;
 
     PlayerController.stat_enum _oldPcStat;
+    bool isReachElapseTime = false;
 
-    public stat_global stat { get; set; }
+    public stat_global stat { get; set; } = stat_global.play;
     public enum stat_global { play, pause, jump, result };
     public stat_global _oldStat, statCache;
     public float elapseTime = 0f;
@@ -34,14 +38,14 @@ public class PlayingManager : MonoBehaviour
         if (gameMaster == null)
         {
             gameMaster = gameObject.AddComponent<GameMaster>();
-            gameMaster.gameMode = new GameMode(-1,"テスト", testTrapezeLengs, -1f, true, "");
+            gameMaster.gameMode = new GameMode(-1, "テスト", testTrapezeLengs, -1f, true, "");
             gameMaster.settings = new Settings(true, 1f);
             gameMaster.am = am;
         }
 
         playingManager = this;
 
-        
+
         stat = stat_global.play;
         _oldStat = stat;
         _oldPcStat = playerController.stat;
@@ -61,12 +65,21 @@ public class PlayingManager : MonoBehaviour
     void Update()
     {
         elapseTime += Time.deltaTime;
+        if (!isReachElapseTime)
+        {
+            if (gameMaster.gameMode.timeLimit > 0 && elapseTime >= gameMaster.gameMode.timeLimit)
+            {
+                playerController.JUMP_on = true;
+                var sld_JUMP = ugController.GetComponentInChildren<Slider>();
+                sld_JUMP.value = 1f;
+                ugController.alpha = 0f;
+            }
+        }
         if (stat != _oldStat)
         {
             switch (stat)
             {
                 case stat_global.play:
-
                     break;
                 case stat_global.jump:
                     StartCoroutine(fadein(ugForAfterJump));
@@ -94,21 +107,22 @@ public class PlayingManager : MonoBehaviour
         }
         if (playerController.stat != _oldPcStat && playerController.stat == PlayerController.stat_enum.finish)
         {
-            Result(playerController.transform.position.z,elapseTime);
+            Result(playerController.transform.position.z, elapseTime);
             ugForResult.gameObject.SetActive(true);
             stat = stat_global.result;
         }
         _oldStat = stat;
         _oldPcStat = playerController.stat;
     }
-    public void Result(float distance,float time)
+    public void Result(float distance, float time)
     {
         bool isNewRecord = false;
         var selectRecords = gameMaster.recordDatas.Find(x => x.game_mode_id == gameMaster.gameMode.id);
+        if (selectRecords == null) return;
         selectRecords.total_time += time;
         selectRecords.play_count++;
         if (distance > 0f) selectRecords.total_distance += distance;
-        if((distance>selectRecords.max_distance) || (distance==selectRecords.max_distance && time < selectRecords.timespan_maxdistance))
+        if ((distance > selectRecords.max_distance) || (distance == selectRecords.max_distance && time < selectRecords.timespan_maxdistance))
         {
             isNewRecord = true;
             selectRecords.max_distance = distance;
@@ -120,7 +134,7 @@ public class PlayingManager : MonoBehaviour
             selectRecords.min_distance = distance;
             selectRecords.timespan_mindistance = time;
         }
-        if(isNewRecord)
+        if (isNewRecord)
         {
             ugNewRecord.SetActive(true);
         }
@@ -142,7 +156,7 @@ public class PlayingManager : MonoBehaviour
         }
     }
 
-    
+
 
     IEnumerator fadeout(CanvasGroup cg)
     {

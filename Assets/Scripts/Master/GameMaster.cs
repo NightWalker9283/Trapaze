@@ -41,7 +41,7 @@ public class GameMaster : MonoBehaviour
             SetBgmVolume(settings.audio_volume);
         else
             SetBgmVolume(0f);
-        if (tggModes != null)
+        if (tglModeOrigin != null)
         {
             tggModes = tglModeOrigin.transform.parent;
             CreateRecordUI(tggModes);
@@ -53,6 +53,7 @@ public class GameMaster : MonoBehaviour
         if (ResetSaveFile != _oldResetSaveFile && ResetSaveFile)
         {
             SaveData.Clear();
+            ResetSaveFile = false;
         }
 
         _oldResetSaveFile = ResetSaveFile;
@@ -60,6 +61,7 @@ public class GameMaster : MonoBehaviour
 
     private void CreateGameModes()
     {
+        
         gameModes.Add(new GameMode(1, "サクッと", 4f, 60f, false, "少しの空き時間でサクッと遊びたいときに。"));
         gameModes.Add(new GameMode(2, "スタンダード", 8f, -1f, false, "時間無制限で巨大ブランコを漕ぎまくれ！がんばれば一周できます。"));
         gameModes.Add(new GameMode(3, "チャレンジャー", 20f, -1, false, "夢の超巨大ブランコ。異常に眠くなります。睡眠導入、精神安定などの用途にご利用ください。"));

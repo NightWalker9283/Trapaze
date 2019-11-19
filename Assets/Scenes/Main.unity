@@ -6095,7 +6095,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1381222100}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 1.33, z: -0.2}
+  m_LocalPosition: {x: -0, y: 1.33, z: -0.017}
   m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_Children:
   - {fileID: 1257826674}
@@ -6143,11 +6143,11 @@ ConfigurableJoint:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1381222100}
-  m_ConnectedBody: {fileID: 0}
+  m_ConnectedBody: {fileID: 1415684288}
   m_Anchor: {x: 0, y: -4.1, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 0
-  m_ConnectedAnchor: {x: 0, y: 0.09, z: -0.16}
+  m_ConnectedAnchor: {x: 0, y: 0.04, z: -0.03}
   serializedVersion: 2
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 0
@@ -6220,7 +6220,7 @@ ConfigurableJoint:
     positionSpring: 0
     positionDamper: 0
     maximumForce: 3.4028233e+38
-  m_ProjectionMode: 0
+  m_ProjectionMode: 1
   m_ProjectionDistance: 0.1
   m_ProjectionAngle: 180
   m_ConfiguredInWorldSpace: 0
@@ -6242,8 +6242,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 15.666016, y: 3.7344582, z: 10.792363}
-  m_Center: {x: 2.2772002, y: 4.2595496, z: -0.003547867}
+  m_Size: {x: 10.998035, y: 3.7344582, z: 10.792363}
+  m_Center: {x: -0.056793094, y: 4.2595496, z: -0.0035476685}
 --- !u!54 &1381222106
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -9973,7 +9973,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -106.899994, y: -263.1}
+  m_AnchoredPosition: {x: -106.899994, y: -223.1}
   m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!82 &1691574505

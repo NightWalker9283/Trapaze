@@ -2298,7 +2298,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: -248.94998}
+  m_AnchoredPosition: {x: 0, y: -249.30212}
   m_SizeDelta: {x: 200, y: 60}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &736719785
@@ -3482,7 +3482,6 @@ MonoBehaviour:
     audio_volume: 1
   gameModes: []
   tglModeOrigin: {fileID: 1438970552}
-  uiRecord: {fileID: 0}
   am: {fileID: 24100000, guid: 585d397d46ab84a3a999926df9b02bff, type: 2}
   ResetSaveFile: 0
 --- !u!4 &1021882140
@@ -6216,7 +6215,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 125.61, y: -66.899994}
+  m_AnchoredPosition: {x: 125.61, y: -67.076065}
   m_SizeDelta: {x: 251.22, y: 48.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1839826520
