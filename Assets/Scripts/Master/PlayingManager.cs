@@ -16,7 +16,7 @@ public class PlayingManager : MonoBehaviour
     [SerializeField] uiVelocity txtVelocity;
     [SerializeField] float testTrapezeLengs = 8f;
     [SerializeField] GameObject ugNewRecord;
-    
+    [SerializeField] AudioMixer am;
 
     PlayerController.stat_enum _oldPcStat;
 
@@ -35,6 +35,8 @@ public class PlayingManager : MonoBehaviour
         {
             gameMaster = gameObject.AddComponent<GameMaster>();
             gameMaster.gameMode = new GameMode(-1,"テスト", testTrapezeLengs, -1f, true, "");
+            gameMaster.settings = new Settings(true, 1f);
+            gameMaster.am = am;
         }
 
         playingManager = this;

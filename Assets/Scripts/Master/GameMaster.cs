@@ -17,10 +17,10 @@ public class GameMaster : MonoBehaviour
     public List<GameMode> gameModes = new List<GameMode>();
 
     [SerializeField] Toggle tglModeOrigin;
-    [SerializeField] UiRecord uiRecord;
+
     private Transform tggModes;
-    [SerializeField] AudioMixer am;
-    [SerializeField] bool ResetSaveFile=false;
+    [SerializeField] public AudioMixer am;
+    [SerializeField] bool ResetSaveFile = false;
     bool _oldResetSaveFile;
 
     void Awake()
@@ -32,16 +32,20 @@ public class GameMaster : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         Load();
 
-        if (settings.audio_enabled)
-            SetBgmVolume(settings.audio_volume);
-        else
-            SetBgmVolume(0f);
+
     }
 
     private void Start()
     {
-        tggModes = tglModeOrigin.transform.parent;
-        CreateRecordUI(tggModes);
+        if (settings.audio_enabled)
+            SetBgmVolume(settings.audio_volume);
+        else
+            SetBgmVolume(0f);
+        if (tggModes != null)
+        {
+            tggModes = tglModeOrigin.transform.parent;
+            CreateRecordUI(tggModes);
+        }
     }
 
     private void Update()
@@ -87,7 +91,7 @@ public class GameMaster : MonoBehaviour
         toggleGroup.GetComponentInChildren<Button>().transform.SetAsLastSibling();
     }
 
-    private List<RecordData> InitRecordDatas(List<RecordData> list,int num) //セーブデータが存在しないときに使用するrecordDatas初期値の設定
+    private List<RecordData> InitRecordDatas(List<RecordData> list, int num) //セーブデータが存在しないときに使用するrecordDatas初期値の設定
     {
         for (int i = 0; i < num; i++)
         {
