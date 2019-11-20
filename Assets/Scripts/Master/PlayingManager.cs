@@ -38,7 +38,7 @@ public class PlayingManager : MonoBehaviour
         if (gameMaster == null)
         {
             gameMaster = gameObject.AddComponent<GameMaster>();
-            gameMaster.gameMode = new GameMode(-1, "テスト", testTrapezeLengs, -1f, true, "");
+            gameMaster.gameMode = new GameMode(-1, "テスト", testTrapezeLengs, -60f, true, "");
             gameMaster.settings = new Settings(true, 1f);
             gameMaster.am = am;
         }

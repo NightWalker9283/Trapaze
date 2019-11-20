@@ -11,11 +11,15 @@ public class uiVelocity : MonoBehaviour
     void Start()
     {
         textVelocity = GetComponent<TextMeshProUGUI>();
+        StartCoroutine(UpdateText());
     }
 
     // Update is called once per frame
-    void Update()
+    IEnumerator UpdateText()
     {
-        textVelocity.text = Mathf.Floor(MassPoint.velocity.magnitude*3.6f) + "km/h";
+        while(true){
+            textVelocity.text = "<#000000><mspace=0.65em>" + ((int)Mathf.Floor(MassPoint.velocity.magnitude * 3.6f)).ToString("D3") + "km/h";
+            yield return new WaitForSeconds(0.3f);
+        }
     }
 }
