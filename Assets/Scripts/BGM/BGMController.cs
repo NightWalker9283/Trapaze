@@ -44,7 +44,7 @@ public class BGMController : MonoBehaviour
     IEnumerator playBGM(AudioClip ac)
     {
         inPreparation = true;
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(6f);
         audioSource.PlayOneShot(ac);
         inPreparation = false;
     }

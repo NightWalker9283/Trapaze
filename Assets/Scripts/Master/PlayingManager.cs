@@ -13,8 +13,8 @@ public class PlayingManager : MonoBehaviour
 {
     [SerializeField] uiDistance txtDistance;
     [SerializeField] CanvasGroup ugForPlay, ugController, ugForAfterJump, ugForResult;
-    [SerializeField] Camera cmrPlayerView, cmrPublic, cmrPlayer, cmrUI;
-    [SerializeField] Rigidbody Player;
+    [SerializeField] Camera cmrPlayerView, cmrPublic, cmrPlayer, cmrUI, cmrFace;
+    [SerializeField] Rigidbody rb_Player,rb_Trapeze;
     [SerializeField] PlayerController playerController;
     [SerializeField] uiVelocity txtVelocity;
     [SerializeField] float testTrapezeLengs = 8f;
@@ -24,8 +24,8 @@ public class PlayingManager : MonoBehaviour
     PlayerController.stat_enum _oldPcStat;
     bool isReachElapseTime = false;
 
-    public stat_global stat { get; set; } = stat_global.play;
-    public enum stat_global { play, pause, jump, result };
+    public stat_global stat { get; set; } = stat_global.init;
+    public enum stat_global { init, play, pause, jump, result };
     public stat_global _oldStat, statCache;
     public float elapseTime = 0f;
     public static GameMaster gameMaster;
@@ -59,12 +59,21 @@ public class PlayingManager : MonoBehaviour
             GameMaster.gameMaster.SetBgmVolume(GameMaster.gameMaster.settings.audio_volume);
         else
             GameMaster.gameMaster.SetBgmVolume(0f);
+
+        StartCoroutine(InitEffect());
     }
 
     // Update is called once per frame
     void Update()
     {
-        elapseTime += Time.deltaTime;
+        if (stat == stat_global.init)
+        {
+
+        }
+        if (stat == stat_global.play || stat == stat_global.jump)
+        {
+            elapseTime += Time.deltaTime;
+        }
         if (!isReachElapseTime)
         {
             if (gameMaster.gameMode.timeLimit > 0 && elapseTime >= gameMaster.gameMode.timeLimit)
@@ -82,17 +91,17 @@ public class PlayingManager : MonoBehaviour
                 case stat_global.play:
                     break;
                 case stat_global.jump:
-                    StartCoroutine(fadein(ugForAfterJump));
-                    StartCoroutine(fadeout(ugForPlay));
-                    StartCoroutine(cameraRectChangeRight(cmrUI, 1f));
-                    StartCoroutine(cameraRectChangeRight(cmrPublic, 1f));
-                    StartCoroutine(cameraRectChangeRight(cmrPlayerView, 1f));
-                    StartCoroutine(cameraRectChangeLeft(cmrPlayer, 0f));
+                    StartCoroutine(Fadein(ugForAfterJump));
+                    StartCoroutine(Fadeout(ugForPlay));
+                    StartCoroutine(CameraRectChangeRight(cmrUI, 1f));
+                    StartCoroutine(CameraRectChangeRight(cmrPublic, 1f));
+                    StartCoroutine(CameraRectChangeRight(cmrPlayerView, 1f));
+                    StartCoroutine(CameraRectChangeLeft(cmrPlayer, 0f));
                     txtDistance.StartMessDistance();
-                    cmrPlayerView.transform.parent = Player.transform;
+                    cmrPlayerView.transform.parent = rb_Player.transform;
 
                     cmrPublic.GetComponent<PublicCamera>().stat = PublicCamera.stat_publicCamera.jump;
-                    txtVelocity.MassPoint = Player;
+                    txtVelocity.MassPoint = rb_Player;
                     break;
                 case stat_global.pause:
 
@@ -156,9 +165,21 @@ public class PlayingManager : MonoBehaviour
         }
     }
 
+    IEnumerator InitEffect()
+    {
+        CanvasTop.canvasTop.FadeinScene();
+        cmrFace.gameObject.SetActive(true);
+        yield return new WaitForSeconds(5f);
+        CanvasTop.canvasTop.FadeoutScene();
+        yield return new WaitForSeconds(1f);
+        cmrFace.gameObject.SetActive(false);
+        rb_Trapeze.isKinematic = false;
+        CanvasTop.canvasTop.FadeinScene();
+        
+        stat = stat_global.play;
+    }
 
-
-    IEnumerator fadeout(CanvasGroup cg)
+    IEnumerator Fadeout(CanvasGroup cg)
     {
         for (float f = 1f; f > 0f; f -= 0.2f)
         {
@@ -171,7 +192,7 @@ public class PlayingManager : MonoBehaviour
 
 
 
-    IEnumerator fadein(CanvasGroup cg)
+    IEnumerator Fadein(CanvasGroup cg)
     {
         for (float f = 0f; f <= 1f; f += 0.2f)
         {
@@ -183,7 +204,7 @@ public class PlayingManager : MonoBehaviour
     }
 
 
-    IEnumerator cameraRectChangeRight(Camera targetCamera, float width)
+    IEnumerator CameraRectChangeRight(Camera targetCamera, float width)
     {
         float nowWidth = targetCamera.rect.width;
         float diff = 0.05f;
@@ -212,7 +233,7 @@ public class PlayingManager : MonoBehaviour
 
         }
     }
-    IEnumerator cameraRectChangeLeft(Camera targetCamera, float width)
+    IEnumerator CameraRectChangeLeft(Camera targetCamera, float width)
     {
         float nowWidth = targetCamera.rect.width;
         float nowX = targetCamera.rect.x;
