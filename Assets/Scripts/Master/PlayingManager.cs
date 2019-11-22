@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 using UnityEngine.Audio;
+using Cinemachine;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
@@ -14,7 +15,8 @@ public class PlayingManager : MonoBehaviour
     [SerializeField] uiDistance txtDistance;
     [SerializeField] CanvasGroup ugForPlay, ugController, ugForAfterJump, ugForResult;
     [SerializeField] Camera cmrPlayerView, cmrPublic, cmrPlayer, cmrUI, cmrFace;
-    [SerializeField] Rigidbody rb_Player,rb_Trapeze;
+    [SerializeField] CinemachineVirtualCamera vcamPublic, vcamFace, vcamResult;
+    [SerializeField] Rigidbody rb_Player, rb_Trapeze;
     [SerializeField] PlayerController playerController;
     [SerializeField] uiVelocity txtVelocity;
     [SerializeField] float testTrapezeLengs = 8f;
@@ -24,7 +26,7 @@ public class PlayingManager : MonoBehaviour
     PlayerController.stat_enum _oldPcStat;
     bool isReachElapseTime = false;
 
-    public stat_global stat { get; set; } = stat_global.init;
+    public stat_global stat { get; set; }
     public enum stat_global { init, play, pause, jump, result };
     public stat_global _oldStat, statCache;
     public float elapseTime = 0f;
@@ -45,8 +47,7 @@ public class PlayingManager : MonoBehaviour
 
         playingManager = this;
 
-
-        stat = stat_global.play;
+        stat = stat_global.init;
         _oldStat = stat;
         _oldPcStat = playerController.stat;
 
@@ -117,12 +118,34 @@ public class PlayingManager : MonoBehaviour
         if (playerController.stat != _oldPcStat && playerController.stat == PlayerController.stat_enum.finish)
         {
             Result(playerController.transform.position.z, elapseTime);
-            ugForResult.gameObject.SetActive(true);
+            StartCoroutine(ShowResultUI());
             stat = stat_global.result;
         }
         _oldStat = stat;
         _oldPcStat = playerController.stat;
     }
+
+    IEnumerator ShowResultUI()
+    {
+        vcamPublic.m_Lens.OrthographicSize = cmrPublic.orthographicSize;
+        vcamPublic.transform.position = cmrPublic.transform.position;
+        vcamPublic.transform.rotation = cmrPublic.transform.rotation;
+        vcamPublic.gameObject.SetActive(true);
+        cmrPublic.GetComponent<PerspectiveSwitcher>().enabled = true;
+        yield return null;
+        cmrPublic.GetComponent<PerspectiveSwitcher>().SwitchToPerspectiveMode();
+        cmrPublic.GetComponent<CinemachineBrain>().enabled = true;
+        // StartCoroutine(SmoothChangePerspective());
+        yield return null;
+        vcamResult.gameObject.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        ugForResult.gameObject.SetActive(true);
+    }
+
+    //IEnumerator SmoothChangePerspective()
+    //{
+       
+    //}
     public void Result(float distance, float time)
     {
         bool isNewRecord = false;
@@ -165,17 +188,21 @@ public class PlayingManager : MonoBehaviour
         }
     }
 
+
+
     IEnumerator InitEffect()
     {
         CanvasTop.canvasTop.FadeinScene();
+        vcamFace.gameObject.SetActive(true);
         cmrFace.gameObject.SetActive(true);
         yield return new WaitForSeconds(5f);
         CanvasTop.canvasTop.FadeoutScene();
         yield return new WaitForSeconds(1f);
         cmrFace.gameObject.SetActive(false);
+        vcamFace.gameObject.SetActive(false);
         rb_Trapeze.isKinematic = false;
         CanvasTop.canvasTop.FadeinScene();
-        
+
         stat = stat_global.play;
     }
 

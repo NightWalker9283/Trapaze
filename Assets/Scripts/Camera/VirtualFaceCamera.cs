@@ -23,10 +23,10 @@ public class VirtualFaceCamera : MonoBehaviour
         aim.m_SoftZoneWidth = Random.Range(aim.m_DeadZoneWidth, 0.5f);
         aim.m_DeadZoneHeight = Random.Range(0f, 0.3f);
         aim.m_SoftZoneHeight = Random.Range(aim.m_DeadZoneHeight, 0.5f);
-        startPos.x = (float)(Random.Range(-2, 3)) / 2;
+        startPos.x = (float)(Random.Range(-3, 4)) / 2;
         startPos.y = (float)(Random.Range(-1, 2)) / 2;
         startPos.z = (float)(Random.Range(1, 3)) / 2;
-        endPos.x = -endPos.x;//(float)(Random.Range(-2, 3)) / 2;
+        endPos.x = -startPos.x;//(float)(Random.Range(-2, 3)) / 2;
         endPos.y = (float)(Random.Range(-1, 2)) / 2;
         endPos.z = (float)(Random.Range(1, 3)) / 2;
         StartCoroutine(RotateAroundTarget());
