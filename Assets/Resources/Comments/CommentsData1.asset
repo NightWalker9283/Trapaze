@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df8d7b5b2c1e643b29dc1677df049420, type: 3}
+  m_Name: CommentsData1
+  m_EditorClassIdentifier: 
+  Comments:
+  - Value: gm
+  - Value: "\u6C60\u6CBC"
+  - Value: "\u6CBC"
+  - Value: "\u5927\u6CBC"
+  - Value: "\uFF1B\uFF1B"
+  - Value: "\u307E\u305A\u3044"
+  - Value: "\u3072\u3093"
+  DistanceL: 0
+  DistanceU: 40
+  HeightL: 0
+  HeightU: 10

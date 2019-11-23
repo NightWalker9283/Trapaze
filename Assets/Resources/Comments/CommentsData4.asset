@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df8d7b5b2c1e643b29dc1677df049420, type: 3}
+  m_Name: CommentsData4
+  m_EditorClassIdentifier: 
+  Comments:
+  - Value: "\u306D\u3082\u3046\u3059"
+  - Value: "\u306D\u3082"
+  - Value: "\u306D\u3082\u3061\u3083\u3093"
+  - Value: "\u306D\u3082\u3046\u3059\u3061\u3083\u3093\u306D\u308B"
+  - Value: "\u52DD\u3061\u7533\u3057\u305F"
+  - Value: "\u3060\u308A\u3083\u3042\u3042\u3042\u3042\u3042"
+  - Value: "\u3069\u308A\u3083\u3042\u3042\u3042"
+  - Value: "\u3069\u308A\u3083\u3042\u3042\u3042\u3042\u3042\u3042\u3042"
+  - Value: "\u3069\u308A\u3083\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042"
+  - Value: "\u3069\u308A\u3083\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042"
+  - Value: "\u3044\u3051\u308B"
+  - Value: "\u3044\u3063\u3051\u3048\u3048\u3048\u3048\u3048\u3048"
+  - Value: "\u3044\u3051\u3048\u3048\u3048\u3048\u3048\u3048\u3048\u3048\u3048\u3048\u3048\u3048\u3048\u3048\u3048\u3048\u3048\u3048\u3048\u3048\u3048\u3048\u3048\u3048\u3048\u3048"
+  - Value: "\u3059\u3052\u3048"
+  - Value: "\u3059\u3063\u3052\u3048\u3048\u3048\u3048\u3048\u3048"
+  - Value: doryaaaaaaaaaaaaaaaaaaaaaaaaaa
+  - Value: "\u3088\u30FC\u3057"
+  - Value: "\u3088\u30FC\u30FC\u30FC\u30FC\u30FC\u3057"
+  - Value: "\u304D\u305F\u3042\u3042\u3042\u3042\u3042"
+  - Value: "\u304D\u305F\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042"
+  DistanceL: 50
+  DistanceU: 1000
+  HeightL: 10
+  HeightU: 1000

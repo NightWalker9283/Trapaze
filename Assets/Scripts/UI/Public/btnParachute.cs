@@ -7,6 +7,7 @@ public class btnParachute : MonoBehaviour
 {
 
     [SerializeField] Rigidbody Player;
+    [SerializeField] GameObject btnComment;
 
     Button btn;
     bool isOpen = false;
@@ -14,7 +15,7 @@ public class btnParachute : MonoBehaviour
     void Start()
     {
         btn = GetComponent<Button>();
-        btn.onClick.AddListener(callOpenParachute);
+        btn.onClick.AddListener(CallOpenParachute);
         btn.interactable = false;
     }
 
@@ -34,9 +35,10 @@ public class btnParachute : MonoBehaviour
         }
     }
 
-    void callOpenParachute()
+    void CallOpenParachute()
     {
-        GetComponent<Button>().interactable = false;
+        gameObject.SetActive(false);
+        btnComment.SetActive(true);
         isOpen = true;
     }
 }
