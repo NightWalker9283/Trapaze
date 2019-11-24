@@ -14,9 +14,11 @@ public class PlayingManager : MonoBehaviour
 {
     [SerializeField] uiDistance txtDistance;
     [SerializeField] CanvasGroup ugForPlay, ugController, ugForAfterJump, ugForResult;
-    [SerializeField] Camera cmrPlayerView, cmrPublic, cmrPlayer, cmrUI, cmrFace;
+    [SerializeField] public Camera cmrPlayerView, cmrPublic, cmrPlayer, cmrUI, cmrFace;
     [SerializeField] CinemachineVirtualCamera vcamPublic, vcamFace, vcamResult;
     [SerializeField] Rigidbody rb_Player, rb_Trapeze;
+    [SerializeField] public Canvas cvsPublic,cvsPlayer,cvsTop;
+    [SerializeField] public Rigidbody playerControlPoint;
     [SerializeField] PlayerController playerController;
     [SerializeField] uiVelocity txtVelocity;
     [SerializeField] float testTrapezeLengs = 8f;
@@ -32,6 +34,7 @@ public class PlayingManager : MonoBehaviour
     public float elapseTime = 0f;
     public static GameMaster gameMaster;
     public static PlayingManager playingManager;
+    public List<CommentsData> allComments;
 
     // Start is called before the first frame update
     private void Awake()
@@ -60,6 +63,14 @@ public class PlayingManager : MonoBehaviour
             GameMaster.gameMaster.SetBgmVolume(GameMaster.gameMaster.settings.audio_volume);
         else
             GameMaster.gameMaster.SetBgmVolume(0f);
+
+
+        allComments = new List<CommentsData>();
+        allComments.Add(Resources.Load<CommentsData>("Comments/CommentsData0"));
+        allComments.Add(Resources.Load<CommentsData>("Comments/CommentsData1"));
+        allComments.Add(Resources.Load<CommentsData>("Comments/CommentsData2"));
+        allComments.Add(Resources.Load<CommentsData>("Comments/CommentsData3"));
+        allComments.Add(Resources.Load<CommentsData>("Comments/CommentsData4"));
 
         StartCoroutine(InitEffect());
     }

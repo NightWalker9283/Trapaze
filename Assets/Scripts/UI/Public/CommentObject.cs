@@ -1,29 +1,58 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CommentObject : MonoBehaviour
 {
-
-    public RectTransform rectObjComment, rectCvsPublic;
-    Rect rectCvsZeroPoint;
+    
+    RectTransform rectObjComment, rectCvsPublic;
     // Start is called before the first frame update
     void Start()
     {
+        GetComponent<Text>().text = GetComment();
         rectCvsPublic = transform.parent.GetComponent<RectTransform>();
         rectObjComment = GetComponent<RectTransform>();
-        rectObjComment.localPosition=new Vector3(rectObjComment.localPosition.x, Random.Range(0f, rectCvsPublic.rect.height/2 - rectObjComment.rect.height), 0f);
-        rectCvsZeroPoint = new Rect(new Vector2(0f, 0f), rectCvsPublic.rect.size);
+        var pos = new Vector3(Random.Range(-5f,0f)+ rectCvsPublic.rect.width / 2f,
+            (int)(Random.Range(80f, rectCvsPublic.rect.height - rectObjComment.rect.height-25f)/rectObjComment.rect.height)* rectObjComment.rect.height - rectCvsPublic.rect.height / 2f-rectObjComment.rect.height/2f,
+            0f);
+
+        rectObjComment.localPosition = pos;
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        rectObjComment.localPosition=new Vector3(rectObjComment.localPosition.x - Time.deltaTime * 100f, rectObjComment.localPosition.y, 0f);
+        rectObjComment.localPosition=new Vector3(rectObjComment.localPosition.x - Time.deltaTime * 150f, rectObjComment.localPosition.y, 0f);
+        var isOut = (rectCvsPublic.rect.width+(rectObjComment.localPosition.x + rectObjComment.rect.width-rectCvsPublic.rect.width/2f) ) <0f;
+        PlayingManager.playingManager.playerControlPoint.AddForce(0f, 0f, 5f);
+        if (isOut) Destroy(gameObject);
+    }
 
-        //var isOut = !rectCvsZeroPoint.Contains(new Vector2(-rectCvsPublic.rect.width + rectObjComment.localPosition.x + rectObjComment.rect.width,
-        //    rectObjComment.localPosition.y));
 
-        //if (isOut) Destroy(gameObject);
+    string GetComment()
+    {
+        var posPlayer = PlayingManager.playingManager.playerControlPoint.position;
+        Ray ray = new Ray(posPlayer, Vector3.down);
+        int layerMask = 1 << 10;
+        RaycastHit hit;
+        var AllComments = PlayingManager.playingManager.allComments;
+        if (Physics.Raycast(ray, out hit, 300f, layerMask))
+        {
+
+            var distance = Mathf.Abs(posPlayer.z);
+            var height = hit.distance;
+            for (int i = 0; i < AllComments.Count; i++)
+            {
+                if (distance > AllComments[i].DistanceL && distance <= AllComments[i].DistanceU &&
+                    height > AllComments[i].HeightL && height <= AllComments[i].HeightU)
+                {
+                    return AllComments[i].Comments[Random.Range(0, AllComments[i].Comments.Count)].Value;
+
+                }
+            }
+        }
+        return "ｗｗｗ";
     }
 }
