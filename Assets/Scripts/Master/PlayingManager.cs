@@ -23,14 +23,16 @@ public class PlayingManager : MonoBehaviour
     [SerializeField] uiVelocity txtVelocity;
     [SerializeField] float testTrapezeLengs = 8f;
     [SerializeField] GameObject ugNewRecord;
+    [SerializeField] GameObject btnHighScore;
     [SerializeField] AudioMixer am;
 
     PlayerController.stat_enum _oldPcStat;
+    RankingManager.Save_ranking_item save_Ranking_Item;
     bool isReachElapseTime = false;
 
-    public stat_global stat { get; set; }
-    public enum stat_global { init, play, pause, jump, result };
-    public stat_global _oldStat, statCache;
+    public Stat_global Stat { get; set; }
+    public enum Stat_global { init, play, pause, jump, result };
+    public Stat_global _oldStat, statCache;
     public float elapseTime = 0f;
     public static GameMaster gameMaster;
     public static PlayingManager playingManager;
@@ -44,14 +46,14 @@ public class PlayingManager : MonoBehaviour
         {
             gameMaster = gameObject.AddComponent<GameMaster>();
             gameMaster.gameMode = new GameMode(-1, "テスト", testTrapezeLengs, -60f, true, "");
-            gameMaster.settings = new Settings(true, 1f);
+            gameMaster.settings = new Settings("加藤純一",true, 1f);
             gameMaster.am = am;
         }
 
         playingManager = this;
 
-        stat = stat_global.init;
-        _oldStat = stat;
+        Stat = Stat_global.init;
+        _oldStat = Stat;
         _oldPcStat = playerController.stat;
 
     }
@@ -78,11 +80,11 @@ public class PlayingManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (stat == stat_global.init)
+        if (Stat == Stat_global.init)
         {
 
         }
-        if (stat == stat_global.play || stat == stat_global.jump)
+        if (Stat == Stat_global.play || Stat == Stat_global.jump)
         {
             elapseTime += Time.deltaTime;
         }
@@ -96,13 +98,13 @@ public class PlayingManager : MonoBehaviour
                 ugController.alpha = 0f;
             }
         }
-        if (stat != _oldStat)
+        if (Stat != _oldStat)
         {
-            switch (stat)
+            switch (Stat)
             {
-                case stat_global.play:
+                case Stat_global.play:
                     break;
-                case stat_global.jump:
+                case Stat_global.jump:
                     StartCoroutine(Fadein(ugForAfterJump));
                     StartCoroutine(Fadeout(ugForPlay));
                     StartCoroutine(CameraRectChangeRight(cmrUI, 1f));
@@ -115,11 +117,11 @@ public class PlayingManager : MonoBehaviour
                     cmrPublic.GetComponent<PublicCamera>().stat = PublicCamera.stat_publicCamera.jump;
                     txtVelocity.MassPoint = rb_Player;
                     break;
-                case stat_global.pause:
+                case Stat_global.pause:
 
 
                     break;
-                case stat_global.result:
+                case Stat_global.result:
 
                     break;
                 default:
@@ -130,9 +132,9 @@ public class PlayingManager : MonoBehaviour
         {
             Result(playerController.transform.position.z, elapseTime);
             StartCoroutine(ShowResultUI());
-            stat = stat_global.result;
+            Stat = Stat_global.result;
         }
-        _oldStat = stat;
+        _oldStat = Stat;
         _oldPcStat = playerController.stat;
     }
 
@@ -153,13 +155,11 @@ public class PlayingManager : MonoBehaviour
         ugForResult.gameObject.SetActive(true);
     }
 
-    //IEnumerator SmoothChangePerspective()
-    //{
-       
-    //}
+    
     public void Result(float distance, float time)
     {
         bool isNewRecord = false;
+        
         var selectRecords = gameMaster.recordDatas.Find(x => x.game_mode_id == gameMaster.gameMode.id);
         if (selectRecords == null) return;
         selectRecords.total_time += time;
@@ -170,15 +170,18 @@ public class PlayingManager : MonoBehaviour
             isNewRecord = true;
             selectRecords.max_distance = distance;
             selectRecords.timespan_maxdistance = time;
+            save_Ranking_Item = RankingManager.Save_ranking_item.SAVE_RANKING_HIGH;
         }
         if ((distance < selectRecords.min_distance) || (distance == selectRecords.min_distance && time < selectRecords.timespan_mindistance))
         {
             isNewRecord = true;
             selectRecords.min_distance = distance;
             selectRecords.timespan_mindistance = time;
+            save_Ranking_Item = RankingManager.Save_ranking_item.SAVE_RANKING_LOW;
         }
         if (isNewRecord)
         {
+            btnHighScore.SetActive(true);
             ugNewRecord.SetActive(true);
         }
     }
@@ -186,16 +189,16 @@ public class PlayingManager : MonoBehaviour
     public void SwitchPause()
     {
 
-        if (stat != stat_global.pause)
+        if (Stat != Stat_global.pause)
         {
             Time.timeScale = 0f;
-            statCache = stat;
-            stat = stat_global.pause;
+            statCache = Stat;
+            Stat = Stat_global.pause;
         }
-        else if (stat == stat_global.pause)
+        else if (Stat == Stat_global.pause)
         {
             Time.timeScale = 1f;
-            stat = statCache;
+            Stat = statCache;
         }
     }
 
@@ -214,7 +217,7 @@ public class PlayingManager : MonoBehaviour
         rb_Trapeze.isKinematic = false;
         CanvasTop.canvasTop.FadeinScene();
 
-        stat = stat_global.play;
+        Stat = Stat_global.play;
     }
 
     IEnumerator Fadeout(CanvasGroup cg)
