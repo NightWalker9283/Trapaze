@@ -10,6 +10,7 @@ public class RankingManager
     Settings settings = GameMaster.gameMaster.settings;
     public enum Save_ranking_item { SAVE_RANKING_HIGH, SAVE_RANKING_LOW }
 
+
     public void SaveRankingAll()
     {
         foreach (var recordData in recordDatas)
@@ -23,9 +24,9 @@ public class RankingManager
     {
         NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject>(rankingClassName);
 
+        query.WhereEqualTo("name", settings.name); // プレイヤー名でデータを絞る
         query.WhereEqualTo("gameModeId", recordData.game_mode_id); // 種目でデータを絞る
         query.WhereEqualTo("type", save_Ranking_Item); // MAX・MINでデータを絞る
-        query.WhereEqualTo("name", settings.name); // プレイヤー名でデータを絞る
 
         query.FindAsync((List<NCMBObject> objList, NCMBException e) =>
         {
@@ -37,6 +38,9 @@ public class RankingManager
                     cloudObj["gameModeId"] = recordData.game_mode_id;
                     cloudObj["type"] = save_Ranking_Item;
                     cloudObj["name"] = settings.name;
+                   
+
+
                     switch (save_Ranking_Item)
                     {
                         case Save_ranking_item.SAVE_RANKING_HIGH:
@@ -82,7 +86,7 @@ public class RankingManager
             }
         });
     }
-    List<RankingRecord> getRankingTop(int gameModeId, Save_ranking_item save_Ranking_Item)
+    public List<RankingRecord> getRankingTop(int gameModeId, Save_ranking_item save_Ranking_Item)
     {
         List<RankingRecord> rankingRecords = new List<RankingRecord>();
         NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject>(rankingClassName);
@@ -109,10 +113,11 @@ public class RankingManager
 
                 for (int i = 0; i < objList.Count; i++)
                 {
+
                     string name = System.Convert.ToString(objList[i]["name"]); // 名前を取得
                     float distance = System.Convert.ToSingle(objList[i]["distance"]); // スコアを取得
                     float timeSpan = System.Convert.ToSingle(objList[i]["timeSpan"]);
-                    RankingRecord rankingRecord = new RankingRecord(name, distance, timeSpan);
+                    RankingRecord rankingRecord = new RankingRecord(i + 1, name, distance, timeSpan,save_Ranking_Item);
                     rankingRecords.Add(rankingRecord);
                 }
             }
@@ -121,27 +126,25 @@ public class RankingManager
     }
 
 
-    public int fetchRank(string name, Save_ranking_item save_Ranking_Item) //ランキングに自身の名前が見つからなければ-1を返す。
+    public int fetchRank(string name, int gameModeId, Save_ranking_item save_Ranking_Item) //ランキングに自身の名前が見つからなければ-1を返す。
     {
         int currentRank = 0;
         RankingRecord myRecord = null;
         // データスコアの「HighScore」から検索
         NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject>(rankingClassName);
-        query.WhereEqualTo("type", save_Ranking_Item);
         query.WhereEqualTo("name", name);
+        query.WhereEqualTo("gameModeId", gameModeId);
+        query.WhereEqualTo("type", save_Ranking_Item);
         query.FindAsync((List<NCMBObject> objList, NCMBException e) =>
         {
             if (e == null)
             { //検索成功したら
 
-                for (int i = 0; i < objList.Count; i++)
-                {
-                    string _name = System.Convert.ToString(objList[i]["name"]); // 名前を取得
-                    float _distance = System.Convert.ToSingle(objList[i]["distance"]); // スコアを取得
-                    float _timeSpan = System.Convert.ToSingle(objList[i]["timeSpan"]);
-                    myRecord = new RankingRecord(_name, _distance, _timeSpan);
+                    string _name = System.Convert.ToString(objList[0]["name"]); // 名前を取得
+                    float _distance = System.Convert.ToSingle(objList[0]["distance"]); // スコアを取得
+                    float _timeSpan = System.Convert.ToSingle(objList[0]["timeSpan"]);
+                    myRecord = new RankingRecord(0,_name, _distance, _timeSpan,save_Ranking_Item);
 
-                }
             }
         });
         if (myRecord == null) return -1;
@@ -175,9 +178,9 @@ public class RankingManager
         return currentRank;
     }
 
-    List<RankingRecord> getRankingNeighbors(int gameModeId, Save_ranking_item save_Ranking_Item)
+    public List<RankingRecord> getRankingNeighbors(int gameModeId, Save_ranking_item save_Ranking_Item)
     {
-        int currentRank = fetchRank(settings.name, save_Ranking_Item);
+        int currentRank = fetchRank(settings.name, gameModeId, save_Ranking_Item);
         int numSkip = currentRank - 3;
         if (numSkip < 0) numSkip = 0;
 
@@ -185,7 +188,7 @@ public class RankingManager
         NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject>(rankingClassName);
         query.WhereEqualTo("gameModeId", gameModeId);
         query.WhereEqualTo("type", save_Ranking_Item);
-        query.Limit = 5; 
+        query.Limit = 5;
         switch (save_Ranking_Item)
         {
             case Save_ranking_item.SAVE_RANKING_HIGH:
@@ -209,7 +212,7 @@ public class RankingManager
                     string name = System.Convert.ToString(objList[i]["name"]); // 名前を取得
                     float distance = System.Convert.ToSingle(objList[i]["distance"]); // スコアを取得
                     float timeSpan = System.Convert.ToSingle(objList[i]["timeSpan"]);
-                    RankingRecord rankingRecord = new RankingRecord(name, distance, timeSpan);
+                    RankingRecord rankingRecord = new RankingRecord(numSkip+i+1,name, distance, timeSpan,save_Ranking_Item);
                     rankingRecords.Add(rankingRecord);
                 }
             }
@@ -217,7 +220,7 @@ public class RankingManager
         return rankingRecords;
     }
 
-    public bool isNameExistInRanking(string name)
+    public bool isNameExistInRankingAll(string name)
     {
         bool isNameExist = true;
         NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject>(rankingClassName);
@@ -238,8 +241,33 @@ public class RankingManager
         });
         return isNameExist;
     }
-    public void renameforRanking(string previousName, string newName)
+
+    public bool isNameExistInRanking(string name, int gameModeId, Save_ranking_item save_Ranking_Item)
     {
+        bool isNameExist = true;
+        NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject>(rankingClassName);
+        query.WhereEqualTo("name", name);
+        query.WhereEqualTo("gameModeId", gameModeId);
+        query.WhereEqualTo("type", save_Ranking_Item);
+        query.CountAsync((int count, NCMBException e) =>
+        { // 1つ上のコードで絞られたデータが何個あるかかぞえる 
+            if (e == null)
+            {
+                if (count == 0)
+                { // 0個なら名前は登録されていない
+                    isNameExist = false;
+                }
+                else
+                { // 0個じゃなかったらすでに名前が登録されている
+                    isNameExist = true;
+                }
+            }
+        });
+        return isNameExist;
+    }
+    public bool renameforRanking(string previousName, string newName)
+    {
+        bool isSuccess = false;
         NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject>(rankingClassName);
         query.WhereEqualTo("name", previousName); // 古い名前でデータを絞る
         query.FindAsync((List<NCMBObject> objList, NCMBException e) =>
@@ -251,10 +279,16 @@ public class RankingManager
                     for (int i = 0; i < objList.Count; i++)
                     {
                         objList[i]["name"] = newName; // 新しい名前にする
-                        objList[i].SaveAsync(); // セーブ
+                        objList[i].SaveAsync((NCMBException e2) => {
+                            if (e2 == null)
+                            {
+                                isSuccess = true;
+                            }
+                        });
                     }
                 }
             }
         });
+        return isSuccess;
     }
 }

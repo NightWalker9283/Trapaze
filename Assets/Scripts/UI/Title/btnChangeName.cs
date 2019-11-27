@@ -32,7 +32,7 @@ public class btnChangeName : MonoBehaviour
         if (Encoding.GetEncoding("Shift_JIS").GetByteCount(inptName.text)<=64){
             isPassInputRules = true;
         }
-        var isNameExist = GameMaster.rankingManager.isNameExistInRanking(inptName.text);
+        var isNameExist = GameMaster.rankingManager.isNameExistInRankingAll(inptName.text);
         if (isNameExist || !isPassInputRules)
         {
             StopCoroutine(showWarningCoroutine);
@@ -40,7 +40,15 @@ public class btnChangeName : MonoBehaviour
         }
         else
         {
-            GameMaster.rankingManager.renameforRanking(settings.name, inptName.text);
+            if (GameMaster.rankingManager.renameforRanking(settings.name, inptName.text))
+            {
+                settings.name = inptName.text;
+            }
+            else
+            {
+                StopCoroutine(showWarningCoroutine);
+                showWarningCoroutine = StartCoroutine(showWarning());
+            }
         }
 
 
