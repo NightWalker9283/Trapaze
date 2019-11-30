@@ -12,12 +12,20 @@ public class CategoryElementForRanking : MonoBehaviour
         RIVAL
     }
     public categorys category;
-    UIRanking uIRanking = UIRanking.uIRanking;
+    UIRanking _uIRanking;
+    UIRanking uIRanking
+    {
+        get
+        {
+            if (_uIRanking == null) _uIRanking = UIRanking.uIRanking;
+            return _uIRanking;
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-       
+        GetComponent<Toggle>().onValueChanged.AddListener(OnChangeCategoryElement);
     }
 
     // Update is called once per frame
@@ -25,11 +33,12 @@ public class CategoryElementForRanking : MonoBehaviour
     {
 
     }
-    public void OnChangeModeElement(bool isOn)
+    public void OnChangeCategoryElement(bool isOn)
     {
         
         if (isOn)
         {
+            
             uIRanking.CreateRankingViews();
         }
 

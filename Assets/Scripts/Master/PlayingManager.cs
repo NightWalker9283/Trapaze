@@ -14,6 +14,7 @@ public class PlayingManager : MonoBehaviour
 {
     [SerializeField] uiDistance txtDistance;
     [SerializeField] CanvasGroup ugForPlay, ugController, ugForAfterJump, ugForResult;
+   
     [SerializeField] public Camera cmrPlayerView, cmrPublic, cmrPlayer, cmrUI, cmrFace;
     [SerializeField] CinemachineVirtualCamera vcamPublic, vcamFace, vcamResult;
     [SerializeField] Rigidbody rb_Player, rb_Trapeze;
@@ -131,6 +132,7 @@ public class PlayingManager : MonoBehaviour
         if (playerController.stat != _oldPcStat && playerController.stat == PlayerController.stat_enum.finish)
         {
             Result(playerController.transform.position.z, elapseTime);
+          
             StartCoroutine(ShowResultUI());
             Stat = Stat_global.result;
         }
@@ -160,8 +162,9 @@ public class PlayingManager : MonoBehaviour
     {
         bool isNewRecord = false;
         
+        
         var selectRecords = gameMaster.recordDatas.Find(x => x.game_mode_id == gameMaster.gameMode.id);
-        if (selectRecords == null) return;
+        if (selectRecords == null) return ;
         selectRecords.total_time += time;
         selectRecords.play_count++;
         if (distance > 0f) selectRecords.total_distance += distance;
@@ -171,6 +174,7 @@ public class PlayingManager : MonoBehaviour
             selectRecords.max_distance = distance;
             selectRecords.timespan_maxdistance = time;
             save_Ranking_Item = RankingManager.Save_ranking_item.SAVE_RANKING_HIGH;
+            
         }
         if ((distance < selectRecords.min_distance) || (distance == selectRecords.min_distance && time < selectRecords.timespan_mindistance))
         {
@@ -178,12 +182,14 @@ public class PlayingManager : MonoBehaviour
             selectRecords.min_distance = distance;
             selectRecords.timespan_mindistance = time;
             save_Ranking_Item = RankingManager.Save_ranking_item.SAVE_RANKING_LOW;
+           
         }
         if (isNewRecord)
         {
-            btnHighScore.SetActive(true);
+            btnHighScore.GetComponent<Button>().interactable=true;
             ugNewRecord.SetActive(true);
         }
+        return;
     }
 
     public void SwitchPause()

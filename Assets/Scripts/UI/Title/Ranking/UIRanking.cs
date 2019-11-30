@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
-using UnityScript.Scripting.Pipeline;
 
 public class UIRanking : MonoBehaviour
 {
@@ -35,37 +34,54 @@ public class UIRanking : MonoBehaviour
     private void CreateRankingUI()
     {
 
+        foreach (Transform item in ugRankingRecords.transform)
+        {
+            lstRankingRecords.Add(item.gameObject);
+        }
 
-        for (int i = 0; i < gameModes.Count; i++)
+
+        for (int i = 0; i < gameModes.Count-1; i++)
         {
 
             var tglModeElementObj = Instantiate(tglModeOrigin);
-            var modeElement = gameModes[i];
-            tglModeElementObj.transform.GetComponent<ModeElementForRanking>().id = modeElement.id;
-
-            tglModeElementObj.transform.GetComponentInChildren<Text>().text = (modeElement.name != null ? modeElement.name : "");
             tglModeElementObj.transform.parent = tggMode.transform;
             tglModeElementObj.transform.localScale = tglModeOrigin.transform.localScale;
+         
+        }
+        tggMode.GetComponentInChildren<Button>().transform.SetAsLastSibling();
+        for (int i = 0; i < gameModes.Count; i++)
+        {
+
+            var tglModeElementObj = tggMode.transform.GetChild(i);
+            var modeElement = gameModes[i];
+            tglModeElementObj.GetComponent<ModeElementForRanking>().id = modeElement.id;
+
+            tglModeElementObj.GetComponentInChildren<Text>().text = (modeElement.name != null ? modeElement.name : "");
             //tglModeElementObj.isOn = false;
             tglModeElementObj.GetComponent<Toggle>().onValueChanged.AddListener(tglModeElementObj.GetComponent<ModeElementForRanking>().OnChangeModeElement);
         }
-        Destroy(tglModeOrigin.gameObject);
+        
         tggMode.transform.GetComponentInChildren<Button>().transform.SetAsLastSibling();
-        //tggMode.transform.GetChild(0).GetComponent<Toggle>().isOn = true;
-        Debug.Log(tggMode.transform.GetChild(0).GetComponent<Toggle>().isOn);
-        Debug.Log(tggMode.transform.GetChild(1).GetComponent<Toggle>().isOn);
+        tggMode.transform.GetChild(0).GetComponent<Toggle>().isOn = true;
+        
+     
+       
         //CreateRankingViews();
 
-        tggMode.GetComponentInChildren<Button>().transform.SetAsLastSibling();
     }
 
     
 
     void CreateRankingRecords(List<RankingRecord> lst)
     {
-        if (lst.Count>0) 
+        int rank=0;
+        foreach (var item in lst)
         {
-            txtName.text += "(RANK:" + lst.Count;
+            if (item.name == GameMaster.gameMaster.settings.name) rank = item.rank;
+        }
+        if (rank>0) 
+        {
+            txtName.text += "(RANK:" + rank+")";
         }
         else
         {
@@ -74,7 +90,7 @@ public class UIRanking : MonoBehaviour
         for (int i = 0; i < lst.Count; i++)
         {
             var objRecord = lst[i];
-            CreateRankingRecord(objRecord.rank, objRecord.name, objRecord.distance, objRecord.timeSpan);
+            CreateRankingRecord(lstRankingRecords[i],objRecord.rank, objRecord.name, objRecord.distance, objRecord.timeSpan);
         }
     }
 
@@ -108,14 +124,37 @@ public class UIRanking : MonoBehaviour
     }
     private void ClearRankingRecords()
     {
-        lstRankingRecords = new List<GameObject>();
+        foreach (var item in lstRankingRecords)
+        {
+            item.transform.Find("txtRank").GetComponent<Text>().text = "";
+            item.transform.Find("txtRankerName").GetComponent<Text>().text = "";
+            item.transform.Find("txtDistance").GetComponent<Text>().text = "";
+            item.transform.Find("txtTimeSpan").GetComponent<Text>().text = "";
+        }
+        
     }
 
-    public void ResetToggles()
+    public void ResetAllToggles()
     {
+        var tgl = tggDirection.transform.Find("tglDirectionMax").GetComponent<Toggle>();
+        tgl.enabled=false;
+        tgl.isOn = true;
+        tgl.enabled = true;
 
-        tggDirection.transform.Find("tglDirectionMax").GetComponent<Toggle>().isOn = true;
-        tggCategory.transform.Find("tglCatTop").GetComponent<Toggle>().isOn = true;
+        tgl = tggCategory.transform.Find("tglCatTop").GetComponent<Toggle>();
+        tgl.enabled = false;
+        tgl.isOn = true;
+        tgl.enabled = true;
+    }
+
+    public void ResetCategoryToggles()
+    {
+       
+
+        var tgl = tggCategory.transform.Find("tglCatTop").GetComponent<Toggle>();
+        tgl.enabled = false;
+        tgl.isOn = true;
+        tgl.enabled = true;
     }
 
     public void JudgmentTggCategory()
@@ -137,13 +176,14 @@ public class UIRanking : MonoBehaviour
            });
     }
 
-    private void CreateRankingRecord(int rank,string rankerName,float distance,float timeSpan)
+    private void CreateRankingRecord(GameObject objRecord, int rank,string rankerName,float distance,float timeSpan)
     {
-        var objRecord = Instantiate(tglModeOrigin);
+        
+        
         objRecord.transform.Find("txtRank").GetComponent<Text>().text = rank.ToString();
         objRecord.transform.Find("txtRankerName").GetComponent<Text>().text = rankerName;
         objRecord.transform.Find("txtDistance").GetComponent<Text>().text = distance.ToString("F1") + "m";
-        objRecord.transform.Find("txtTimeSpan").GetComponent<Text>().text= (int)(timeSpan / 60) + ":" + ((int)(timeSpan % 60)).ToString("D2") + ")";
+        objRecord.transform.Find("txtTimeSpan").GetComponent<Text>().text= (int)(timeSpan / 60) + ":" + ((int)(timeSpan % 60)).ToString("D2");
         lstRankingRecords.Add(objRecord.gameObject);
     }
 }

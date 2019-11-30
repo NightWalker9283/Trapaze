@@ -134,7 +134,7 @@ public class RankingManager : MonoBehaviour
 
         query.WhereEqualTo("name", settings.name); // プレイヤー名でデータを絞る
         query.WhereEqualTo("gameModeId", recordData.game_mode_id); // 種目でデータを絞る
-        query.WhereEqualTo("type", save_Ranking_Item); // MAX・MINでデータを絞る
+        query.WhereEqualTo("type", (int)save_Ranking_Item); // MAX・MINでデータを絞る
 
         query.FindAsync((List<NCMBObject> objList, NCMBException e) =>
         {
@@ -144,7 +144,7 @@ public class RankingManager : MonoBehaviour
                 { // ハイスコアが未登録の場合
                     NCMBObject cloudObj = new NCMBObject(rankingClassName);
                     cloudObj["gameModeId"] = recordData.game_mode_id;
-                    cloudObj["type"] = save_Ranking_Item;
+                    cloudObj["type"] =(int) save_Ranking_Item;
                     cloudObj["name"] = settings.name;
 
 
@@ -203,7 +203,7 @@ public class RankingManager : MonoBehaviour
         NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject>(rankingClassName);
         query.WhereEqualTo("name", name);
         query.WhereEqualTo("gameModeId", gameModeId);
-        query.WhereEqualTo("type", save_Ranking_Item);
+        query.WhereEqualTo("type", (int)save_Ranking_Item);
         query.FindAsync((List<NCMBObject> objList, NCMBException e) =>
         {
             if (e == null)
@@ -217,7 +217,7 @@ public class RankingManager : MonoBehaviour
                 {
 
                     var query2 = new NCMBQuery<NCMBObject>(rankingClassName);
-                    query2.WhereEqualTo("type", save_Ranking_Item);
+                    query2.WhereEqualTo("type", (int)save_Ranking_Item);
                     switch (save_Ranking_Item)
                     {
                         case Save_ranking_item.SAVE_RANKING_HIGH:
@@ -261,7 +261,7 @@ public class RankingManager : MonoBehaviour
         List<RankingRecord> rankingRecords = new List<RankingRecord>();
         NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject>(rankingClassName);
         query.WhereEqualTo("gameModeId", gameModeId);
-        query.WhereEqualTo("type", save_Ranking_Item);
+        query.WhereEqualTo("type", (int)save_Ranking_Item);
         query.Limit = 10; // 上位10件のみ取得
         switch (save_Ranking_Item)
         {
@@ -284,10 +284,10 @@ public class RankingManager : MonoBehaviour
                 for (int i = 0; i < objList.Count; i++)
                 {
 
-                    string name = System.Convert.ToString(objList[i]["name"]); // 名前を取得
-                    float distance = System.Convert.ToSingle(objList[i]["distance"]); // スコアを取得
-                    float timeSpan = System.Convert.ToSingle(objList[i]["timeSpan"]);
-                    RankingRecord rankingRecord = new RankingRecord(i + 1, name, distance, timeSpan, save_Ranking_Item);
+                    string _name = System.Convert.ToString(objList[i]["name"]); // 名前を取得
+                    float _distance = System.Convert.ToSingle(objList[i]["distance"]); // スコアを取得
+                    float _timeSpan = System.Convert.ToSingle(objList[i]["timeSpan"]);
+                    RankingRecord rankingRecord = new RankingRecord(i + 1, _name, _distance, _timeSpan, save_Ranking_Item);
                     rankingRecords.Add(rankingRecord);
                 }
                 callback(rankingRecords);
@@ -310,7 +310,7 @@ public class RankingManager : MonoBehaviour
             List<RankingRecord> rankingRecords = new List<RankingRecord>();
             NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject>(rankingClassName);
             query.WhereEqualTo("gameModeId", gameModeId);
-            query.WhereEqualTo("type", save_Ranking_Item);
+            query.WhereEqualTo("type", (int)save_Ranking_Item);
             query.Limit = 5;
             switch (save_Ranking_Item)
             {
@@ -386,7 +386,7 @@ public class RankingManager : MonoBehaviour
         NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject>(rankingClassName);
         query.WhereEqualTo("name", name);
         query.WhereEqualTo("gameModeId", gameModeId);
-        query.WhereEqualTo("type", save_Ranking_Item);
+        query.WhereEqualTo("type", (int)save_Ranking_Item);
         query.CountAsync((int count, NCMBException e) =>
         { // 1つ上のコードで絞られたデータが何個あるかかぞえる 
             if (e == null)
