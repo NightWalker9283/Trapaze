@@ -34,7 +34,7 @@ public class GameMaster : MonoBehaviour
         // 以降破棄しない
         DontDestroyOnLoad(gameObject);
         Load();
-        rankingManager = new RankingManager();
+        rankingManager =GetComponent<RankingManager>();
         if (settings.name.Length <= 0) cvsInputName.gameObject.SetActive(true);
 
     }
@@ -142,7 +142,7 @@ public class GameMaster : MonoBehaviour
     }
 
 
-    void Save()
+    public void Save()
     {
         SaveData.SetList<RecordData>("recordDatas", recordDatas);
         SaveData.SetClass<Settings>("settings", settings);
@@ -154,6 +154,7 @@ public class GameMaster : MonoBehaviour
         var list = new List<RecordData>(gameModes.Count);
         recordDatas = SaveData.GetList<RecordData>("recordDatas", InitRecordDatas(list, gameModes.Count));
         settings = SaveData.GetClass<Settings>("settings", new Settings());
+        Debug.Log(settings.name);
     }
 
 

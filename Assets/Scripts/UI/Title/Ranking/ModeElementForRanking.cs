@@ -9,12 +9,12 @@ public class ModeElementForRanking : MonoBehaviour
 {
     
     public int id = 0;
-    UIRanking uIRanking;
-    
+    UIRanking uIRanking = UIRanking.uIRanking;
+
     // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-        uIRanking= transform.parent.GetComponent<UIRanking>();
+        
     }
 
     // Update is called once per frame
@@ -28,7 +28,7 @@ public class ModeElementForRanking : MonoBehaviour
         uIRanking.JudgmentTggCategory();
         if (isOn)
         {
-            uIRanking.CreateRankingRecords();  
+            uIRanking.CreateRankingViews();  
         }
 
     }

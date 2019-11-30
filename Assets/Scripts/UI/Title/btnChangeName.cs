@@ -1,14 +1,22 @@
 ﻿using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
 using System.Text;
+using System.CodeDom;
+using System;
 
 public class btnChangeName : MonoBehaviour
 {
+    [SerializeField] Canvas cvsInputName;
     [SerializeField] InputField inptName;
     [SerializeField] Text txtWarning;
-
+    string msgAlredy = "The name is already in use";
+    string msgLengthZero = "Give your name more than 1 charactor";
+    string msgTooLong = "Too many characters in the name";
+    string msgFaild = "Failed to save name";
+    Settings settings;
     Button btn;
     Coroutine showWarningCoroutine;
 
@@ -17,7 +25,7 @@ public class btnChangeName : MonoBehaviour
     void Start()
     {
         btn = GetComponent<Button>();
-
+        settings = GameMaster.gameMaster.settings;
 
         btn.onClick.AddListener(ChangeName);
 
@@ -26,35 +34,47 @@ public class btnChangeName : MonoBehaviour
     // Update is called once per frame
     void ChangeName()
     {
-        if (inptName.text.Length <= 0) return;
-        Settings settings = GameMaster.gameMaster.settings;
-        bool isPassInputRules=false;
-        if (Encoding.GetEncoding("Shift_JIS").GetByteCount(inptName.text)<=64){
-            isPassInputRules = true;
-        }
-        var isNameExist = GameMaster.rankingManager.isNameExistInRankingAll(inptName.text);
-        if (isNameExist || !isPassInputRules)
+        if (inptName.text == settings.name) return;
+        if (inptName.text.Length <= 0)
         {
-            StopCoroutine(showWarningCoroutine);
-            showWarningCoroutine= StartCoroutine(showWarning());
+            HideWarningMessage();
+            StartCoroutine(showWarning(msgLengthZero));
+            return;
+        }
+        if (Encoding.GetEncoding("Shift_JIS").GetByteCount(inptName.text) > 64)
+        {
+            HideWarningMessage();
+            StartCoroutine(showWarning(msgTooLong));
+            return;
+        }
+        GameMaster.rankingManager.RenameUser(settings.name,inptName.text, Callback);
+
+    }
+
+    void HideWarningMessage()
+    {
+        if (showWarningCoroutine != null) StopCoroutine(showWarningCoroutine);
+        txtWarning.gameObject.SetActive(false);
+    }
+
+    void Callback(bool isNameExist)
+    {
+        
+        if (isNameExist)
+        {
+            HideWarningMessage();
+            showWarningCoroutine = StartCoroutine(showWarning(msgAlredy));
         }
         else
         {
-            if (GameMaster.rankingManager.renameforRanking(settings.name, inptName.text))
-            {
-                settings.name = inptName.text;
-            }
-            else
-            {
-                StopCoroutine(showWarningCoroutine);
-                showWarningCoroutine = StartCoroutine(showWarning());
-            }
+            settings.name = inptName.text;
+           
         }
-
-
     }
-    IEnumerator showWarning()
+
+    IEnumerator showWarning(string message)
     {
+        txtWarning.text = message;
         txtWarning.gameObject.SetActive(true);
         yield return new WaitForSeconds(4);
         txtWarning.gameObject.SetActive(false);

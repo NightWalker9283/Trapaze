@@ -12,12 +12,12 @@ public class CategoryElementForRanking : MonoBehaviour
         RIVAL
     }
     public categorys category;
-    UIRanking uIRanking;
+    UIRanking uIRanking = UIRanking.uIRanking;
 
     // Start is called before the first frame update
     void Start()
     {
-        uIRanking = transform.parent.GetComponent<UIRanking>();
+       
     }
 
     // Update is called once per frame
@@ -30,7 +30,7 @@ public class CategoryElementForRanking : MonoBehaviour
         
         if (isOn)
         {
-            uIRanking.CreateRankingRecords();
+            uIRanking.CreateRankingViews();
         }
 
     }
