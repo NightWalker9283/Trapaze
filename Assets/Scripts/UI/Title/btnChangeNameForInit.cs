@@ -40,7 +40,7 @@ public class btnChangeNameForInit : MonoBehaviour
             StartCoroutine(showWarning(msgLengthZero));
             return;
         }
-        if (Encoding.GetEncoding("Shift_JIS").GetByteCount(inptName.text) > 64)
+        if (Encoding.UTF8.GetByteCount(inptName.text) > 64)
         {
             HideWarningMessage();
             StartCoroutine(showWarning(msgTooLong));
