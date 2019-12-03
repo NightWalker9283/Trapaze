@@ -243,7 +243,7 @@ public class RankingManager : MonoBehaviour
         query.WhereEqualTo("type", (int)save_Ranking_Item);
         query.FindAsync((List<NCMBObject> objList, NCMBException e) =>
         {
-            if (e == null)
+            if (e == null && objList.Count>0)
             { //検索成功したら
 
                 string _name = System.Convert.ToString(objList[0]["name"]); // 名前を取得
@@ -272,6 +272,7 @@ public class RankingManager : MonoBehaviour
                     if (e2 != null)
                     {
                         //件数取得失敗
+                        callback(currentRank);
                     }
                     else
                     {
@@ -280,6 +281,10 @@ public class RankingManager : MonoBehaviour
                     }
                     callback(currentRank);
                 });
+            }
+            else
+            {
+                callback(currentRank);
             }
 
             return;
@@ -323,6 +328,10 @@ public void getRankingTop(int gameModeId, Save_ranking_item save_Ranking_Item, C
                 RankingRecord rankingRecord = new RankingRecord(i + 1, _name, _distance, _timeSpan, save_Ranking_Item);
                 rankingRecords.Add(rankingRecord);
             }
+            callback(rankingRecords);
+        }
+        else
+        {
             callback(rankingRecords);
         }
 
@@ -372,6 +381,10 @@ public void getRankingNeighbors(string name, int gameModeId, Save_ranking_item s
                     RankingRecord rankingRecord = new RankingRecord(numSkip + i + 1, _name, _distance, _timeSpan, save_Ranking_Item);
                     rankingRecords.Add(rankingRecord);
                 }
+                callback(rankingRecords);
+            }
+            else
+            {
                 callback(rankingRecords);
             }
         });

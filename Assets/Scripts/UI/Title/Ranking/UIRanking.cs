@@ -15,6 +15,7 @@ public class UIRanking : MonoBehaviour
     List<GameMode> gameModes;
     List<GameObject> lstRankingRecords;
     RankingManager rankingManager;
+    bool flgUpdate=false,oldFlgUpdate=false;
     // Start is called before the first frame update
     void Start()
     {
@@ -29,7 +30,12 @@ public class UIRanking : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(oldFlgUpdate!=flgUpdate && flgUpdate)
+        {
+            UpdateRankingViews();
+            flgUpdate = false;
+        }
+        oldFlgUpdate = flgUpdate;
     }
     private void CreateRankingUI()
     {
@@ -40,13 +46,13 @@ public class UIRanking : MonoBehaviour
         }
 
 
-        for (int i = 0; i < gameModes.Count-1; i++)
+        for (int i = 0; i < gameModes.Count - 1; i++)
         {
 
             var tglModeElementObj = Instantiate(tglModeOrigin);
             tglModeElementObj.transform.parent = tggMode.transform;
             tglModeElementObj.transform.localScale = tglModeOrigin.transform.localScale;
-         
+
         }
         tggMode.GetComponentInChildren<Button>().transform.SetAsLastSibling();
         for (int i = 0; i < gameModes.Count; i++)
@@ -60,28 +66,28 @@ public class UIRanking : MonoBehaviour
             //tglModeElementObj.isOn = false;
             tglModeElementObj.GetComponent<Toggle>().onValueChanged.AddListener(tglModeElementObj.GetComponent<ModeElementForRanking>().OnChangeModeElement);
         }
-        
+
         tggMode.transform.GetComponentInChildren<Button>().transform.SetAsLastSibling();
         tggMode.transform.GetChild(0).GetComponent<Toggle>().isOn = true;
-        
-     
-       
+
+
+
         //CreateRankingViews();
 
     }
 
-    
+
 
     void CreateRankingRecords(List<RankingRecord> lst)
     {
-        int rank=0;
+        int rank = 0;
         foreach (var item in lst)
         {
             if (item.name == GameMaster.gameMaster.settings.name) rank = item.rank;
         }
-        if (rank>0) 
+        if (rank > 0)
         {
-            txtName.text += "(RANK:" + rank+")";
+            txtName.text += "(RANK:" + rank + ")";
         }
         else
         {
@@ -90,34 +96,38 @@ public class UIRanking : MonoBehaviour
         for (int i = 0; i < lst.Count; i++)
         {
             var objRecord = lst[i];
-            CreateRankingRecord(lstRankingRecords[i],objRecord.rank, objRecord.name, objRecord.distance, objRecord.timeSpan);
+            CreateRankingRecord(lstRankingRecords[i], objRecord.rank, objRecord.name, objRecord.distance, objRecord.timeSpan);
         }
     }
 
-   
-
     public void CreateRankingViews()
+    {
+        flgUpdate = true;
+
+    }
+
+    public void UpdateRankingViews()
     {
         ClearRankingRecords();
         var playerName = GameMaster.gameMaster.settings.name;
         var id = tggMode.ActiveToggles().FirstOrDefault().GetComponent<ModeElementForRanking>().id;
         var direction = tggDirection.ActiveToggles().FirstOrDefault().GetComponent<DirectionElementForRanking>().directionType;
         var category = tggCategory.ActiveToggles().FirstOrDefault().GetComponent<CategoryElementForRanking>().category;
-        
-        txtName.text = "Your Name:"+playerName;
+
+        txtName.text = "Your Name:" + playerName;
         //rankingManager.fetchRank(playerName, id, direction,SetPlayerRank);
 
         switch (category)
         {
             case CategoryElementForRanking.categorys.TOP:
-                rankingManager.getRankingTop(id, direction,CreateRankingRecords);
+                rankingManager.getRankingTop(id, direction, CreateRankingRecords);
                 break;
             case CategoryElementForRanking.categorys.RIVAL:
-                rankingManager.getRankingNeighbors(playerName,id, direction,CreateRankingRecords);
+                rankingManager.getRankingNeighbors(playerName, id, direction, CreateRankingRecords);
                 break;
 
             default:
-                
+
                 break;
         }
 
@@ -131,30 +141,38 @@ public class UIRanking : MonoBehaviour
             item.transform.Find("txtDistance").GetComponent<Text>().text = "";
             item.transform.Find("txtTimeSpan").GetComponent<Text>().text = "";
         }
-        
+
     }
 
     public void ResetAllToggles()
     {
+
         var tgl = tggDirection.transform.Find("tglDirectionMax").GetComponent<Toggle>();
-        tgl.enabled=false;
+
         tgl.isOn = true;
-        tgl.enabled = true;
+
+
 
         tgl = tggCategory.transform.Find("tglCatTop").GetComponent<Toggle>();
-        tgl.enabled = false;
+
         tgl.isOn = true;
-        tgl.enabled = true;
+
+
+
+
     }
 
     public void ResetCategoryToggles()
     {
-       
+
 
         var tgl = tggCategory.transform.Find("tglCatTop").GetComponent<Toggle>();
         tgl.enabled = false;
         tgl.isOn = true;
+
         tgl.enabled = true;
+
+
     }
 
     public void JudgmentTggCategory()
@@ -176,14 +194,14 @@ public class UIRanking : MonoBehaviour
            });
     }
 
-    private void CreateRankingRecord(GameObject objRecord, int rank,string rankerName,float distance,float timeSpan)
+    private void CreateRankingRecord(GameObject objRecord, int rank, string rankerName, float distance, float timeSpan)
     {
-        
-        
+
+
         objRecord.transform.Find("txtRank").GetComponent<Text>().text = rank.ToString();
         objRecord.transform.Find("txtRankerName").GetComponent<Text>().text = rankerName;
         objRecord.transform.Find("txtDistance").GetComponent<Text>().text = distance.ToString("F1") + "m";
-        objRecord.transform.Find("txtTimeSpan").GetComponent<Text>().text= (int)(timeSpan / 60) + ":" + ((int)(timeSpan % 60)).ToString("D2");
+        objRecord.transform.Find("txtTimeSpan").GetComponent<Text>().text = (int)(timeSpan / 60) + ":" + ((int)(timeSpan % 60)).ToString("D2");
         lstRankingRecords.Add(objRecord.gameObject);
     }
 }
