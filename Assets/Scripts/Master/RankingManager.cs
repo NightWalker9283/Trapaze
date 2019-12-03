@@ -250,56 +250,102 @@ public class RankingManager : MonoBehaviour
                 float _distance = System.Convert.ToSingle(objList[0]["distance"]); // スコアを取得
                 float _timeSpan = System.Convert.ToSingle(objList[0]["timeSpan"]);
                 myRecord = new RankingRecord(0, _name, _distance, _timeSpan, save_Ranking_Item);
-                if (myRecord != null)
+
+                var query2 = new NCMBQuery<NCMBObject>(rankingClassName);
+                query2.WhereEqualTo("gameModeId", gameModeId);
+                query2.WhereEqualTo("type", (int)save_Ranking_Item);
+                switch (save_Ranking_Item)
+                {
+                    case Save_ranking_item.SAVE_RANKING_HIGH:
+                        query2.WhereGreaterThanOrEqualTo("distance", myRecord.distance);
+                        break;
+                    case Save_ranking_item.SAVE_RANKING_LOW:
+                        query2.WhereLessThanOrEqualTo("distance", myRecord.distance);
+                        break;
+                    default:
+                        break;
+                }
+
+                query2.CountAsync((int count, NCMBException e2) =>
                 {
 
-                    var query2 = new NCMBQuery<NCMBObject>(rankingClassName);
-                    query2.WhereEqualTo("type", (int)save_Ranking_Item);
-                    switch (save_Ranking_Item)
+                    if (e2 != null)
                     {
-                        case Save_ranking_item.SAVE_RANKING_HIGH:
-                            query2.WhereGreaterThanOrEqualTo("distance", myRecord.distance);
-                            break;
-                        case Save_ranking_item.SAVE_RANKING_LOW:
-                            query2.WhereLessThanOrEqualTo("distance", myRecord.distance);
-                            break;
-                        default:
-                            break;
+                        //件数取得失敗
                     }
-
-                    query2.CountAsync((int count, NCMBException e2) =>
+                    else
                     {
-
-                        if (e2 != null)
-                        {
-                            //件数取得失敗
-                        }
-                        else
-                        {
-                            //件数取得成功
-                            currentRank = count + 1; // 自分よりスコアが上の人がn人いたら自分はn+1位
-                        }
-                        callback(currentRank);
-                    });
-                }
-                else
-                {
+                        //件数取得成功
+                        currentRank = count + 1; // 自分よりスコアが上の人がn人いたら自分はn+1位
+                    }
                     callback(currentRank);
-                }
-                return;
+                });
             }
+
+            return;
+        
         });
 
     }
 
 
-    public void getRankingTop(int gameModeId, Save_ranking_item save_Ranking_Item, CallbackRecordsList callback)
+public void getRankingTop(int gameModeId, Save_ranking_item save_Ranking_Item, CallbackRecordsList callback)
+{
+    List<RankingRecord> rankingRecords = new List<RankingRecord>();
+    NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject>(rankingClassName);
+    query.WhereEqualTo("gameModeId", gameModeId);
+    query.WhereEqualTo("type", (int)save_Ranking_Item);
+    query.Limit = 10; // 上位10件のみ取得
+    switch (save_Ranking_Item)
     {
+        case Save_ranking_item.SAVE_RANKING_HIGH:
+            query.OrderByDescending("distance");
+            query.AddAscendingOrder("timeSpan");
+            break;
+        case Save_ranking_item.SAVE_RANKING_LOW:
+            query.OrderByAscending("distance");
+            query.AddAscendingOrder("timeSpan");
+            break;
+        default:
+            break;
+    }
+    query.FindAsync((List<NCMBObject> objList, NCMBException e) =>
+    {
+        if (e == null)
+        { //検索成功したら
+
+            for (int i = 0; i < objList.Count; i++)
+            {
+
+                string _name = System.Convert.ToString(objList[i]["name"]); // 名前を取得
+                float _distance = System.Convert.ToSingle(objList[i]["distance"]); // スコアを取得
+                float _timeSpan = System.Convert.ToSingle(objList[i]["timeSpan"]);
+                RankingRecord rankingRecord = new RankingRecord(i + 1, _name, _distance, _timeSpan, save_Ranking_Item);
+                rankingRecords.Add(rankingRecord);
+            }
+            callback(rankingRecords);
+        }
+
+    });
+    return;
+}
+
+
+
+
+public void getRankingNeighbors(string name, int gameModeId, Save_ranking_item save_Ranking_Item, CallbackRecordsList callback)
+{
+    fetchRank(name, gameModeId, save_Ranking_Item, (int currentRank) =>
+    {
+        int numSkip = currentRank - 3;
+        if (numSkip < 0) numSkip = 0;
+
         List<RankingRecord> rankingRecords = new List<RankingRecord>();
         NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject>(rankingClassName);
         query.WhereEqualTo("gameModeId", gameModeId);
         query.WhereEqualTo("type", (int)save_Ranking_Item);
-        query.Limit = 10; // 上位10件のみ取得
+        query.Skip = numSkip;
+        query.Limit = 5;
         switch (save_Ranking_Item)
         {
             case Save_ranking_item.SAVE_RANKING_HIGH:
@@ -320,128 +366,79 @@ public class RankingManager : MonoBehaviour
 
                 for (int i = 0; i < objList.Count; i++)
                 {
-
                     string _name = System.Convert.ToString(objList[i]["name"]); // 名前を取得
                     float _distance = System.Convert.ToSingle(objList[i]["distance"]); // スコアを取得
                     float _timeSpan = System.Convert.ToSingle(objList[i]["timeSpan"]);
-                    RankingRecord rankingRecord = new RankingRecord(i + 1, _name, _distance, _timeSpan, save_Ranking_Item);
+                    RankingRecord rankingRecord = new RankingRecord(numSkip + i + 1, _name, _distance, _timeSpan, save_Ranking_Item);
                     rankingRecords.Add(rankingRecord);
                 }
                 callback(rankingRecords);
             }
-
         });
-        return;
-    }
+    });
+    return;
+}
 
+public void IsNameExistAll(string name, CallbackBool callback)
+{
+    isBusy = true;
+    isNameExist = false;
 
-
-
-    public void getRankingNeighbors(string name, int gameModeId, Save_ranking_item save_Ranking_Item, CallbackRecordsList callback)
+    NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject>(rankingClassName);
+    query.WhereEqualTo("name", name);
+    query.CountAsync((int count, NCMBException e) =>
     {
-        fetchRank(name, gameModeId, save_Ranking_Item, (int currentRank) =>
+
+        if (e == null)
         {
-            int numSkip = currentRank - 3;
-            if (numSkip < 0) numSkip = 0;
-
-            List<RankingRecord> rankingRecords = new List<RankingRecord>();
-            NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject>(rankingClassName);
-            query.WhereEqualTo("gameModeId", gameModeId);
-            query.WhereEqualTo("type", (int)save_Ranking_Item);
-            query.Limit = 5;
-            switch (save_Ranking_Item)
-            {
-                case Save_ranking_item.SAVE_RANKING_HIGH:
-                    query.OrderByDescending("distance");
-                    query.AddAscendingOrder("timeSpan");
-                    break;
-                case Save_ranking_item.SAVE_RANKING_LOW:
-                    query.OrderByAscending("distance");
-                    query.AddAscendingOrder("timeSpan");
-                    break;
-                default:
-                    break;
+            if (count == 0)
+            { // 0個なら名前は登録されていない
+                Debug.Log("false");
+                isNameExist = false;
             }
-            query.FindAsync((List<NCMBObject> objList, NCMBException e) =>
-            {
-                if (e == null)
-                { //検索成功したら
+            else
+            { // 0個じゃなかったらすでに名前が登録されている
+                Debug.Log("true");
+                isNameExist = true;
+            }
+        }
+        callback(isNameExist);
+        isBusy = false;
+    });
 
-                    for (int i = 0; i < objList.Count; i++)
-                    {
-                        string _name = System.Convert.ToString(objList[i]["name"]); // 名前を取得
-                        float _distance = System.Convert.ToSingle(objList[i]["distance"]); // スコアを取得
-                        float _timeSpan = System.Convert.ToSingle(objList[i]["timeSpan"]);
-                        RankingRecord rankingRecord = new RankingRecord(numSkip + i + 1, _name, _distance, _timeSpan, save_Ranking_Item);
-                        rankingRecords.Add(rankingRecord);
-                    }
-                    callback(rankingRecords);
-                }
-            });
-        });
-        return;
-    }
 
-    public void IsNameExistAll(string name, CallbackBool callback)
-    {
-        isBusy = true;
-        isNameExist = false;
+}
 
-        NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject>(rankingClassName);
-        query.WhereEqualTo("name", name);
-        query.CountAsync((int count, NCMBException e) =>
+
+
+
+public void IsNameExistInRanking(string name, int gameModeId, Save_ranking_item save_Ranking_Item, CallbackBool callback)
+{
+
+    isNameExist = false;
+
+    NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject>(rankingClassName);
+    query.WhereEqualTo("name", name);
+    query.WhereEqualTo("gameModeId", gameModeId);
+    query.WhereEqualTo("type", (int)save_Ranking_Item);
+    query.CountAsync((int count, NCMBException e) =>
+    { // 1つ上のコードで絞られたデータが何個あるかかぞえる 
+        if (e == null)
         {
-
-            if (e == null)
-            {
-                if (count == 0)
-                { // 0個なら名前は登録されていない
-                    Debug.Log("false");
-                    isNameExist = false;
-                }
-                else
-                { // 0個じゃなかったらすでに名前が登録されている
-                    Debug.Log("true");
-                    isNameExist = true;
-                }
+            if (count == 0)
+            { // 0個なら名前は登録されていない
+                isNameExist = false;
             }
-            callback(isNameExist);
-            isBusy = false;
-        });
-
-
-    }
-
-
-
-
-    public void IsNameExistInRanking(string name, int gameModeId, Save_ranking_item save_Ranking_Item, CallbackBool callback)
-    {
-
-        isNameExist = false;
-
-        NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject>(rankingClassName);
-        query.WhereEqualTo("name", name);
-        query.WhereEqualTo("gameModeId", gameModeId);
-        query.WhereEqualTo("type", (int)save_Ranking_Item);
-        query.CountAsync((int count, NCMBException e) =>
-        { // 1つ上のコードで絞られたデータが何個あるかかぞえる 
-            if (e == null)
-            {
-                if (count == 0)
-                { // 0個なら名前は登録されていない
-                    isNameExist = false;
-                }
-                else
-                { // 0個じゃなかったらすでに名前が登録されている
-                    isNameExist = true;
-                }
+            else
+            { // 0個じゃなかったらすでに名前が登録されている
+                isNameExist = true;
             }
-            callback(isNameExist);
-        });
+        }
+        callback(isNameExist);
+    });
 
-        return;
-    }
+    return;
+}
 
 
 
