@@ -1466,7 +1466,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0.5, y: 1, z: 0.5}
+  m_FollowOffset: {x: -3, y: 1, z: 0}
   m_XDamping: 20
   m_YDamping: 20
   m_ZDamping: 20
@@ -4278,8 +4278,8 @@ MonoBehaviour:
   m_WorldUpOverride: {fileID: 0}
   m_UpdateMethod: 2
   m_DefaultBlend:
-    m_Style: 1
-    m_Time: 1
+    m_Style: 4
+    m_Time: 1.5
     m_CustomCurve:
       serializedVersion: 2
       m_Curve: []
@@ -11599,8 +11599,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97174dd2a6eab43a9b046e9b4f658015, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Radius: 0.5
+  Radius: 3
   Period: 6
+  Wait: 1.4
 --- !u!1 &1304407664
 GameObject:
   m_ObjectHideFlags: 0
@@ -13562,7 +13563,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0.03, y: -0.09, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 0
-  m_ConnectedAnchor: {x: 0.59, y: 1, z: 0.05}
+  m_ConnectedAnchor: {x: 0.59, y: 1, z: 0}
   serializedVersion: 2
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 0
@@ -13582,11 +13583,11 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_LowAngularXLimit:
-    limit: -106.724
+    limit: 70
     bounciness: 0
     contactDistance: 0
   m_HighAngularXLimit:
-    limit: 90.54713
+    limit: 85
     bounciness: 0
     contactDistance: 0
   m_AngularYZLimitSpring:
@@ -13860,10 +13861,10 @@ ConfigurableJoint:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1415684251}
   m_ConnectedBody: {fileID: 2020679185}
-  m_Anchor: {x: -0.03, y: -0.09, z: 0}
+  m_Anchor: {x: -0.06, y: -0.08, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 0
-  m_ConnectedAnchor: {x: -0.59, y: 1, z: 0.05}
+  m_ConnectedAnchor: {x: -0.59, y: 1, z: 0}
   serializedVersion: 2
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 0
@@ -13883,11 +13884,11 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_LowAngularXLimit:
-    limit: -106.72402
+    limit: 70
     bounciness: 0
     contactDistance: 0
   m_HighAngularXLimit:
-    limit: 90.54713
+    limit: 85
     bounciness: 0
     contactDistance: 0
   m_AngularYZLimitSpring:

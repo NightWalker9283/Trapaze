@@ -153,6 +153,7 @@ public class PlayingManager : MonoBehaviour
         // StartCoroutine(SmoothChangePerspective());
         yield return null;
         vcamResult.gameObject.SetActive(true);
+        vcamPublic.gameObject.SetActive(false);
         yield return new WaitForSeconds(0.5f);
         ugForResult.gameObject.SetActive(true);
     }
