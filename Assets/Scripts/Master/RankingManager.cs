@@ -14,12 +14,28 @@ public class RankingManager : MonoBehaviour
     float TIME_OUT = 3000f;
     string rankingClassName = "RankingData";
     string usersClassName = "Users";
-    public List<RecordData> recordDatas;
-    Settings settings;
+
+    public List<RecordData> recordDatas
+    {
+        get
+        {
+            return GameMaster.gameMaster.recordDatas;
+        }
+    }
+
+    Settings settings
+    {
+        get
+        {
+            return GameMaster.gameMaster.settings;
+        }
+    }
+
     public enum Save_ranking_item { SAVE_RANKING_HIGH, SAVE_RANKING_LOW }
     bool isNameExistFetched = false;
     bool isScoreFetched = false;
     bool isRankFetched = false;
+    public delegate void CallbackVoid();
     public delegate void CallbackBool(bool flg);
     public delegate void CallbackInt(int num);
     public delegate void CallbackRecordsList(List<RankingRecord> lst);
@@ -27,8 +43,7 @@ public class RankingManager : MonoBehaviour
 
     private void Start()
     {
-        recordDatas = GameMaster.gameMaster.recordDatas;
-        settings = GameMaster.gameMaster.settings;
+
     }
 
     private void Update()
@@ -120,15 +135,35 @@ public class RankingManager : MonoBehaviour
         return;
     }
 
-    public void SaveRankingAll()
+    public void SaveRankingAll(CallbackVoid callback)
     {
+        int cntProc = 0;
+        int cntFinishProc = 0;
         foreach (var recordData in recordDatas)
         {
-            SaveRanking(recordData, Save_ranking_item.SAVE_RANKING_HIGH);
-            SaveRanking(recordData, Save_ranking_item.SAVE_RANKING_LOW);
+            cntProc = cntProc + 2;
+            SaveRanking(recordData, Save_ranking_item.SAVE_RANKING_HIGH, () => { cntFinishProc++; });
+            SaveRanking(recordData, Save_ranking_item.SAVE_RANKING_LOW, () => { cntFinishProc++; });
         }
+        StartCoroutine(MonitorSaveProcs());
+
+
+        return;
+
+        IEnumerator MonitorSaveProcs()
+        {
+            while (cntProc > cntFinishProc)
+            {
+
+                yield return null;
+            }
+            callback();
+        }
+
+
     }
-    public void SaveRanking(RecordData recordData, Save_ranking_item save_Ranking_Item)
+
+    public void SaveRanking(RecordData recordData, Save_ranking_item save_Ranking_Item, CallbackVoid callback)
     {
         NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject>(rankingClassName);
 
@@ -140,11 +175,12 @@ public class RankingManager : MonoBehaviour
         {
             if (e == null)
             { // データの検索が成功したら、
+
                 if (objList.Count == 0)
                 { // ハイスコアが未登録の場合
                     NCMBObject cloudObj = new NCMBObject(rankingClassName);
                     cloudObj["gameModeId"] = recordData.game_mode_id;
-                    cloudObj["type"] =(int) save_Ranking_Item;
+                    cloudObj["type"] = (int)save_Ranking_Item;
                     cloudObj["name"] = settings.name;
 
 
@@ -164,34 +200,35 @@ public class RankingManager : MonoBehaviour
                     }
                     cloudObj.SaveAsync(); // セーブ
                 }
-            }
-            else
-            { // ハイスコアが登録済みの場合
-                NCMBObject cloudObj = objList[0]; // クラウド上のレコードデータを取得
-                float distance = System.Convert.ToSingle(cloudObj["distance"]);
-                float timeSpan = System.Convert.ToSingle(cloudObj["timeSpan"]);
-                switch (save_Ranking_Item)
-                {
-                    case Save_ranking_item.SAVE_RANKING_HIGH:
-                        if (distance < recordData.max_distance || (distance == recordData.max_distance && timeSpan > recordData.timespan_maxdistance))
-                        {
-                            cloudObj["distance"] = recordData.max_distance;
-                            cloudObj["timeSpan"] = recordData.timespan_maxdistance;
-                            cloudObj.SaveAsync();
-                        }
-                        break;
-                    case Save_ranking_item.SAVE_RANKING_LOW:
-                        if (distance > recordData.min_distance || (distance == recordData.min_distance && timeSpan > recordData.timespan_mindistance))
-                        {
-                            cloudObj["distance"] = recordData.min_distance;
-                            cloudObj["timeSpan"] = recordData.timespan_mindistance;
-                            cloudObj.SaveAsync();
-                        }
-                        break;
-                    default:
-                        break;
+                else
+                { // ハイスコアが登録済みの場合
+                    NCMBObject cloudObj = objList[0]; // クラウド上のレコードデータを取得
+                    float distance = System.Convert.ToSingle(cloudObj["distance"]);
+                    float timeSpan = System.Convert.ToSingle(cloudObj["timeSpan"]);
+                    switch (save_Ranking_Item)
+                    {
+                        case Save_ranking_item.SAVE_RANKING_HIGH:
+                            if (distance < recordData.max_distance || (distance == recordData.max_distance && timeSpan > recordData.timespan_maxdistance))
+                            {
+                                cloudObj["distance"] = recordData.max_distance;
+                                cloudObj["timeSpan"] = recordData.timespan_maxdistance;
+                                cloudObj.SaveAsync();
+                            }
+                            break;
+                        case Save_ranking_item.SAVE_RANKING_LOW:
+                            if (distance > recordData.min_distance || (distance == recordData.min_distance && timeSpan > recordData.timespan_mindistance))
+                            {
+                                cloudObj["distance"] = recordData.min_distance;
+                                cloudObj["timeSpan"] = recordData.timespan_mindistance;
+                                cloudObj.SaveAsync();
+                            }
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
+            callback();
         });
     }
 
@@ -256,7 +293,7 @@ public class RankingManager : MonoBehaviour
     }
 
 
-    public void getRankingTop(int gameModeId, Save_ranking_item save_Ranking_Item,CallbackRecordsList callback)
+    public void getRankingTop(int gameModeId, Save_ranking_item save_Ranking_Item, CallbackRecordsList callback)
     {
         List<RankingRecord> rankingRecords = new List<RankingRecord>();
         NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject>(rankingClassName);
@@ -300,7 +337,7 @@ public class RankingManager : MonoBehaviour
 
 
 
-    public void getRankingNeighbors(string name,int gameModeId, Save_ranking_item save_Ranking_Item,CallbackRecordsList callback)
+    public void getRankingNeighbors(string name, int gameModeId, Save_ranking_item save_Ranking_Item, CallbackRecordsList callback)
     {
         fetchRank(name, gameModeId, save_Ranking_Item, (int currentRank) =>
         {
@@ -378,9 +415,9 @@ public class RankingManager : MonoBehaviour
 
 
 
-    public void IsNameExistInRanking(string name, int gameModeId, Save_ranking_item save_Ranking_Item,CallbackBool callback)
+    public void IsNameExistInRanking(string name, int gameModeId, Save_ranking_item save_Ranking_Item, CallbackBool callback)
     {
-        
+
         isNameExist = false;
 
         NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject>(rankingClassName);

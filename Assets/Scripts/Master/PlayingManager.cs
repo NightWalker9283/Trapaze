@@ -186,9 +186,11 @@ public class PlayingManager : MonoBehaviour
         }
         if (isNewRecord)
         {
+            btnRegisterHighScore.save_Ranking_Item = save_Ranking_Item;
             btnHighScore.GetComponent<Button>().interactable=true;
             ugNewRecord.SetActive(true);
         }
+        gameMaster.Save();
         return;
     }
 

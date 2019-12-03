@@ -30,7 +30,7 @@ public class VirtualResultCamera : MonoBehaviour
         pos.x = Mathf.Sin(t * time2Euler * Mathf.Deg2Rad);
         pos.z = Mathf.Cos(t * time2Euler * Mathf.Deg2Rad);
 
-        pos.y = 1f;
+        pos.y = 2f;
         body.m_FollowOffset = pos;
         t += Time.deltaTime;
         if (t >= Period) t -= Period;

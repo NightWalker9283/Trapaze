@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class btnRegisterHighScore : MonoBehaviour
 {
+    [SerializeField] Transform cnvsRanking,wndBackGround, wndRegisterHighScore, wndWaitMessage;
+    [SerializeField] Button btnHighScore;
     public static RankingManager.Save_ranking_item save_Ranking_Item { get; set; }
     RecordData selectRecordData;
     // Start is called before the first frame update
@@ -17,6 +19,19 @@ public class btnRegisterHighScore : MonoBehaviour
     // Update is called once per frame
     void Done()
     {
-        GameMaster.rankingManager.SaveRanking(selectRecordData, save_Ranking_Item);
+        wndRegisterHighScore.gameObject.SetActive(false);
+        wndWaitMessage.gameObject.SetActive(true);
+        GameMaster.rankingManager.SaveRanking(selectRecordData,save_Ranking_Item,() => {
+            wndWaitMessage.gameObject.SetActive(false);
+            wndBackGround.gameObject.SetActive(false);
+            cnvsRanking.gameObject.SetActive(true);
+            btnHighScore.onClick.RemoveAllListeners();
+            btnHighScore.onClick.AddListener(() =>
+            {
+                cnvsRanking.gameObject.SetActive(true);
+            });
+
+        });
     }
+
 }
