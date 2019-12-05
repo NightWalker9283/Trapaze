@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class btnSettings : MonoBehaviour
 {
 
-    
+
     [SerializeField] Image wndSettings;
     [SerializeField] Transform wndBackGround;
     [SerializeField] PlayingManager playingManager;
@@ -24,15 +24,12 @@ public class btnSettings : MonoBehaviour
     }
     public void OpenSettings()
     {
-        if (PlayingManager.playingManager.Stat != PlayingManager.Stat_global.pause)
-        {
-           
-            
-            wndBackGround.gameObject.SetActive(true);
-            wndSettings.gameObject.SetActive(true);
-        }
-        
-        playingManager.SwitchPause();
+
+        wndBackGround.gameObject.SetActive(true);
+        wndSettings.gameObject.SetActive(true);
+
+
+        playingManager.SwitchPause(true);
 
     }
 }

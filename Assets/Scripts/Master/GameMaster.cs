@@ -45,6 +45,13 @@ public class GameMaster : MonoBehaviour
             SetBgmVolume(settings.audio_volume);
         else
             SetBgmVolume(0f);
+
+
+        if (settings.enable_voice)
+            VoiceOn();
+        else
+            VoiceOff();
+
         if (tglModeOrigin != null)
         {
             tggModes = tglModeOrigin.transform.parent;
@@ -141,6 +148,15 @@ public class GameMaster : MonoBehaviour
 
     }
 
+    public void VoiceOn()
+    {
+        am.SetFloat("VoiceVolume", 20.0f * Mathf.Log10(1f));
+    }
+
+    public void VoiceOff()
+    {
+        am.SetFloat("VoiceVolume", -96f);
+    }
 
     public void Save()
     {

@@ -154,6 +154,7 @@ public class PlayerController : MonoBehaviour
                     jumpForce.x = 0;
                     jumpForce = rb_Trapaze.transform.TransformDirection(jumpForce);
                     Debug.Log(jumpForce);
+                    PlayingManager.playingManager.Stat = PlayingManager.Stat_global.jump;
                     stat = stat_enum.jump;
                     StartCoroutine(JumpProc(jumpForce, force_pos));
                     yield break;
@@ -185,7 +186,6 @@ public class PlayerController : MonoBehaviour
         mslR_UpLeg.Hold(180f);
         mslL_Leg.Hold(180f);
         mslR_Leg.Hold(180f);
-        PlayingManager.playingManager.Stat = PlayingManager.Stat_global.jump;
         stat = stat_enum.fly;
         StartCoroutine(DelayFreeHoldMasclesProc());
         StartCoroutine(FlyProc());
@@ -202,14 +202,14 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(MonitorDistancefromTrapeze());
         while (stat == stat_enum.fly)
         {
-          //  Debug.Log(velocity);
+            //  Debug.Log(velocity);
             if (velocity < LOWER_LIMIT_VELOCITY)
             {
                 stopPos = rb.position;
                 wdt = 0f;
                 while (Vector3.Distance(rb.position, stopPos) < LIMIT_DISTANCE)
                 {
-//                    Debug.Log("b");
+                    //                    Debug.Log("b");
                     if (wdt > LIMIT_WDT)
                     {
                         stat = stat_enum.finish;
@@ -257,7 +257,7 @@ public class PlayerController : MonoBehaviour
         mslR_UpLeg.isHold = false;
         mslR_UpLeg.Free();
         GetComponent<PlayerSound>().isCrackSound = false;
-        
+
     }
 
     void FreeClingJoints()

@@ -11,15 +11,15 @@ public class uiJUMP : MonoBehaviour
     public static Color txtcol_JUMPoff = new Color(80f / 255f, 80f / 255f, 80f / 255f);
     public static Color txtcol_JUMPon = new Color(255f / 255f, 32f / 255f, 140f / 255f);
     [SerializeField] TextMeshProUGUI textJUMP;
-    [SerializeField] AudioClip ac_on;
-    [SerializeField] AudioClip ac_off;
-    [SerializeField] AudioMixerGroup amgSE;
+    [SerializeField] AudioClip ac_on_SE,ac_on_Voice;
+    [SerializeField] AudioClip ac_off_SE,ac_off_Voice;
+    [SerializeField] AudioMixerGroup amgSE,amgVoice;
     [SerializeField] GameObject PlayerControllPoint;
     [SerializeField] GameObject Joystick;
-    
 
 
-    AudioSource audioSource;
+    Settings settings;
+    AudioSource audioSourceSE,audioSourceVoice;
     float oldVal = 0f;
 
 
@@ -28,11 +28,14 @@ public class uiJUMP : MonoBehaviour
     void Start()
     {
         sld_JUMP = GetComponent<Slider>();
-        audioSource = gameObject.AddComponent<AudioSource>();
-        audioSource.volume = 0.2f;
-        audioSource.outputAudioMixerGroup = amgSE;
+        audioSourceSE = gameObject.AddComponent<AudioSource>();
+        audioSourceVoice = gameObject.AddComponent<AudioSource>();
+        audioSourceSE.volume = 0.2f;
+        audioSourceVoice.volume = 0.5f;
+        audioSourceSE.outputAudioMixerGroup = amgSE;
+        audioSourceVoice.outputAudioMixerGroup = amgVoice;
 
-
+        settings = GameMaster.gameMaster.settings;
 
     }
 
@@ -51,7 +54,10 @@ public class uiJUMP : MonoBehaviour
         {
             if (oldVal != 1f)
             {
-                audioSource.PlayOneShot(ac_on);
+                if (settings.enable_voice)
+                    audioSourceVoice.PlayOneShot(ac_on_Voice);
+                else
+                    audioSourceSE.PlayOneShot(ac_on_SE);
             }
             sld_JUMP.value = 1f;
             textJUMP.color = txtcol_JUMPon;
@@ -62,7 +68,7 @@ public class uiJUMP : MonoBehaviour
         {
             if (oldVal != 0f)
             {
-                audioSource.PlayOneShot(ac_off);
+                audioSourceSE.PlayOneShot(ac_off_SE);
             }
             sld_JUMP.value = 0f;
             fadein(Joystick);

@@ -25,15 +25,21 @@ public class PlayingManager : MonoBehaviour
     [SerializeField] float testTrapezeLengs = 8f;
     [SerializeField] GameObject ugNewRecord;
     [SerializeField] GameObject btnHighScore;
+    [SerializeField] GameObject wndBackGround;
+    [SerializeField] Button btnComment, btnCommentRush;
     [SerializeField] AudioMixer am;
+    [SerializeField] AudioMixerGroup amgSE;
+    [SerializeField] AudioClip BGN;
+    [SerializeField] Image imgCutIn;
 
     PlayerController.stat_enum _oldPcStat;
     RankingManager.Save_ranking_item save_Ranking_Item;
     bool isReachElapseTime = false;
+    bool isPause=false;
 
     public Stat_global Stat { get; set; }
-    public enum Stat_global { init, play, pause, jump, result };
-    public Stat_global _oldStat, statCache;
+    public enum Stat_global { init, play, jump,fly, result };
+    public Stat_global _oldStat;
     public float elapseTime = 0f;
     public static GameMaster gameMaster;
     public static PlayingManager playingManager;
@@ -47,7 +53,7 @@ public class PlayingManager : MonoBehaviour
         {
             gameMaster = gameObject.AddComponent<GameMaster>();
             gameMaster.gameMode = new GameMode(-1, "テスト", testTrapezeLengs, -60f, true, "");
-            gameMaster.settings = new Settings("加藤純一",true, 1f);
+            gameMaster.settings = new Settings("加藤純一",true, 1f,true);
             gameMaster.am = am;
         }
 
@@ -85,7 +91,7 @@ public class PlayingManager : MonoBehaviour
         {
 
         }
-        if (Stat == Stat_global.play || Stat == Stat_global.jump)
+        if (Stat == Stat_global.play || Stat == Stat_global.jump || Stat==Stat_global.fly)
         {
             elapseTime += Time.deltaTime;
         }
@@ -106,6 +112,10 @@ public class PlayingManager : MonoBehaviour
                 case Stat_global.play:
                     break;
                 case Stat_global.jump:
+                    StartCoroutine(CutInProc());
+                    
+                    break;
+                case Stat_global.fly:
                     StartCoroutine(Fadein(ugForAfterJump));
                     StartCoroutine(Fadeout(ugForPlay));
                     StartCoroutine(CameraRectChangeRight(cmrUI, 1f));
@@ -117,10 +127,7 @@ public class PlayingManager : MonoBehaviour
 
                     cmrPublic.GetComponent<PublicCamera>().stat = PublicCamera.stat_publicCamera.jump;
                     txtVelocity.MassPoint = rb_Player;
-                    break;
-                case Stat_global.pause:
-
-
+                   
                     break;
                 case Stat_global.result:
 
@@ -162,7 +169,8 @@ public class PlayingManager : MonoBehaviour
     public void Result(float distance, float time)
     {
         bool isNewRecord = false;
-        
+        btnComment.interactable = false;
+        btnCommentRush.interactable = false;
         
         var selectRecords = gameMaster.recordDatas.Find(x => x.game_mode_id == gameMaster.gameMode.id);
         if (selectRecords == null) return ;
@@ -198,27 +206,46 @@ public class PlayingManager : MonoBehaviour
     public void SwitchPause()
     {
 
-        if (Stat != Stat_global.pause)
+        if (!isPause)
         {
             Time.timeScale = 0f;
-            statCache = Stat;
-            Stat = Stat_global.pause;
+            isPause=true;
         }
-        else if (Stat == Stat_global.pause)
+        else
         {
             Time.timeScale = 1f;
-            Stat = statCache;
+            isPause = false;
+        }
+    }
+
+    public void SwitchPause(bool enabled)
+    {
+
+        if (enabled)
+        {
+            Time.timeScale = 0f;
+            isPause = true;
+        }
+        else
+        {
+            Time.timeScale = 1f;
+            isPause = false;
         }
     }
 
 
-
     IEnumerator InitEffect()
     {
+        AudioSource audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.outputAudioMixerGroup = amgSE;
+
         CanvasTop.canvasTop.FadeinScene();
         vcamFace.gameObject.SetActive(true);
         cmrFace.gameObject.SetActive(true);
-        yield return new WaitForSeconds(5f);
+        audioSource.PlayOneShot(BGN);
+        yield return new WaitForSeconds(0.7f);
+        StartVoice.startVoice.Play();
+        yield return new WaitForSeconds(4.3f);
         CanvasTop.canvasTop.FadeoutScene();
         yield return new WaitForSeconds(1f);
         cmrFace.gameObject.SetActive(false);
@@ -228,6 +255,37 @@ public class PlayingManager : MonoBehaviour
 
         Stat = Stat_global.play;
     }
+
+    IEnumerator CutInProc()
+    {
+        if (gameMaster.settings.enable_voice)
+        {
+            SwitchPause(true);
+            wndBackGround.SetActive(true);
+            imgCutIn.gameObject.SetActive(true);
+            yield return null;
+            CutIn.cutIn.MoveIn();
+            while (CutIn.cutIn.busy)
+            {
+                yield return null;
+            }
+            JumpVoice.jumpVoice.Play(() =>
+            {
+                CutIn.cutIn.MoveOut();
+                wndBackGround.SetActive(false);
+                Stat = Stat_global.fly;
+                SwitchPause(false);
+
+            });
+        }
+        else
+        {
+            yield return null;
+            Stat = Stat_global.fly;
+        }
+
+    }
+
 
     IEnumerator Fadeout(CanvasGroup cg)
     {
