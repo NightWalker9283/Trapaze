@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Comments:
   - Value: "\u3072\u3093"
-  DistanceL: 40
+  DistanceL: 80
   DistanceU: 1000
   HeightL: 0
   HeightU: 10

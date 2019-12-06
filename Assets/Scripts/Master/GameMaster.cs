@@ -12,6 +12,7 @@ using System.Data;
 public class GameMaster : MonoBehaviour
 {
     public GameMode gameMode;
+    public List<string> acquiredVoices;
     public List<RecordData> recordDatas;
     public Settings settings;
     public static GameMaster gameMaster;
@@ -150,7 +151,7 @@ public class GameMaster : MonoBehaviour
 
     public void VoiceOn()
     {
-        am.SetFloat("VoiceVolume", 20.0f * Mathf.Log10(1f));
+        am.SetFloat("VoiceVolume", 20.0f * Mathf.Log10(10f));
     }
 
     public void VoiceOff()
@@ -161,6 +162,7 @@ public class GameMaster : MonoBehaviour
     public void Save()
     {
         SaveData.SetList<RecordData>("recordDatas", recordDatas);
+        SaveData.SetList<string>("acquiredVoices", acquiredVoices);
         SaveData.SetClass<Settings>("settings", settings);
         SaveData.Save();
     }
@@ -169,6 +171,7 @@ public class GameMaster : MonoBehaviour
     {
         var list = new List<RecordData>(gameModes.Count);
         recordDatas = SaveData.GetList<RecordData>("recordDatas", InitRecordDatas(list, gameModes.Count));
+        acquiredVoices = SaveData.GetList<string>("acquiredVoices", new List<string>());
         settings = SaveData.GetClass<Settings>("settings", new Settings());
         Debug.Log(settings.name);
     }

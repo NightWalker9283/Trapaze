@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -49,24 +50,26 @@ public class CutIn : MonoBehaviour
 
     }
 
-    public void MoveOut()
+    public void MoveOut(Action callback)
     {
         busy = true;
         StartCoroutine(MoveOut());
 
+        
         IEnumerator MoveOut()
         {
             float now = 0;
             while (rectTransform.localPosition.x > OutPosX)
             {
+                Debug.Log(rectTransform.localPosition.x+":"+OutPosX);
                 now += Time.unscaledDeltaTime / 0.15f;
                 rectTransform.localPosition=new Vector3(Mathf.Lerp(InPosX, OutPosX, now), 0f, 0f);
                 yield return null;
             }
-
+            Debug.Log("Finish MoveOut");
             busy = false;
+            callback();
             gameObject.SetActive(false);
         }
-        
     }
 }

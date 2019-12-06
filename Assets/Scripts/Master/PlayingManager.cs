@@ -14,11 +14,11 @@ public class PlayingManager : MonoBehaviour
 {
     [SerializeField] uiDistance txtDistance;
     [SerializeField] CanvasGroup ugForPlay, ugController, ugForAfterJump, ugForResult;
-   
+
     [SerializeField] public Camera cmrPlayerView, cmrPublic, cmrPlayer, cmrUI, cmrFace;
     [SerializeField] CinemachineVirtualCamera vcamPublic, vcamFace, vcamResult;
     [SerializeField] Rigidbody rb_Player, rb_Trapeze;
-    [SerializeField] public Canvas cvsPublic,cvsPlayer,cvsTop;
+    [SerializeField] public Canvas cvsPublic, cvsPlayer, cvsTop;
     [SerializeField] public Rigidbody playerControlPoint;
     [SerializeField] PlayerController playerController;
     [SerializeField] uiVelocity txtVelocity;
@@ -35,10 +35,10 @@ public class PlayingManager : MonoBehaviour
     PlayerController.stat_enum _oldPcStat;
     RankingManager.Save_ranking_item save_Ranking_Item;
     bool isReachElapseTime = false;
-    bool isPause=false;
+    bool isPause = false;
 
     public Stat_global Stat { get; set; }
-    public enum Stat_global { init, play, jump,fly, result };
+    public enum Stat_global { init, play, jump, fly, result };
     public Stat_global _oldStat;
     public float elapseTime = 0f;
     public static GameMaster gameMaster;
@@ -51,11 +51,18 @@ public class PlayingManager : MonoBehaviour
         gameMaster = FindObjectOfType<GameMaster>();
         if (gameMaster == null)
         {
+            gameObject.AddComponent<RankingManager>();
             gameMaster = gameObject.AddComponent<GameMaster>();
             gameMaster.gameMode = new GameMode(-1, "テスト", testTrapezeLengs, -60f, true, "");
-            gameMaster.settings = new Settings("加藤純一",true, 1f,true);
+            gameMaster.settings = new Settings("加藤純一", true, 1f, true);
             gameMaster.am = am;
         }
+        allComments = new List<CommentsData>();
+        allComments.Add(Resources.Load<CommentsData>("Comments/CommentsData0"));
+        allComments.Add(Resources.Load<CommentsData>("Comments/CommentsData1"));
+        allComments.Add(Resources.Load<CommentsData>("Comments/CommentsData2"));
+        allComments.Add(Resources.Load<CommentsData>("Comments/CommentsData3"));
+        allComments.Add(Resources.Load<CommentsData>("Comments/CommentsData4"));
 
         playingManager = this;
 
@@ -74,12 +81,6 @@ public class PlayingManager : MonoBehaviour
             GameMaster.gameMaster.SetBgmVolume(0f);
 
 
-        allComments = new List<CommentsData>();
-        allComments.Add(Resources.Load<CommentsData>("Comments/CommentsData0"));
-        allComments.Add(Resources.Load<CommentsData>("Comments/CommentsData1"));
-        allComments.Add(Resources.Load<CommentsData>("Comments/CommentsData2"));
-        allComments.Add(Resources.Load<CommentsData>("Comments/CommentsData3"));
-        allComments.Add(Resources.Load<CommentsData>("Comments/CommentsData4"));
 
         StartCoroutine(InitEffect());
     }
@@ -91,7 +92,7 @@ public class PlayingManager : MonoBehaviour
         {
 
         }
-        if (Stat == Stat_global.play || Stat == Stat_global.jump || Stat==Stat_global.fly)
+        if (Stat == Stat_global.play || Stat == Stat_global.jump || Stat == Stat_global.fly)
         {
             elapseTime += Time.deltaTime;
         }
@@ -113,7 +114,7 @@ public class PlayingManager : MonoBehaviour
                     break;
                 case Stat_global.jump:
                     StartCoroutine(CutInProc());
-                    
+
                     break;
                 case Stat_global.fly:
                     StartCoroutine(Fadein(ugForAfterJump));
@@ -127,7 +128,7 @@ public class PlayingManager : MonoBehaviour
 
                     cmrPublic.GetComponent<PublicCamera>().stat = PublicCamera.stat_publicCamera.jump;
                     txtVelocity.MassPoint = rb_Player;
-                   
+
                     break;
                 case Stat_global.result:
 
@@ -139,8 +140,8 @@ public class PlayingManager : MonoBehaviour
         if (playerController.stat != _oldPcStat && playerController.stat == PlayerController.stat_enum.finish)
         {
             Result(playerController.transform.position.z, elapseTime);
-          
             StartCoroutine(ShowResultUI());
+
             Stat = Stat_global.result;
         }
         _oldStat = Stat;
@@ -161,19 +162,26 @@ public class PlayingManager : MonoBehaviour
         yield return null;
         vcamResult.gameObject.SetActive(true);
         vcamPublic.gameObject.SetActive(false);
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1.5f);
         ugForResult.gameObject.SetActive(true);
+        ResultVoice.resultVoice.Play();
     }
 
-    
+
     public void Result(float distance, float time)
     {
         bool isNewRecord = false;
         btnComment.interactable = false;
         btnCommentRush.interactable = false;
-        
+
+
+
         var selectRecords = gameMaster.recordDatas.Find(x => x.game_mode_id == gameMaster.gameMode.id);
-        if (selectRecords == null) return ;
+        if (selectRecords == null)
+        {
+            btnHighScore.GetComponent<BtnHighScore>().ChangeListener();
+            return;
+        }
         selectRecords.total_time += time;
         selectRecords.play_count++;
         if (distance > 0f) selectRecords.total_distance += distance;
@@ -183,7 +191,7 @@ public class PlayingManager : MonoBehaviour
             selectRecords.max_distance = distance;
             selectRecords.timespan_maxdistance = time;
             save_Ranking_Item = RankingManager.Save_ranking_item.SAVE_RANKING_HIGH;
-            
+
         }
         if ((distance < selectRecords.min_distance) || (distance == selectRecords.min_distance && time < selectRecords.timespan_mindistance))
         {
@@ -191,14 +199,19 @@ public class PlayingManager : MonoBehaviour
             selectRecords.min_distance = distance;
             selectRecords.timespan_mindistance = time;
             save_Ranking_Item = RankingManager.Save_ranking_item.SAVE_RANKING_LOW;
-           
+
         }
         if (isNewRecord)
         {
             btnRegisterHighScore.save_Ranking_Item = save_Ranking_Item;
-            btnHighScore.GetComponent<Button>().interactable=true;
+            
             ugNewRecord.SetActive(true);
         }
+        else
+        {
+            btnHighScore.GetComponent<BtnHighScore>().ChangeListener();
+        }
+      
         gameMaster.Save();
         return;
     }
@@ -209,7 +222,7 @@ public class PlayingManager : MonoBehaviour
         if (!isPause)
         {
             Time.timeScale = 0f;
-            isPause=true;
+            isPause = true;
         }
         else
         {
@@ -271,9 +284,12 @@ public class PlayingManager : MonoBehaviour
             }
             JumpVoice.jumpVoice.Play(() =>
             {
-                CutIn.cutIn.MoveOut();
-                wndBackGround.SetActive(false);
-                Stat = Stat_global.fly;
+                CutIn.cutIn.MoveOut(()=>
+                {
+                    wndBackGround.SetActive(false);
+                    Stat = Stat_global.fly;
+                });
+                
                 SwitchPause(false);
 
             });

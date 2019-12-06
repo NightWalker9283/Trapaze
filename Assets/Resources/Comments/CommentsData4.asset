@@ -33,7 +33,7 @@ MonoBehaviour:
   - Value: "\u3088\u30FC\u30FC\u30FC\u30FC\u30FC\u3057"
   - Value: "\u304D\u305F\u3042\u3042\u3042\u3042\u3042"
   - Value: "\u304D\u305F\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042"
-  DistanceL: 50
+  DistanceL: 100
   DistanceU: 1000
   HeightL: 10
   HeightU: 1000

@@ -18,7 +18,7 @@ MonoBehaviour:
   - Value: "\uFF57\uFF57\uFF57\uFF57\uFF57\uFF57\uFF57\uFF57\uFF57\uFF57"
   - Value: "\uFF57\uFF57\uFF57\uFF57\uFF57\uFF57"
   - Value: "\uFF57\uFF57\uFF57"
-  DistanceL: 20
-  DistanceU: 50
+  DistanceL: 40
+  DistanceU: 100
   HeightL: 10
   HeightU: 1000

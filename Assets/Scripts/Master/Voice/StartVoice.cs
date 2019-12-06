@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class StartVoice : MonoBehaviour
 {
-    AudioClip[] ac;
+    string path = "Voice/Start";
+    List<AudioFile> lstAf;
     public static StartVoice startVoice;
     // Start is called before the first frame update
     private void Awake()
     {
-        ac = Resources.LoadAll<AudioClip>("Voice/Start");
+        lstAf = VoiceManager.LoadAllAudioFile(path);
         startVoice = this;
     }
 
@@ -26,6 +27,7 @@ public class StartVoice : MonoBehaviour
 
     public void Play()
     {
-        VoiceManager.voiceManager.AddVoice(ac[Random.Range(0, ac.Length)]) ;
+        
+        VoiceManager.voiceManager.AddVoice(lstAf[UnityEngine.Random.Range(0, lstAf.Count)]) ;
     }
 }

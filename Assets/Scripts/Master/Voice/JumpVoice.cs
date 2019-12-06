@@ -5,33 +5,27 @@ using UnityEngine;
 
 public class JumpVoice : MonoBehaviour
 {
-	AudioClip[] ac;
+    string path = "Voice/Jump";
+    List<AudioFile> lstAf;
 	public static JumpVoice jumpVoice;
 	// Start is called before the first frame update
 	private void Awake()
 	{
-		ac = Resources.LoadAll<AudioClip>("Voice/Jump");
+        lstAf = VoiceManager.LoadAllAudioFile(path);
 		jumpVoice = this;
 	}
 
-	void Start()
-	{
-
-	}
-
-	// Update is called once per frame
-	void Update()
-	{
-
-	}
+	
 
 	public void Play()
 	{
-		VoiceManager.voiceManager.AddVoice(ac[UnityEngine.Random.Range(0, ac.Length)]);
+        
+
+        VoiceManager.voiceManager.AddVoice(lstAf[UnityEngine.Random.Range(0, lstAf.Count)]);
 	}
 
 	public void Play(Action action)
 	{
-		VoiceManager.voiceManager.AddVoice(ac[UnityEngine.Random.Range(0, ac.Length)],action);
+		VoiceManager.voiceManager.AddVoice(lstAf[UnityEngine.Random.Range(0, lstAf.Count)], action);
 	}
 }

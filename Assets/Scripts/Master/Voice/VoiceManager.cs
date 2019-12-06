@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -8,7 +9,7 @@ public class VoiceManager : MonoBehaviour
 {
 
     public static VoiceManager voiceManager;
-    Queue<AudioClip> queue=new Queue<AudioClip>();
+    Queue<AudioFile> queue=new Queue<AudioFile>();
     AudioSource audioSource;
    
     // Start is called before the first frame update
@@ -31,21 +32,27 @@ public class VoiceManager : MonoBehaviour
     {
         if (queue.Count > 0 && !audioSource.isPlaying)
         {
-            audioSource.PlayOneShot(queue.Dequeue());
+            var af = queue.Dequeue();
+            audioSource.PlayOneShot(af.audioClip);
+            if (GameMaster.gameMaster.acquiredVoices.Find(str => str == af.path) == null)
+            {
+                GameMaster.gameMaster.acquiredVoices.Add(af.path);
+                GameMaster.gameMaster.Save();
+            }
 
         }
 
 
     }
 
-    public void AddVoice(AudioClip ac)
+    public void AddVoice(AudioFile af)
     {
-        queue.Enqueue(ac);
+        queue.Enqueue(af);
     }
 
-    public void AddVoice(AudioClip ac,Action callback)
+    public void AddVoice(AudioFile af,Action callback)
     {
-        queue.Enqueue(ac);
+        queue.Enqueue(af);
         StartCoroutine(MonitorIsPlaying());
 
 
@@ -73,6 +80,34 @@ public class VoiceManager : MonoBehaviour
     {
         return queue.Count;
     }
+
+    public static List<AudioFile> LoadAllAudioFile(string path)
+    {
+        var lst = new List<AudioFile>();
+        var voices = Resources.LoadAll<AudioClip>(path);
+        
+        foreach (AudioClip ac in voices)
+        {
+            var af = new AudioFile();
+            af.path = path+"/"+ac.name;
+            af.audioClip = ac;
+            lst.Add(af);
+        }
+        return lst;
+    }
    
 
+}
+
+public class AudioFile
+{
+    public string path;
+    public AudioClip audioClip;
+
+    public AudioFile() { }
+    public AudioFile(string path,AudioClip audioClip)
+    {
+        this.path = path;
+        this.audioClip = audioClip;
+    }
 }

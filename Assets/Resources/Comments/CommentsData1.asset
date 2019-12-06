@@ -21,6 +21,6 @@ MonoBehaviour:
   - Value: "\u307E\u305A\u3044"
   - Value: "\u3072\u3093"
   DistanceL: 0
-  DistanceU: 40
+  DistanceU: 80
   HeightL: 0
   HeightU: 10
