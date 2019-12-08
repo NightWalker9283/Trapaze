@@ -5,28 +5,39 @@ using UnityEngine.UI;
 
 public class CommentObject : MonoBehaviour
 {
-    
+
     RectTransform rectObjComment, rectCvsPublic;
+    bool isChangedColliderRect = false;
     // Start is called before the first frame update
     void Start()
     {
         GetComponent<Text>().text = GetComment();
         rectCvsPublic = transform.parent.GetComponent<RectTransform>();
         rectObjComment = GetComponent<RectTransform>();
-        var pos = new Vector3(Random.Range(-5f,0f)+ rectCvsPublic.rect.width / 2f,
-            (int)(Random.Range(80f, rectCvsPublic.rect.height - rectObjComment.rect.height-25f)/rectObjComment.rect.height)* rectObjComment.rect.height - rectCvsPublic.rect.height / 2f-rectObjComment.rect.height/2f,
+        var pos = new Vector3(Random.Range(-5f, 0f) + rectCvsPublic.rect.width / 2f,
+            (int)(Random.Range(80f, rectCvsPublic.rect.height - rectObjComment.rect.height - 25f) / rectObjComment.rect.height) * rectObjComment.rect.height - rectCvsPublic.rect.height / 2f - rectObjComment.rect.height / 2f,
             0f);
 
         rectObjComment.localPosition = pos;
+
+
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        rectObjComment.localPosition=new Vector3(rectObjComment.localPosition.x - Time.deltaTime * 150f, rectObjComment.localPosition.y, 0f);
-        var isOut = (rectCvsPublic.rect.width+(rectObjComment.localPosition.x + rectObjComment.rect.width-rectCvsPublic.rect.width/2f) ) <0f;
-        PlayingManager.playingManager.playerControlPoint.AddForce(0f, 0f, 5f);
+        if (!isChangedColliderRect)
+        {
+            var rect = rectObjComment.rect;
+            var collider = GetComponent<BoxCollider>();
+            collider.center = new Vector3(rect.width / 2f, rect.height / 2f, 0f);
+            collider.size = new Vector3(rect.width, rect.height, 5f);
+            isChangedColliderRect = true;
+        }
+        rectObjComment.localPosition = new Vector3(rectObjComment.localPosition.x - Time.deltaTime * 150f, rectObjComment.localPosition.y, 0f);
+        var isOut = (rectCvsPublic.rect.width + (rectObjComment.localPosition.x + rectObjComment.rect.width - rectCvsPublic.rect.width / 2f)) < 0f;
+
         if (isOut) Destroy(gameObject);
     }
 
