@@ -44,6 +44,7 @@ public class PlayingManager : MonoBehaviour
     public static GameMaster gameMaster;
     public static PlayingManager playingManager;
     public List<CommentsData> allComments;
+    public int mayoCount = 0;
 
     // Start is called before the first frame update
     private void Awake()

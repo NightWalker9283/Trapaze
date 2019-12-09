@@ -67,6 +67,7 @@ public class CutIn : MonoBehaviour
                 yield return null;
             }
             Debug.Log("Finish MoveOut");
+            rectTransform.localPosition = new Vector3(startPosX,0f,0f);
             busy = false;
             callback();
             gameObject.SetActive(false);
