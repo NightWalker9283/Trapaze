@@ -6,8 +6,8 @@ public class PlayerColliderOnCanvas : MonoBehaviour
 {
     [SerializeField] Transform Target;
     [SerializeField] float x, y, z;
-   
-    Camera cmrPublic,cmrUI;
+
+    Camera cmrPublic, cmrUI;
     Rigidbody rigidbody;
 
     // Start is called before the first frame update
@@ -32,7 +32,14 @@ public class PlayerColliderOnCanvas : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        rigidbody.AddForce(0f, 0f, 20f, ForceMode.Impulse);
+        if (PlayingManager.playingManager.Stat == PlayingManager.Stat_global.play)
+        {
+            rigidbody.AddForce(0f, 0f, 20f, ForceMode.Impulse);
+        }
+        else
+        {
+            rigidbody.AddForce(0f, 3f, 7f, ForceMode.Impulse);
+        }
     }
 
 }
