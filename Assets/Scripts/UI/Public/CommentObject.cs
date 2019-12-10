@@ -49,18 +49,25 @@ public class CommentObject : MonoBehaviour
         int layerMask = 1 << 10;
         RaycastHit hit;
         var AllComments = PlayingManager.playingManager.allComments;
-        if (Physics.Raycast(ray, out hit, 300f, layerMask))
+        if (PlayingManager.playingManager.Stat == PlayingManager.Stat_global.play)
         {
-
-            var distance = Mathf.Abs(posPlayer.z);
-            var height = hit.distance;
-            for (int i = 0; i < AllComments.Count; i++)
+            return AllComments[0].Comments[Random.Range(0, AllComments[0].Comments.Count)].Value;
+        }
+        else
+        {
+            if (Physics.Raycast(ray, out hit, 300f, layerMask))
             {
-                if (distance > AllComments[i].DistanceL && distance <= AllComments[i].DistanceU &&
-                    height > AllComments[i].HeightL && height <= AllComments[i].HeightU)
-                {
-                    return AllComments[i].Comments[Random.Range(0, AllComments[i].Comments.Count)].Value;
 
+                var distance = Mathf.Abs(posPlayer.z);
+                var height = hit.distance;
+                for (int i = 0; i < AllComments.Count; i++)
+                {
+                    if (distance > AllComments[i].DistanceL && distance <= AllComments[i].DistanceU &&
+                        height > AllComments[i].HeightL && height <= AllComments[i].HeightU)
+                    {
+                        return AllComments[i].Comments[Random.Range(0, AllComments[i].Comments.Count)].Value;
+
+                    }
                 }
             }
         }

@@ -29,11 +29,12 @@ public class PlayingManager : MonoBehaviour
     [SerializeField] Button btnComment, btnCommentRush;
     [SerializeField] AudioMixer am;
     [SerializeField] AudioMixerGroup amgSE;
-    [SerializeField] AudioClip BGN;
+    [SerializeField] AudioClip BGN,decision;
     [SerializeField] Image imgCutIn;
 
     PlayerController.stat_enum _oldPcStat;
     RankingManager.Save_ranking_item save_Ranking_Item;
+    AudioSource audioSource;
     bool isReachElapseTime = false;
     bool isPause = false;
 
@@ -44,12 +45,27 @@ public class PlayingManager : MonoBehaviour
     public static GameMaster gameMaster;
     public static PlayingManager playingManager;
     public List<CommentsData> allComments;
-    public int mayoCount = 0;
+    int _mayoCount=0;
+    public int mayoCount
+    {
+        get { return _mayoCount; }
+        set
+        {
+            if (_mayoCount < value)
+            {
+                audioSource.PlayOneShot(decision);
+            }
+            _mayoCount = value;
+        }
+    }
 
     // Start is called before the first frame update
     private void Awake()
     {
         gameMaster = FindObjectOfType<GameMaster>();
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.outputAudioMixerGroup = amgSE;
+
         if (gameMaster == null)
         {
             gameObject.AddComponent<RankingManager>();
@@ -205,14 +221,14 @@ public class PlayingManager : MonoBehaviour
         if (isNewRecord)
         {
             btnRegisterHighScore.save_Ranking_Item = save_Ranking_Item;
-            
+
             ugNewRecord.SetActive(true);
         }
         else
         {
             btnHighScore.GetComponent<BtnHighScore>().ChangeListener();
         }
-      
+
         gameMaster.Save();
         return;
     }
@@ -250,8 +266,7 @@ public class PlayingManager : MonoBehaviour
 
     IEnumerator InitEffect()
     {
-        AudioSource audioSource = gameObject.AddComponent<AudioSource>();
-        audioSource.outputAudioMixerGroup = amgSE;
+       
 
         CanvasTop.canvasTop.FadeinScene();
         vcamFace.gameObject.SetActive(true);
@@ -285,12 +300,12 @@ public class PlayingManager : MonoBehaviour
             }
             JumpVoice.jumpVoice.Play(() =>
             {
-                CutIn.cutIn.MoveOut(()=>
+                CutIn.cutIn.MoveOut(() =>
                 {
                     wndBackGround.SetActive(false);
                     Stat = Stat_global.fly;
                 });
-                
+
                 SwitchPause(false);
 
             });

@@ -7,9 +7,9 @@ public class btnCommentRush : MonoBehaviour
 {
 
 
-    
-    [SerializeField] GameObject PrefComment,wndBackGround,imgCutIn;
-    
+
+    [SerializeField] GameObject PrefComment, wndBackGround, imgCutIn;
+
     Button btn;
 
 
@@ -25,12 +25,12 @@ public class btnCommentRush : MonoBehaviour
     }
     private void Update()
     {
-        if(PlayingManager.playingManager.mayoCount<=0 && btn.interactable == true)
+        if (PlayingManager.playingManager.mayoCount <= 0 && btn.interactable == true)
         {
             btn.interactable = false;
         }
 
-        if(PlayingManager.playingManager.mayoCount>0 && btn.interactable==false)
+        if (PlayingManager.playingManager.mayoCount > 0 && btn.interactable == false)
         {
             btn.interactable = true;
         }
@@ -39,12 +39,12 @@ public class btnCommentRush : MonoBehaviour
     // Update is called once per frame
     void ShotComments()
     {
+        PlayingManager.playingManager.mayoCount--;
         StartCoroutine(CutInProc(() =>
         {
-            PlayingManager.playingManager.mayoCount--;
             StartCoroutine(CommentRush());
         }));
-        
+
     }
     IEnumerator CommentRush()
     {
@@ -73,16 +73,22 @@ public class btnCommentRush : MonoBehaviour
             {
                 CutIn.cutIn.MoveOut(() =>
                 {
-                    wndBackGround.SetActive(false);
-                    PlayingManager.playingManager.SwitchPause(false);
-                    action();
+                    StartCoroutine(Finish(action));
                 });
 
-                
+
 
             });
         }
-        
+
+    }
+
+    IEnumerator Finish(System.Action action)
+    {
+        wndBackGround.SetActive(false);
+        PlayingManager.playingManager.SwitchPause(false);
+        yield return new WaitForSeconds(3f);
+        action();
     }
 }
 
