@@ -149,11 +149,13 @@ public class PlayerController : MonoBehaviour
             {
                 if (draggingSpan <= draggingSpanLimit && draggingSpan > 0)
                 {
+                   
+
                     jumpForce = (DragMonitor.DragPosition - DragMonitor.TapPosition).normalized * JumpMultiplier;
                     jumpForce.z = -jumpForce.x;
                     jumpForce.x = 0;
                     jumpForce = rb_Trapaze.transform.TransformDirection(jumpForce);
-                    Debug.Log(jumpForce);
+                    //Debug.Log(jumpForce);
                     PlayingManager.playingManager.Stat = PlayingManager.Stat_global.jump;
                     stat = stat_enum.jump;
                     StartCoroutine(JumpProc(jumpForce, force_pos));

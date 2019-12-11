@@ -62,7 +62,7 @@ class SizeChanger : MonoBehaviour
         }
         this.processing = false;
         this.now = 0f;
-        Debug.Log("finish change size");
+        //Debug.Log("finish change size");
         yield break;
 
     }

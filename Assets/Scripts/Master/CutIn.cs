@@ -61,12 +61,12 @@ public class CutIn : MonoBehaviour
             float now = 0;
             while (rectTransform.localPosition.x > OutPosX)
             {
-                Debug.Log(rectTransform.localPosition.x+":"+OutPosX);
+                //Debug.Log(rectTransform.localPosition.x+":"+OutPosX);
                 now += Time.unscaledDeltaTime / 0.15f;
                 rectTransform.localPosition=new Vector3(Mathf.Lerp(InPosX, OutPosX, now), 0f, 0f);
                 yield return null;
             }
-            Debug.Log("Finish MoveOut");
+            //Debug.Log("Finish MoveOut");
             rectTransform.localPosition = new Vector3(startPosX,0f,0f);
             busy = false;
             callback();

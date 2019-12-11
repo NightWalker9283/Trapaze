@@ -38,7 +38,7 @@ public class PlayerColliderOnCanvas : MonoBehaviour
         }
         else
         {
-            rigidbody.AddForce(0f, 3f, 7f, ForceMode.Impulse);
+            rigidbody.AddForce(0f, 2f, 50f, ForceMode.Impulse);
         }
     }
 
