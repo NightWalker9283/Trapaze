@@ -12,7 +12,7 @@ using System.Runtime.InteropServices;
 
 public class PlayingManager : MonoBehaviour
 {
-    [SerializeField] uiDistance txtDistance;
+    [SerializeField] UiDistance uiDistance;
     [SerializeField] CanvasGroup ugForPlay, ugController, ugForAfterJump, ugForResult;
 
     [SerializeField] public Camera cmrPlayerView, cmrPublic, cmrPlayer, cmrUI, cmrFace;
@@ -23,18 +23,20 @@ public class PlayingManager : MonoBehaviour
     [SerializeField] PlayerController playerController;
     [SerializeField] uiVelocity txtVelocity;
     [SerializeField] float testTrapezeLengs = 8f;
-    [SerializeField] GameObject ugNewRecord;
+    [SerializeField] GameObject ugNewRecord, ugButtonsForResult;
+    [SerializeField] GameObject prfbTitleElement;
     [SerializeField] GameObject btnHighScore;
-    [SerializeField] GameObject wndBackGround;
+    [SerializeField] GameObject wndBackGround, wndResultComment, ugTitleElements;
     [SerializeField] Button btnComment, btnCommentRush;
     [SerializeField] AudioMixer am;
     [SerializeField] AudioMixerGroup amgSE;
-    [SerializeField] AudioClip BGN,decision;
+    [SerializeField] AudioClip BGN, decision, hanko;
     [SerializeField] Image imgCutIn;
 
     PlayerController.stat_enum _oldPcStat;
     RankingManager.Save_ranking_item save_Ranking_Item;
     AudioSource audioSource;
+    TitleMonitor titleMonitor;
     bool isReachElapseTime = false;
     bool isPause = false;
 
@@ -45,7 +47,7 @@ public class PlayingManager : MonoBehaviour
     public static GameMaster gameMaster;
     public static PlayingManager playingManager;
     public List<CommentsData> allComments;
-    int _mayoCount=0;
+    int _mayoCount = 0;
     public int mayoCount
     {
         get { return _mayoCount; }
@@ -91,6 +93,8 @@ public class PlayingManager : MonoBehaviour
 
     void Start()
     {
+        titleMonitor = GetComponent<TitleMonitor>();
+
         ugForAfterJump.alpha = 0f;
         if (GameMaster.gameMaster.settings.audio_enabled)
             GameMaster.gameMaster.SetBgmVolume(GameMaster.gameMaster.settings.audio_volume);
@@ -140,7 +144,7 @@ public class PlayingManager : MonoBehaviour
                     StartCoroutine(CameraRectChangeRight(cmrPublic, 1f));
                     StartCoroutine(CameraRectChangeRight(cmrPlayerView, 1f));
                     StartCoroutine(CameraRectChangeLeft(cmrPlayer, 0f));
-                    txtDistance.StartMessDistance();
+                    uiDistance.StartMessDistance();
                     cmrPlayerView.transform.parent = rb_Player.transform;
 
                     cmrPublic.GetComponent<PublicCamera>().stat = PublicCamera.stat_publicCamera.jump;
@@ -179,8 +183,30 @@ public class PlayingManager : MonoBehaviour
         yield return null;
         vcamResult.gameObject.SetActive(true);
         vcamPublic.gameObject.SetActive(false);
+        uiDistance.Finish();
         yield return new WaitForSeconds(1.5f);
         ugForResult.gameObject.SetActive(true);
+        wndResultComment.SetActive(true);
+        yield return new WaitForSeconds(1f);
+
+        titleMonitor.Result(playerController.transform.position.z);
+        foreach (var item in titleMonitor.acquiredTitles)
+        {
+            var titleObject = gameMaster.titles.allTitles.FirstOrDefault(t => t.id == item);
+            var titleElement = Instantiate(prfbTitleElement, ugTitleElements.transform);
+            var txtTitleElement = titleElement.transform.Find("txtTitleElement");
+            txtTitleElement.GetComponent<Text>().text = titleObject.name;
+
+            if (gameMaster.acquiredTitles.FirstOrDefault(i => i == item) == 0)
+            {
+                var txtNew = titleElement.transform.Find("txtNew");
+                txtNew.gameObject.SetActive(true);
+                gameMaster.acquiredTitles.Add(item);
+            }
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        ugButtonsForResult.SetActive(true);
         ResultVoice.resultVoice.Play();
     }
 
@@ -266,7 +292,7 @@ public class PlayingManager : MonoBehaviour
 
     IEnumerator InitEffect()
     {
-       
+
 
         CanvasTop.canvasTop.FadeinScene();
         vcamFace.gameObject.SetActive(true);

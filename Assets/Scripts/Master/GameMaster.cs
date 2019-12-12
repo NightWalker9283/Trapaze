@@ -15,6 +15,8 @@ public class GameMaster : MonoBehaviour
     public List<string> acquiredVoices;
     public List<RecordData> recordDatas;
     public Settings settings;
+    public Titles titles = new Titles();
+    public List<int> acquiredTitles;
     public static GameMaster gameMaster;
     public static RankingManager rankingManager;
     public List<GameMode> gameModes = new List<GameMode>();
@@ -164,6 +166,7 @@ public class GameMaster : MonoBehaviour
         SaveData.SetList<RecordData>("recordDatas", recordDatas);
         SaveData.SetList<string>("acquiredVoices", acquiredVoices);
         SaveData.SetClass<Settings>("settings", settings);
+        SaveData.SetList<int>("acquiredTitles", acquiredTitles);
         SaveData.Save();
     }
 
@@ -173,6 +176,7 @@ public class GameMaster : MonoBehaviour
         recordDatas = SaveData.GetList<RecordData>("recordDatas", InitRecordDatas(list, gameModes.Count));
         acquiredVoices = SaveData.GetList<string>("acquiredVoices", new List<string>());
         settings = SaveData.GetClass<Settings>("settings", new Settings());
+        acquiredTitles = SaveData.GetList<int>("acquiredTitles", new List<int>());
         Debug.Log(settings.name);
     }
 
