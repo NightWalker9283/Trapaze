@@ -184,7 +184,7 @@ public class PlayingManager : MonoBehaviour
         vcamResult.gameObject.SetActive(true);
         vcamPublic.gameObject.SetActive(false);
         uiDistance.Finish();
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(3.5f);
         ugForResult.gameObject.SetActive(true);
         wndResultComment.SetActive(true);
         yield return new WaitForSeconds(1f);
