@@ -7,6 +7,7 @@ using UnityEngine.Audio;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Data;
+using System.Security.AccessControl;
 
 [System.Serializable]
 public class GameMaster : MonoBehaviour
@@ -20,10 +21,15 @@ public class GameMaster : MonoBehaviour
     public static GameMaster gameMaster;
     public static RankingManager rankingManager;
     public List<GameMode> gameModes = new List<GameMode>();
+    
 
     [SerializeField] Toggle tglModeOrigin;
     [SerializeField] GameObject cvsInputName;
 
+    [SerializeField] WndTitles wndTitles;
+    
+    [SerializeField] Transform contentTitles, contentVoices;
+    [SerializeField] GameObject prfbListElementTitle, prfbListElementVoice;
     private Transform tggModes;
     [SerializeField] public AudioMixer am;
     [SerializeField] bool ResetSaveFile = false;
@@ -37,7 +43,7 @@ public class GameMaster : MonoBehaviour
         // 以降破棄しない
         DontDestroyOnLoad(gameObject);
         Load();
-        rankingManager =GetComponent<RankingManager>();
+        rankingManager = GetComponent<RankingManager>();
         if (settings.name.Length <= 0) cvsInputName.gameObject.SetActive(true);
 
     }
@@ -60,6 +66,7 @@ public class GameMaster : MonoBehaviour
             tggModes = tglModeOrigin.transform.parent;
             CreateRecordUI(tggModes);
         }
+        CreateLibraryListViews();
     }
 
     private void Update()
@@ -118,6 +125,60 @@ public class GameMaster : MonoBehaviour
         return list;
     }
 
+    private void CreateLibraryListViews()
+    {
+        CreateLibListTitles();
+        CreateLibListVoices();
+
+    }
+
+    private void CreateLibListTitles()
+    {
+        var lstListElementsTitles=new List<ListElementTitle>();
+        var tggTitles = contentTitles.GetComponent<ToggleGroup>();
+        for (int i = 0; i < titles.allTitles.Count; i++)
+        {
+            var objLe = Instantiate(prfbListElementTitle, contentTitles);
+            var tgl = objLe.GetComponent<Toggle>();
+            tgl.group = tggTitles;
+            tgl.onValueChanged.AddListener(wndTitles.UpdateTitleInfo);
+            objLe.GetComponentInChildren<Text>().text = "?????";
+            var le = objLe.GetComponent<ListElementTitle>();
+            le.enable = false;
+            le.id = titles.allTitles[i].id;
+            lstListElementsTitles.Add(le);
+        }
+        foreach (var item in acquiredTitles)
+        {
+            var le=lstListElementsTitles.Find(dt => dt.id == item);
+            if (le != null)
+            {
+                le.enable = true;
+                le.GetComponentInChildren<Text>().text = titles.allTitles.Find(dt => dt.id == item).name;
+            }
+        }
+
+    }
+
+    private void CreateLibListVoices()
+    {
+
+        var tggVoices = contentVoices.GetComponent<ToggleGroup>();
+        for (int i = 0; i < acquiredVoices.Count; i++)
+        {
+            var objLe = Instantiate(prfbListElementVoice, contentVoices);
+            var tgl = objLe.GetComponent<Toggle>();
+            tgl.group = tggVoices;
+           
+            objLe.GetComponentInChildren<Text>().text =
+                acquiredVoices[i].Substring(acquiredVoices[i].LastIndexOf('/')+1);
+            var le = objLe.GetComponent<ListElementVoice>();
+            le.path = acquiredVoices[i];
+            
+            
+        }
+
+    }
     public void SwitchAudio()
     {
 
