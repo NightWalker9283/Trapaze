@@ -25,14 +25,22 @@ public class WndTitles : MonoBehaviour
     {
         if (isOn)
         {
-           
-            var id = tggTitles.ActiveToggles().FirstOrDefault().GetComponent<ListElementTitle>().id;
-            var titleObject = titles.allTitles.Find(dt => dt.id == id);
+
+            var le = tggTitles.ActiveToggles().FirstOrDefault().GetComponent<ListElementTitle>();
+            var titleObject = titles.allTitles.Find(dt => dt.id == le.id);
             if (titleObject != null)
             {
-                txtNameTitle.text = titleObject.name;
                 txtConditionTitle.text = titleObject.condition;
-                txtDescriptionTitle.text = titleObject.description;
+                if (le.enable)
+                {
+                    txtNameTitle.text = titleObject.name;
+                    txtDescriptionTitle.text = titleObject.description;
+                }
+                else
+                {
+                    txtNameTitle.text = "?????";
+                    txtDescriptionTitle.text = "?????";
+                }
             }
         }
     }

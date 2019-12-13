@@ -66,7 +66,10 @@ public class GameMaster : MonoBehaviour
             tggModes = tglModeOrigin.transform.parent;
             CreateRecordUI(tggModes);
         }
-        CreateLibraryListViews();
+        if (wndTitles != null)
+        {
+            CreateLibraryListViews();
+        }
     }
 
     private void Update()

@@ -7,9 +7,9 @@ public class btnCommentRush : MonoBehaviour
 {
 
 
-
+    [SerializeField] AudioClip ac;
     [SerializeField] GameObject PrefComment, wndBackGround, imgCutIn;
-
+    AudioSource audioSource;
     Button btn;
 
 
@@ -18,7 +18,7 @@ public class btnCommentRush : MonoBehaviour
     void Start()
     {
         btn = GetComponent<Button>();
-
+        audioSource = GetComponent<AudioSource>();
 
         btn.onClick.AddListener(ShotComments);
 
@@ -79,6 +79,12 @@ public class btnCommentRush : MonoBehaviour
 
 
             });
+        }
+        else
+        {
+            audioSource.PlayOneShot(ac);
+            yield return new WaitForSeconds(3f);
+            action();
         }
 
     }
