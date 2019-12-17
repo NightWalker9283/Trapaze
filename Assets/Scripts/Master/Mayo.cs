@@ -7,7 +7,7 @@ public class Mayo : MonoBehaviour
 {
     [SerializeField] RectTransform virtualMayo;
     [SerializeField] GameObject particles;
-    float deadTime = 3f;
+    [SerializeField] float deadTime = 20f;
     Coroutine crtnJudge = null, crtnDrop = null;
     Camera cmrPublic, cmrUI;
     Canvas cvsPublic;
@@ -17,7 +17,10 @@ public class Mayo : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        if (!PlayingManager.gameMaster.gameMode.enableDropMayo)
+        {
+            gameObject.SetActive(false);
+        }
         cmrPublic = PlayingManager.playingManager.cmrPublic;
         cmrUI = PlayingManager.playingManager.cmrUI;
         cvsPublic = PlayingManager.playingManager.cvsPublic;
@@ -56,7 +59,7 @@ public class Mayo : MonoBehaviour
         bool isStart = false;
         while (!isStart)
         {
-            if (Random.Range(0, 2) == 0)
+            if (Random.Range(0, 8) == 0)
             {
                 crtnDrop = StartCoroutine(DropMayo());
 
@@ -64,6 +67,7 @@ public class Mayo : MonoBehaviour
             }
             yield return new WaitForSeconds(5);
         }
+        crtnJudge = null;
     }
 
     IEnumerator DropMayo()

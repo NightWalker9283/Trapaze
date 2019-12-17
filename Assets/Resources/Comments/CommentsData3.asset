@@ -18,6 +18,8 @@ MonoBehaviour:
   - Value: "\uFF57\uFF57\uFF57\uFF57\uFF57\uFF57\uFF57\uFF57\uFF57\uFF57"
   - Value: "\uFF57\uFF57\uFF57\uFF57\uFF57\uFF57"
   - Value: "\uFF57\uFF57\uFF57"
+  - Value: "\u3080\u306B\u307E\u3093\u3044\u3051\u30FC"
+  - Value: "\u304B\u3063\u3051\u3047\u30FB\u30FB\u30FB"
   DistanceL: 40
   DistanceU: 100
   HeightL: 10

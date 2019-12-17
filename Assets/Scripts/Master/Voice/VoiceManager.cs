@@ -33,6 +33,7 @@ public class VoiceManager : MonoBehaviour
         if (queue.Count > 0 && !audioSource.isPlaying)
         {
             var af = queue.Dequeue();
+
             audioSource.PlayOneShot(af.audioClip);
             if (GameMaster.gameMaster.acquiredVoices.Find(str => str == af.path) == null)
             {
@@ -81,19 +82,28 @@ public class VoiceManager : MonoBehaviour
         return queue.Count;
     }
 
-    public static List<AudioFile> LoadAllAudioFile(string path)
+    public static List<AudioFile> LoadAllAudioFile(string directlyPath)
     {
         var lst = new List<AudioFile>();
-        var voices = Resources.LoadAll<AudioClip>(path);
+        var voices = Resources.LoadAll<AudioClip>(directlyPath);
         
         foreach (AudioClip ac in voices)
         {
             var af = new AudioFile();
-            af.path = path+"/"+ac.name;
+            af.path = directlyPath+"/"+ac.name;
             af.audioClip = ac;
             lst.Add(af);
         }
         return lst;
+    }
+
+    public static AudioFile LoadAudioFile(string filePath)
+    {
+        var voice = Resources.Load<AudioClip>(filePath);
+        var af = new AudioFile();
+        af.path = filePath;
+        af.audioClip = voice;
+        return af;
     }
    
 

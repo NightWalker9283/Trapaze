@@ -14,6 +14,7 @@ public class ResultVoice : MonoBehaviour
 
 
     VoiceCategory[] voices;
+    AudioFile vicDaichiSansho;
     public static ResultVoice resultVoice;
 
 
@@ -25,7 +26,8 @@ public class ResultVoice : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-       
+        vicDaichiSansho = VoiceManager.LoadAudioFile("Voice/Result/大地讃頌");
+
         voices = new VoiceCategory[path.Length];
         for (int i = 0; i < path.Length; i++)
         {
@@ -48,25 +50,35 @@ public class ResultVoice : MonoBehaviour
         voices[4].DistanceU = 10000f;
     }
 
-    public void Play()
+    public void Play(TitleObject titleObject)
     {
-        var Player = PlayingManager.playingManager.playerControlPoint;
-        var PlayerPosZ = Mathf.Abs(Player.position.z);
-        VoiceCategory TargetCategory=new VoiceCategory();
+        bool isSpecialTitle = false;
 
-        for (int i = 0; i < voices.Length; i++)
+        if (titleObject.id == 200)
         {
-            
-            if(PlayerPosZ >= voices[i].DistanceL && PlayerPosZ < voices[i].DistanceU)
-            {
-                TargetCategory = voices[i];
-                break;
-            }
+            VoiceManager.voiceManager.AddVoice(vicDaichiSansho);
+            isSpecialTitle = true;
         }
+        if (!isSpecialTitle)
+        {
+            var Player = PlayingManager.playingManager.playerControlPoint;
+            var PlayerPosZ = Mathf.Abs(Player.position.z);
+            VoiceCategory TargetCategory = new VoiceCategory();
 
-        VoiceManager.voiceManager.AddVoice(
-            TargetCategory.AudioFiles[Random.Range(0, TargetCategory.AudioFiles.Count)]
-        ) ;
+            for (int i = 0; i < voices.Length; i++)
+            {
+
+                if (PlayerPosZ >= voices[i].DistanceL && PlayerPosZ < voices[i].DistanceU)
+                {
+                    TargetCategory = voices[i];
+                    break;
+                }
+            }
+
+            VoiceManager.voiceManager.AddVoice(
+                TargetCategory.AudioFiles[Random.Range(0, TargetCategory.AudioFiles.Count)]
+            );
+        }
     }
 
 }

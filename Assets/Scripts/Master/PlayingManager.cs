@@ -36,7 +36,7 @@ public class PlayingManager : MonoBehaviour
     PlayerController.stat_enum _oldPcStat;
     RankingManager.Save_ranking_item save_Ranking_Item;
     AudioSource audioSource;
-    TitleMonitor titleMonitor;
+    public TitleMonitor titleMonitor;
     bool isReachElapseTime = false;
     bool isPause = false;
 
@@ -72,7 +72,7 @@ public class PlayingManager : MonoBehaviour
         {
             gameObject.AddComponent<RankingManager>();
             gameMaster = gameObject.AddComponent<GameMaster>();
-            gameMaster.gameMode = new GameMode(-1, "テスト", testTrapezeLengs, -60f, true, "");
+            gameMaster.gameMode = new GameMode(-1, "テスト",3,true,true,testTrapezeLengs, -1f, "");
             gameMaster.settings = new Settings("加藤純一", true, 1f, true);
             gameMaster.am = am;
         }
@@ -189,7 +189,7 @@ public class PlayingManager : MonoBehaviour
         wndResultComment.SetActive(true);
         yield return new WaitForSeconds(1f);
 
-        titleMonitor.Result(playerController.transform.position.z);
+        var sttl=titleMonitor.Result(playerController.transform.position.z);
         foreach (var item in titleMonitor.acquiredTitles)
         {
             var titleObject = gameMaster.titles.allTitles.FirstOrDefault(t => t.id == item);
@@ -207,7 +207,7 @@ public class PlayingManager : MonoBehaviour
         }
 
         ugButtonsForResult.SetActive(true);
-        ResultVoice.resultVoice.Play();
+        ResultVoice.resultVoice.Play(sttl);
     }
 
 
@@ -307,7 +307,7 @@ public class PlayingManager : MonoBehaviour
         vcamFace.gameObject.SetActive(false);
         rb_Trapeze.isKinematic = false;
         CanvasTop.canvasTop.FadeinScene();
-
+        mayoCount = gameMaster.gameMode.initialMayoCnt;
         Stat = Stat_global.play;
     }
 

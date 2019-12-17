@@ -21,7 +21,7 @@ public class TitleMonitor : MonoBehaviour
 
     }
 
-    public void Result(float distance)
+    public StandardTitle Result(float distance)
     {
         List<StandardTitle> standardTitles;
         if (Mathf.Sign(distance) >= 0 || Mathf.Abs(distance) < 10f)
@@ -38,13 +38,22 @@ public class TitleMonitor : MonoBehaviour
             if (Mathf.Abs(distance) > Mathf.Abs(standardTitles[i].distance))
             {
                 acquiredTitles.Add(standardTitles[i].id);
-                break;
+                return standardTitles[i];
             }
         }
 
 
+        return null;
 
 
+    }
+
+    public void VoiceTrigger(AudioFile af)
+    {
+        if (af.audioClip.name == "ハイパー面白いくん")
+        {
+            acquiredTitles.Add(titles.ttlHyperOmoshiroi.id);
+        }
 
     }
 
