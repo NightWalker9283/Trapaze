@@ -180,7 +180,7 @@ public class PlayingManager : MonoBehaviour
         cmrPublic.GetComponent<PerspectiveSwitcher>().SwitchToPerspectiveMode();
         cmrPublic.GetComponent<CinemachineBrain>().enabled = true;
         // StartCoroutine(SmoothChangePerspective());
-        yield return null;
+        yield return new WaitForSeconds(1f);
         vcamResult.gameObject.SetActive(true);
         vcamPublic.gameObject.SetActive(false);
         uiDistance.Finish();
@@ -223,6 +223,7 @@ public class PlayingManager : MonoBehaviour
         if (selectRecords == null)
         {
             btnHighScore.GetComponent<BtnHighScore>().ChangeListener();
+            ugNewRecord.SetActive(true);
             return;
         }
         selectRecords.total_time += time;
