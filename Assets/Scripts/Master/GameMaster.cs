@@ -6,8 +6,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using System.Data;
-using System.Security.AccessControl;
+using GoogleMobileAds.Api;
 
 [System.Serializable]
 public class GameMaster : MonoBehaviour
@@ -25,7 +24,7 @@ public class GameMaster : MonoBehaviour
 
     [SerializeField] Toggle tglModeOrigin;
     [SerializeField] GameObject cvsInputName;
-
+    [SerializeField] GameObject imgBlack;
     [SerializeField] WndTitles wndTitles;
     
     [SerializeField] Transform contentTitles, contentVoices;
@@ -34,10 +33,13 @@ public class GameMaster : MonoBehaviour
     [SerializeField] public AudioMixer am;
     [SerializeField] bool ResetSaveFile = false;
     bool _oldResetSaveFile;
+    float wdtInitializeAd=5f;
 
     void Awake()
     {
         gameMaster = this;
+        MobileAds.Initialize(initStatus => { wdtInitializeAd = 0; });
+
         CreateGameModes();
 
         // 以降破棄しない
@@ -50,6 +52,7 @@ public class GameMaster : MonoBehaviour
 
     private void Start()
     {
+        if (imgBlack != null) imgBlack.SetActive(true);
         if (settings.audio_enabled)
             SetBgmVolume(settings.audio_volume);
         else
@@ -74,6 +77,11 @@ public class GameMaster : MonoBehaviour
 
     private void Update()
     {
+        if (imgBlack != null && imgBlack.activeSelf)
+        {
+            if (wdtInitializeAd > 0f) wdtInitializeAd -= Time.deltaTime;
+            if (wdtInitializeAd <= 0f) imgBlack.SetActive(false);
+        }
         if (ResetSaveFile != _oldResetSaveFile && ResetSaveFile)
         {
             SaveData.Clear();
