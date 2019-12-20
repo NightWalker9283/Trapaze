@@ -26,10 +26,22 @@ public class BtnGetMayo : MonoBehaviour
         
         wndMayo.SetActive(false);
         wndBackGround.SetActive(false);
-       
-        PlayingManager.playingManager.mayoCount++;
+
+        PlayingManager.gameMaster.SwitchAudio(false);
+#if DEBUG
+        WndMessage.wndMessage.ShowMessage("マヨネーズを１つ獲得しました。", () =>
+        {
+            PlayingManager.gameMaster.SwitchAudio(true);
+            PlayingManager.playingManager.mayoCount++;
+            PlayingManager.playingManager.SwitchPause(false);
+        });
+#else
+        
+        AdsManager.adsManager.UserChoseToWatchRewardedAd();
+
+#endif
         mayo.Finish();
-        PlayingManager.playingManager.SwitchPause(false);
+        
 
     }
 }

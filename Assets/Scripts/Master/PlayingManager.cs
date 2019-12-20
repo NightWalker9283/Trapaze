@@ -67,7 +67,7 @@ public class PlayingManager : MonoBehaviour
         gameMaster = FindObjectOfType<GameMaster>();
         audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.outputAudioMixerGroup = amgSE;
-
+        
         if (gameMaster == null)
         {
             gameObject.AddComponent<RankingManager>();

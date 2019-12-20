@@ -38,8 +38,9 @@ public class GameMaster : MonoBehaviour
     void Awake()
     {
         gameMaster = this;
-        MobileAds.Initialize(initStatus => { wdtInitializeAd = 0; });
 
+        MobileAds.Initialize(initStatus => { wdtInitializeAd = 0; });
+        gameObject.AddComponent<AdsManager>();
         CreateGameModes();
 
         // 以降破棄しない
@@ -194,6 +195,20 @@ public class GameMaster : MonoBehaviour
     {
 
         settings.audio_enabled = !settings.audio_enabled;
+        if (!settings.audio_enabled)
+        {
+            SetBgmVolume(0f);
+        }
+        else
+        {
+            SetBgmVolume(settings.audio_volume);
+        }
+    }
+
+    public void SwitchAudio(bool value)
+    {
+
+        settings.audio_enabled = value;
         if (!settings.audio_enabled)
         {
             SetBgmVolume(0f);
