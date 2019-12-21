@@ -59,7 +59,7 @@ public class Mayo : MonoBehaviour
         bool isStart = false;
         while (!isStart)
         {
-            if (Random.Range(0, 1) == 0)
+            if (Random.Range(0, 6) == 0)
             {
                 crtnDrop = StartCoroutine(DropMayo());
 

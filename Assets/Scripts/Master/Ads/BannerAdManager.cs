@@ -8,18 +8,29 @@ public class BannerAdManager : MonoBehaviour
 {
 	public BannerView bannerView;
 	private bool isSuccessLoad = true;
+//バナー
+#if TEST_AD //テスト
 
 #if UNITY_ANDROID
-    string adUnitId = "ca-app-pub-3940256099942544/6300978111";
+    string adUnitId = "ca-app-pub-3940256099942544/6300978111"; //Android
 #elif UNITY_IPHONE
-    string adUnitId = "ca-app-pub-3940256099942544/2934735716";
+    string adUnitId = "ca-app-pub-3940256099942544/2934735716"; //iOS
 #else
 	string adUnitId = "unexpected_platform";
 #endif
 
+#else   //本番
+#if UNITY_ANDROID
+    string adUnitId = "ca-app-pub-1610123728558925/7230492645"; //Android
+#elif UNITY_IPHONE
+    string adUnitId = "ca-app-pub-1610123728558925/5338826471"; //iOS
+#else
+	string adUnitId = "unexpected_platform";
+#endif
+#endif
 
-	// Start is called before the first frame update
-	void Start()
+    // Start is called before the first frame update
+    void Start()
 	{
 
 

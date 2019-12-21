@@ -10,14 +10,27 @@ public class InterstitialAdManager : MonoBehaviour
     private Action action;
     private bool isSuccessLoad = true;
 
+//インタースティシャル
+#if TEST_AD //テスト
+
 #if UNITY_ANDROID
-    string adUnitId = "ca-app-pub-3940256099942544/1033173712";
+    string adUnitId = "ca-app-pub-3940256099942544/1033173712"; //Android
 #elif UNITY_IPHONE
-    string adUnitId = "ca-app-pub-3940256099942544/4411468910";
+    string adUnitId = "ca-app-pub-3940256099942544/4411468910"; //iOS
 #else
     string adUnitId = "unexpected_platform";
 #endif
 
+#else   //本番
+#if UNITY_ANDROID
+    string adUnitId = "ca-app-pub-1610123728558925/7007131364"; //Android
+#elif UNITY_IPHONE
+    string adUnitId = "ca-app-pub-1610123728558925/5950374025"; //iOS
+#else
+    string adUnitId = "unexpected_platform";
+#endif
+
+#endif
 
     // Start is called before the first frame update
     void Start()

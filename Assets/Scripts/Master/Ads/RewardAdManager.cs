@@ -6,25 +6,37 @@ using GoogleMobileAds.Api;
 
 public class RewardAdManager : MonoBehaviour
 {
-    
+
     private RewardedAd rewardedAd;
-    private bool isSuccessLoad=true;
+    private bool isSuccessLoad = true;
     bool isEarn = false;
+//リワード
+#if TEST_AD　//テスト
 
 #if UNITY_ANDROID
-    public static string adUnitId = "ca-app-pub-3940256099942544/5224354917";
+    public static string adUnitId = "ca-app-pub-3940256099942544/5224354917";   //Android
 #elif UNITY_IPHONE
-    public static string adUnitId = "ca-app-pub-3940256099942544/1712485313";
+    public static string adUnitId = "ca-app-pub-3940256099942544/1712485313";   //iOS
 #else
     public static string adUnitId = "unexpected_platform";
+#endif
+
+#else   //本番
+#if UNITY_ANDROID
+    public static string adUnitId = "ca-app-pub-1610123728558925/7613636021";   //Android
+#elif UNITY_IPHONE
+    public static string adUnitId = "ca-app-pub-1610123728558925/3902795183";   //iOS
+#else
+    public static string adUnitId = "unexpected_platform";
+#endif
 #endif
 
     // Start is called before the first frame update
     void Start()
     {
-        
-        
-        
+
+
+
         this.rewardedAd = CreateRewardedAd();
     }
 
@@ -59,7 +71,7 @@ public class RewardAdManager : MonoBehaviour
 
     }
 
-   
+
 
     public void UserChoseToWatchRewardedAd()
     {

@@ -6663,7 +6663,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 2.690549e+11}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -8436,7 +8436,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -5, y: 8.200012}
+  m_AnchoredPosition: {x: -5, y: 8.199951}
   m_SizeDelta: {x: 190, y: 30}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &752081779
@@ -8505,7 +8505,7 @@ MonoBehaviour:
     m_SelectedTrigger: Highlighted
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 752081782}
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
@@ -8989,7 +8989,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -3.000061, y: 70.2}
+  m_AnchoredPosition: {x: -3, y: 70.19995}
   m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &775577724
@@ -9553,7 +9553,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 816422584}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
@@ -17348,10 +17348,10 @@ RectTransform:
   m_Father: {fileID: 522778975}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -4, y: 94.99999}
-  m_SizeDelta: {x: 350, y: 200}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -15.72406, y: 42.274994}
+  m_SizeDelta: {x: -77.80005, y: -203}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &1533424171
 MonoBehaviour:
@@ -17497,7 +17497,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 11.234985, y: -87}
+  m_AnchoredPosition: {x: 11.234863, y: -87}
   m_SizeDelta: {x: 900, y: -500.7}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1552110520
@@ -17980,9 +17980,9 @@ RectTransform:
   m_Father: {fileID: 864318324}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: -381.65002}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0.3499756}
   m_SizeDelta: {x: 171.51, y: 60}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1591670546
@@ -19558,6 +19558,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1695794004}
   - component: {fileID: 1695794006}
+  - component: {fileID: 1695794007}
   - component: {fileID: 1695794005}
   m_Layer: 5
   m_Name: Text
@@ -19580,10 +19581,10 @@ RectTransform:
   m_Father: {fileID: 1533424170}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 300, y: 180}
+  m_SizeDelta: {x: -10, y: -10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1695794005
 MonoBehaviour:
@@ -19594,7 +19595,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 1695794003}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Script: {fileID: 11500000, guid: 33cd32594dc174a088e32f0ee32620b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!222 &1695794006
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1695794003}
+  m_CullTransparentMesh: 0
+--- !u!114 &1695794007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1695794003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7149aeeeec7e43c89f2dd6f59f7e982, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
@@ -19616,18 +19637,13 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "[\u4F7F\u7528\u7D20\u6750]\n  \u753B\u50CF\uFF1A\n\u3000\u30A2\u30A4\u30B3\u30F3\u95A2\u9023\uFF1AICOOON
-    MONO \u69D8\n\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000(http://icooon-mono.com)\n\u3000\n\u3000\u30E9\u30F3\u30AD\u30F3\u30B0\u753B\u9762\u80CC\u666F\uFF1A\u3073\u305F\u3061\u30FC\u7D20\u6750\u9928
-    \u69D8\n\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000(http://www.vita-chi.net)\n\n\u30B5\u30A6\u30F3\u30C9\uFF1A\n\u3000BGM\uFF1A\u9B54\u738B\u9B42
-    \u69D8\n\u3000\u3000\u3000\u3000(http://maoudamashii.jokersounds.com)"
---- !u!222 &1695794006
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1695794003}
-  m_CullTransparentMesh: 0
+  m_Text: "\u672C\u30A2\u30D7\u30EA\u306F\u3046\u3093\u3053\u3061\u3083\u3093 \u3053\u3068\u52A0\u85E4\u7D14\u4E00\u6C0F\uFF08\u4EE5\u4E0B\u3046\u3093\u3053\u3061\u3083\u3093\uFF09\u304C\u81EA\u3089\u4F01\u753B\u3055\u308C\u3001\n\u6C0F\u304C\u5E83\u5831\u5927\u4F7F\u3092\u52E4\u3081\u308BBlueStacks\u793E\u306E\u5354\u529B\u306B\u3088\u308A\u958B\u50AC\u3055\u308C\u308B\u300C\u52A0\u85E4\u7D14\u4E00
+    \u30A2\u30D7\u30EA\u738B\u9078\u624B\u6A29(\u4EEE) BlueStacks\u676F\u300D\u306E\u51FA\u5C55\u4F5C\u54C1\u3067\u3059\u3002\n\u672C\u30A2\u30D7\u30EA\u4E2D\u3067\u306E\u97F3\u58F0\u30C7\u30FC\u30BF\u306F\u3001\u3046\u3093\u3053\u3061\u3083\u3093\u53CA\u3073BlueStacks\u793E\u306E\u4E86\u627F\u306E\u4E0B\n\u4F7F\u7528\u3057\u3066\u304A\u308A\u307E\u3059\u304C\u3001\u500B\u3005\u306E\u97F3\u58F0\u30C7\u30FC\u30BF\u306E\u53CE\u96C6\u30FB\u52A0\u5DE5\u306FNightWalker\u306E\u8CAC\u4EFB\u3067\u884C\u3063\u3066\u304A\u308A\u307E\u3059\u3002\n\u304A\u554F\u3044\u5408\u308F\u305B\u7B49\u306FNightWalker\u3078\u304A\u9858\u3044\u3057\u307E\u3059\u3002\n\n\u9023\u7D61\u5148\uFF1Anightwalker.9283@gmail.com\n\n===\u30AF\u30EC\u30B8\u30C3\u30C8===\n[\u4F7F\u7528\u7D20\u6750]\n 
+    \u753B\u50CF\uFF1A\n\u3000\u30A2\u30A4\u30B3\u30F3\u95A2\u9023\uFF1AICOOON MONO
+    \u69D8 (http://icooon-mono.com)\n\u3000\n\u3000\u30E9\u30F3\u30AD\u30F3\u30B0\u753B\u9762\u80CC\u666F\uFF1A\u3073\u305F\u3061\u30FC\u7D20\u6750\u9928
+    \u69D8 (http://www.vita-chi.net/sozai1.htm)\n\n\u30B5\u30A6\u30F3\u30C9\uFF1A\n\u3000BGM\uFF1A\u9B54\u738B\u9B42
+    \u69D8 (http://maoudamashii.jokersounds.com)\n\n[\u30B9\u30DA\u30B7\u30E3\u30EB\u30B5\u30F3\u30AF\u30B9]\n\u3000\uFF13D\u30E2\u30C7\u30EA\u30F3\u30B0
+    \u30DD\u30EA\u30B4\u30F3\u7BA1\u7406\uFF1A\u306D\u3082\u3046\u3059\u304A\u6BCD\u3055\u3093@nemousuokasan\n\n[\u5236\u4F5C]\n\u3000NightWalker@NightWa43733459"
 --- !u!1 &1698163232
 GameObject:
   m_ObjectHideFlags: 0

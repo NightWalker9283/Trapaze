@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿//#define TEST_AD
+using System.Collections;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
