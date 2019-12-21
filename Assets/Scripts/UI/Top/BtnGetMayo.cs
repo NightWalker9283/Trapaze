@@ -7,12 +7,12 @@ public class BtnGetMayo : MonoBehaviour
 {
     [SerializeField] GameObject wndBackGround, wndMayo;
     [SerializeField] Mayo mayo;
-    
+
     // Start is called before the first frame update
     void Start()
     {
         GetComponent<Button>().onClick.AddListener(GetMayo);
-        
+
     }
 
     // Update is called once per frame
@@ -23,25 +23,25 @@ public class BtnGetMayo : MonoBehaviour
 
     void GetMayo()
     {
-        
+
         wndMayo.SetActive(false);
         wndBackGround.SetActive(false);
-
+        
         PlayingManager.gameMaster.SwitchAudio(false);
 #if DEBUG
         WndMessage.wndMessage.ShowMessage("マヨネーズを１つ獲得しました。", () =>
         {
-            PlayingManager.gameMaster.SwitchAudio(true);
+            PlayingManager.gameMaster.SwitchAudio(PlayingManager.gameMaster.settings.audio_enabled);
             PlayingManager.playingManager.mayoCount++;
             PlayingManager.playingManager.SwitchPause(false);
         });
 #else
         
-        AdsManager.adsManager.UserChoseToWatchRewardedAd();
+        AdsManager.rewardAdManager.UserChoseToWatchRewardedAd();
 
 #endif
         mayo.Finish();
-        
+
 
     }
 }

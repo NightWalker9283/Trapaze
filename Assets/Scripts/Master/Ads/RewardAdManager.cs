@@ -4,24 +4,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using GoogleMobileAds.Api;
 
-public class AdsManager : MonoBehaviour
+public class RewardAdManager : MonoBehaviour
 {
-    public static AdsManager adsManager;
+    
     private RewardedAd rewardedAd;
-    private string adUnitId;
-    bool isEarn=false;
+    private bool isSuccessLoad=true;
+    bool isEarn = false;
+
+#if UNITY_ANDROID
+    public static string adUnitId = "ca-app-pub-3940256099942544/5224354917";
+#elif UNITY_IPHONE
+    public static string adUnitId = "ca-app-pub-3940256099942544/1712485313";
+#else
+    public static string adUnitId = "unexpected_platform";
+#endif
+
     // Start is called before the first frame update
     void Start()
     {
-        adsManager = this;
-#if UNITY_ANDROID
-        adUnitId = "ca-app-pub-3940256099942544/5224354917";
-#elif UNITY_IPHONE
-        adUnitId = "ca-app-pub-3940256099942544/1712485313";
-#else
-        adUnitId = "unexpected_platform";
-#endif
-
+        
+        
+        
         this.rewardedAd = CreateRewardedAd();
     }
 
@@ -51,10 +54,12 @@ public class AdsManager : MonoBehaviour
         AdRequest request = new AdRequest.Builder().Build();
         // Load the rewarded ad with the request.
         _rewardedAd.LoadAd(request);
-
+        isSuccessLoad = true;
         return _rewardedAd;
 
     }
+
+   
 
     public void UserChoseToWatchRewardedAd()
     {
@@ -63,12 +68,20 @@ public class AdsManager : MonoBehaviour
 
         IEnumerator MonitorLoadingAd()
         {
-            while (!this.rewardedAd.IsLoaded())
+            while (!this.rewardedAd.IsLoaded() && isSuccessLoad)
             {
                 yield return new WaitForSeconds(0.1f);
             }
-            
-                this.rewardedAd.Show();
+
+            if (isSuccessLoad) { this.rewardedAd.Show(); }
+            else
+            {
+                WndMessage.wndMessage.ShowMessage("広告の再生に失敗しました。", () =>
+                {
+                    PlayingManager.gameMaster.SwitchAudio(true);
+                    PlayingManager.playingManager.SwitchPause(false);
+                });
+            }
         }
 
     }
@@ -80,7 +93,7 @@ public class AdsManager : MonoBehaviour
 
     public void HandleRewardedAdFailedToLoad(object sender, AdErrorEventArgs args)
     {
-        
+        isSuccessLoad = false;
         MonoBehaviour.print(
             "HandleRewardedAdFailedToLoad event received with message: "
                              + args.Message);
@@ -95,7 +108,7 @@ public class AdsManager : MonoBehaviour
     {
         WndMessage.wndMessage.ShowMessage("広告の再生に失敗しました。", () =>
         {
-           
+            PlayingManager.gameMaster.SwitchAudio(true);
             PlayingManager.playingManager.SwitchPause(false);
         });
         MonoBehaviour.print(
@@ -122,8 +135,9 @@ public class AdsManager : MonoBehaviour
                 PlayingManager.playingManager.SwitchPause(false);
             });
         }
+        isEarn = false;
         rewardedAd = CreateRewardedAd();
-       
+
     }
 
     public void HandleUserEarnedReward(object sender, Reward args)

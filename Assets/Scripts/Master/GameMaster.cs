@@ -24,7 +24,7 @@ public class GameMaster : MonoBehaviour
 
     [SerializeField] Toggle tglModeOrigin;
     [SerializeField] GameObject cvsInputName;
-    [SerializeField] GameObject imgBlack;
+    [SerializeField] GameObject imgBrack;
     [SerializeField] WndTitles wndTitles;
     
     [SerializeField] Transform contentTitles, contentVoices;
@@ -53,7 +53,7 @@ public class GameMaster : MonoBehaviour
 
     private void Start()
     {
-        if (imgBlack != null) imgBlack.SetActive(true);
+        if (imgBrack != null) imgBrack.SetActive(true);
         if (settings.audio_enabled)
             SetBgmVolume(settings.audio_volume);
         else
@@ -78,10 +78,10 @@ public class GameMaster : MonoBehaviour
 
     private void Update()
     {
-        if (imgBlack != null && imgBlack.activeSelf)
+        if (imgBrack != null && imgBrack.activeSelf)
         {
             if (wdtInitializeAd > 0f) wdtInitializeAd -= Time.deltaTime;
-            if (wdtInitializeAd <= 0f) imgBlack.SetActive(false);
+            if (wdtInitializeAd <= 0f) imgBrack.SetActive(false);
         }
         if (ResetSaveFile != _oldResetSaveFile && ResetSaveFile)
         {
@@ -270,9 +270,9 @@ public class GameMaster : MonoBehaviour
 
     public void GameStart()
     {
-        Save();
+        
         SceneManager.LoadScene("Main");
-
+        Time.timeScale = 1f;
     }
 
 
@@ -280,5 +280,6 @@ public class GameMaster : MonoBehaviour
     {
         Save();
         SceneManager.LoadScene("Title");
+        Time.timeScale = 1f;
     }
 }

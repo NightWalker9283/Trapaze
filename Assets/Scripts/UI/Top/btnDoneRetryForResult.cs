@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class btnDoneGiveUp : MonoBehaviour
+public class btnDoneRetryForResult : MonoBehaviour
 {
 
     // Start is called before the first frame update
@@ -20,10 +20,12 @@ public class btnDoneGiveUp : MonoBehaviour
 
         AdsManager.interstitialAdManager.Show(() =>
         {
-            PlayingManager.gameMaster.Title();
+            PlayingManager.gameMaster.GameStart();
             PlayingManager.gameMaster.SwitchAudio(PlayingManager.gameMaster.settings.audio_enabled);
-            Destroy(FindObjectOfType<GameMaster>().gameObject);
             Destroy(FindObjectOfType<PlayingManager>().gameObject);
         });
+
+
+
     }
 }

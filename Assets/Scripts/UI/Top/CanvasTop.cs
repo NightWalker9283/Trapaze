@@ -6,35 +6,42 @@ using UnityEngine.UI;
 
 public class CanvasTop : MonoBehaviour
 {
-    Image image;
+    [SerializeField]Image image;
     public static CanvasTop canvasTop ;
 
     // Start is called before the first frame update
     void Awake()
     {
-        image = GetComponent<Image>();
+        
         canvasTop = this;
         
     }
     public void FadeinScene()
     {
-        image.enabled = true;
+        image.gameObject.SetActive(true);
+        image.transform.SetAsLastSibling();
+        image.color = new Color(image.color.r, image.color.g, image.color.b, 1f);
         StartCoroutine(fadeinSceneProc());
     }
 
     public void FadeoutScene()
     {
-        image.enabled = true;
+        image.gameObject.SetActive(true);
+        image.transform.SetAsLastSibling();
+        image.color = new Color(image.color.r, image.color.g, image.color.b, 0f);
         StartCoroutine(fadeoutSceneProc());
     }
 
+    
     public void ImmediatelyInScene()
     {
-        image.enabled = false;
+        image.gameObject.SetActive(false);
+        image.transform.SetAsLastSibling();
     }
     public void ImmediatelyOutScene()
     {
-        image.enabled = true;
+        image.gameObject.SetActive(true);
+        image.transform.SetAsLastSibling();
         image.color = new Color(image.color.r, image.color.g, image.color.b, 1f);
     }
 
@@ -47,19 +54,20 @@ public class CanvasTop : MonoBehaviour
             alpha = alpha-Time.deltaTime;
             yield return null;
         }
-        image.enabled = false;
+        image.gameObject.SetActive(false);
 
     }
 
     IEnumerator fadeoutSceneProc()
     {
-        float alpha = 1f;
-        while (alpha > 0f)
+        float alpha = 0f;
+        while (alpha < 1f)
         {
-            image.color = new Color(image.color.r, image.color.g, image.color.b, 1f-Mathf.Clamp01(alpha));
-            alpha = alpha - Time.deltaTime;
+            image.color = new Color(image.color.r, image.color.g, image.color.b, Mathf.Clamp01(alpha));
+            alpha = alpha + Time.deltaTime;
             yield return null;
         }
+        image.gameObject.SetActive(false);
 
     }
 

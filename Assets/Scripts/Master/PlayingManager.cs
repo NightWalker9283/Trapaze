@@ -88,7 +88,7 @@ public class PlayingManager : MonoBehaviour
         Stat = Stat_global.init;
         _oldStat = Stat;
         _oldPcStat = playerController.stat;
-
+        
     }
 
     void Start()
