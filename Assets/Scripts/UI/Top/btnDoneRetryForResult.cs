@@ -15,13 +15,13 @@ public class btnDoneRetryForResult : MonoBehaviour
     // Update is called once per frame
     void Done()
     {
-        PlayingManager.gameMaster.SwitchAudio(false);
+        PlayingManager.gameMaster.MuteAudio(true);
         CanvasTop.canvasTop.ImmediatelyOutScene();
 
         AdsManager.interstitialAdManager.Show(() =>
         {
             PlayingManager.gameMaster.GameStart();
-            PlayingManager.gameMaster.SwitchAudio(PlayingManager.gameMaster.settings.audio_enabled);
+            PlayingManager.gameMaster.MuteAudio(false);
             Destroy(FindObjectOfType<PlayingManager>().gameObject);
         });
 

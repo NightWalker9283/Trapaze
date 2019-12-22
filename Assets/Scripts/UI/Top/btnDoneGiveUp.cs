@@ -15,13 +15,14 @@ public class btnDoneGiveUp : MonoBehaviour
     // Update is called once per frame
     void Done()
     {
-        PlayingManager.gameMaster.SwitchAudio(false);
+        PlayingManager.gameMaster.MuteAudio(true);
         CanvasTop.canvasTop.ImmediatelyOutScene();
 
         AdsManager.interstitialAdManager.Show(() =>
         {
+            Debug.Log(PlayingManager.gameMaster.settings.audio_enabled);
             PlayingManager.gameMaster.Title();
-            PlayingManager.gameMaster.SwitchAudio(PlayingManager.gameMaster.settings.audio_enabled);
+            PlayingManager.gameMaster.MuteAudio(false);
             Destroy(FindObjectOfType<GameMaster>().gameObject);
             Destroy(FindObjectOfType<PlayingManager>().gameObject);
         });

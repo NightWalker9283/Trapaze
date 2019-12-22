@@ -27,11 +27,11 @@ public class BtnGetMayo : MonoBehaviour
         wndMayo.SetActive(false);
         wndBackGround.SetActive(false);
         
-        PlayingManager.gameMaster.SwitchAudio(false);
+        PlayingManager.gameMaster.MuteAudio(true);
 #if DEBUG
         WndMessage.wndMessage.ShowMessage("マヨネーズを１つ獲得しました。", () =>
         {
-            PlayingManager.gameMaster.SwitchAudio(PlayingManager.gameMaster.settings.audio_enabled);
+            PlayingManager.gameMaster.MuteAudio(false);
             PlayingManager.playingManager.mayoCount++;
             PlayingManager.playingManager.SwitchPause(false);
         });

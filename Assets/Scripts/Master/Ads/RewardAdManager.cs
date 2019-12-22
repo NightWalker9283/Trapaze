@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿//#define TEST_AD
+using System.Collections;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -90,7 +91,7 @@ public class RewardAdManager : MonoBehaviour
             {
                 WndMessage.wndMessage.ShowMessage("広告の再生に失敗しました。", () =>
                 {
-                    PlayingManager.gameMaster.SwitchAudio(true);
+                    PlayingManager.gameMaster.MuteAudio(false);
                     PlayingManager.playingManager.SwitchPause(false);
                 });
             }
@@ -120,7 +121,7 @@ public class RewardAdManager : MonoBehaviour
     {
         WndMessage.wndMessage.ShowMessage("広告の再生に失敗しました。", () =>
         {
-            PlayingManager.gameMaster.SwitchAudio(true);
+            PlayingManager.gameMaster.MuteAudio(false);
             PlayingManager.playingManager.SwitchPause(false);
         });
         MonoBehaviour.print(
@@ -134,7 +135,7 @@ public class RewardAdManager : MonoBehaviour
         {
             WndMessage.wndMessage.ShowMessage("マヨネーズを１つ獲得しました!", () =>
             {
-                PlayingManager.gameMaster.SwitchAudio(true);
+                PlayingManager.gameMaster.MuteAudio(false);
                 PlayingManager.playingManager.mayoCount++;
                 PlayingManager.playingManager.SwitchPause(false);
             });
@@ -143,7 +144,7 @@ public class RewardAdManager : MonoBehaviour
         {
             WndMessage.wndMessage.ShowMessage("広告の再生が中断されました。", () =>
             {
-                PlayingManager.gameMaster.SwitchAudio(true);
+                PlayingManager.gameMaster.MuteAudio(false);
                 PlayingManager.playingManager.SwitchPause(false);
             });
         }

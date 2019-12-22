@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿//#define TEST_AD
+using System.Collections;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,8 +9,9 @@ public class InterstitialAdManager : MonoBehaviour
 {
     private InterstitialAd interstitial;
     private Action action;
-    private bool isSuccessLoad = true;
-
+    private bool isFailedLoad = false;
+    private bool isFinishShow = false;
+    private Coroutine crtnMonitorFinishShow;
 //インタースティシャル
 #if TEST_AD //テスト
 
@@ -48,20 +50,26 @@ public class InterstitialAdManager : MonoBehaviour
 
     public void Show(Action callback)
     {
-        StartCoroutine(MonitorLoadingAd());
+        crtnMonitorFinishShow=StartCoroutine(MonitorLoadingAd());
         return;
-
         IEnumerator MonitorLoadingAd()
         {
-            while (!this.interstitial.IsLoaded() && isSuccessLoad)
+            var wdt = 3f;
+            while (!this.interstitial.IsLoaded() && !isFailedLoad && wdt>0f)
             {
+                wdt -= Time.deltaTime;
                 yield return new WaitForSeconds(0.1f);
             }
 
-            if (isSuccessLoad)
+            if (!isFailedLoad && wdt>0f)
             {
+                this.isFinishShow = false;
                 this.action = callback;
                 this.interstitial.Show();
+#if DEBUG
+                callback();
+#endif
+
             }
             else
             {
@@ -83,7 +91,7 @@ public class InterstitialAdManager : MonoBehaviour
 
         AdRequest request = new AdRequest.Builder().Build();
         _interstitial.LoadAd(request);
-        isSuccessLoad = true;
+        isFailedLoad = false;
         return _interstitial;
     }
 
@@ -94,7 +102,7 @@ public class InterstitialAdManager : MonoBehaviour
 
     public void HandleOnAdFailedToLoad(object sender, AdFailedToLoadEventArgs args)
     {
-        isSuccessLoad = false;
+        isFailedLoad = true;
         MonoBehaviour.print("HandleFailedToReceiveAd event received with message: "
                             + args.Message);
     }
@@ -108,7 +116,9 @@ public class InterstitialAdManager : MonoBehaviour
     {
         this.interstitial.Destroy();
         this.interstitial = CreateInterstitialAd();
+        StopCoroutine(crtnMonitorFinishShow);
         this.action();
+        this.isFinishShow = true;
         MonoBehaviour.print("HandleAdClosed event received");
     }
 

@@ -219,6 +219,18 @@ public class GameMaster : MonoBehaviour
         }
     }
 
+    public void MuteAudio(bool enable)
+    {
+        if (enable)
+        {
+            SetBgmVolume(0f);
+        }
+        else
+        {
+            if(settings.audio_enabled) SetBgmVolume(settings.audio_volume);
+        }
+    }
+
     public float GetBgmVolume()
     {
         float decibel;
