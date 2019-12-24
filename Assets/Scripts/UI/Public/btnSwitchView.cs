@@ -29,7 +29,7 @@ public class btnSwitchView : MonoBehaviour
             stat = stat_view.publicView;
             image.sprite = sprPlayerView;
             cmrPlayerView.depth = -1f;
-            cmrPlayerView.gameObject.SetActive(true);
+            cmrPlayerView.gameObject.SetActive(false);
             cmrPublicView.depth = 0f;
             //cnvsPublic.worldCamera = cmrPublicView;
         }
@@ -38,7 +38,7 @@ public class btnSwitchView : MonoBehaviour
             stat = stat_view.playerView;
             image.sprite = sprPublicView;
             cmrPlayerView.depth = 0f;
-            cmrPlayerView.gameObject.SetActive(false);
+            cmrPlayerView.gameObject.SetActive(true);
             cmrPublicView.depth = -1f;
             //cnvsPublic.worldCamera = cmrPlayerView;
         }
