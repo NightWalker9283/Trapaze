@@ -95,7 +95,7 @@ public class GameMaster : MonoBehaviour
     private void CreateGameModes()
     {
 
-        gameModes.Add(new GameMode(1, "ショート",1,false,false, 4f, 90f, "少しの空き時間でサクッと遊びたいときに。たったひとうのマヨネーズをどう使う？"));
+        gameModes.Add(new GameMode(1, "ショート",1,false,false, 4f, 90f, "少しの空き時間でサクッと遊びたいときに。たったひとつのマヨネーズをどう使う？"));
         gameModes.Add(new GameMode(2, "スタンダード", 1,true,true,9f, 180f, "ブランコをしっかり楽しみたい方に。ブランコ漕ぎの技術で差をつけろ！"));
         gameModes.Add(new GameMode(3, "チャレンジャー",0,true,true, 20f, -1, "夢の超巨大ブランコ。異常に眠くなります。睡眠導入、精神安定などの用途にご利用ください。がんばれば一周できます。"));
 

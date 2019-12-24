@@ -11,7 +11,7 @@ public class InterstitialAdManager : MonoBehaviour
     private Action action;
     private bool isFailedLoad = false;
     private bool isFinishShow = false;
-    private Coroutine crtnMonitorFinishShow;
+    IEnumerator crtnMonitorFinishShow;
 //インタースティシャル
 #if TEST_AD //テスト
 
@@ -50,9 +50,12 @@ public class InterstitialAdManager : MonoBehaviour
 
     public void Show(Action callback)
     {
-        crtnMonitorFinishShow=StartCoroutine(MonitorLoadingAd());
+        crtnMonitorFinishShow = MonitorLoadingAd(callback);
+        StartCoroutine(crtnMonitorFinishShow);
         return;
-        IEnumerator MonitorLoadingAd()
+
+    }
+        IEnumerator MonitorLoadingAd(Action callback)
         {
             var wdt = 3f;
             while (!this.interstitial.IsLoaded() && !isFailedLoad && wdt>0f)
@@ -68,6 +71,7 @@ public class InterstitialAdManager : MonoBehaviour
                 this.interstitial.Show();
 #if DEBUG
                 callback();
+                StopCoroutine(crtnMonitorFinishShow);
 #endif
 
             }
@@ -76,8 +80,6 @@ public class InterstitialAdManager : MonoBehaviour
                 callback();
             }
         }
-
-    }
 
 
     private InterstitialAd CreateInterstitialAd()
@@ -114,11 +116,11 @@ public class InterstitialAdManager : MonoBehaviour
 
     public void HandleOnAdClosed(object sender, EventArgs args)
     {
-        this.interstitial.Destroy();
-        this.interstitial = CreateInterstitialAd();
         StopCoroutine(crtnMonitorFinishShow);
         this.action();
         this.isFinishShow = true;
+        this.interstitial.Destroy();
+        this.interstitial = CreateInterstitialAd();
         MonoBehaviour.print("HandleAdClosed event received");
     }
 
