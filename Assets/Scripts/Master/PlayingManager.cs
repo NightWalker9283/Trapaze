@@ -15,7 +15,7 @@ public class PlayingManager : MonoBehaviour
     [SerializeField] UiDistance uiDistance;
     [SerializeField] CanvasGroup ugForPlay, ugController, ugForAfterJump, ugForResult;
 
-    [SerializeField] public Camera cmrPlayerView, cmrPublic, cmrPlayer, cmrUI, cmrFace;
+    [SerializeField] public Camera cmrPlayerView, cmrPublic, cmrPlayer, cmrUI,cmrUiPlayer, cmrFace;
     [SerializeField] CinemachineVirtualCamera vcamPublic, vcamFace, vcamResult;
     [SerializeField] Rigidbody rb_Player, rb_Trapeze;
     [SerializeField] public Canvas cvsPublic, cvsPlayer, cvsTop;
@@ -144,6 +144,7 @@ public class PlayingManager : MonoBehaviour
                     StartCoroutine(CameraRectChangeRight(cmrPublic, 1f));
                     StartCoroutine(CameraRectChangeRight(cmrPlayerView, 1f));
                     StartCoroutine(CameraRectChangeLeft(cmrPlayer, 0f));
+                    StartCoroutine(CameraRectChangeLeft(cmrUiPlayer, 0f));
                     uiDistance.StartMessDistance();
                     cmrPlayerView.transform.parent = rb_Player.transform;
 
@@ -294,7 +295,7 @@ public class PlayingManager : MonoBehaviour
     IEnumerator InitEffect()
     {
 
-
+        cmrUiPlayer.gameObject.SetActive(false);
         CanvasTop.canvasTop.FadeinScene();
         vcamFace.gameObject.SetActive(true);
         cmrFace.gameObject.SetActive(true);
@@ -308,6 +309,7 @@ public class PlayingManager : MonoBehaviour
         vcamFace.gameObject.SetActive(false);
         rb_Trapeze.isKinematic = false;
         CanvasTop.canvasTop.FadeinScene();
+        cmrUiPlayer.gameObject.SetActive(true);
         mayoCount = gameMaster.gameMode.initialMayoCnt;
         Stat = Stat_global.play;
     }
