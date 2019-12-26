@@ -73,7 +73,7 @@ public class PlayingManager : MonoBehaviour
             gameObject.AddComponent<RankingManager>();
             gameMaster = gameObject.AddComponent<GameMaster>();
             gameMaster.gameMode = new GameMode(-1, "テスト",3,true,true,testTrapezeLengs, -1f, "");
-            gameMaster.settings = new Settings("加藤純一", true, 1f, true);
+            gameMaster.settings = new Settings("加藤純一", true, 1f, true,0);
             gameMaster.am = am;
         }
         allComments = new List<CommentsData>();

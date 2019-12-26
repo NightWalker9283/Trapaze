@@ -36,7 +36,14 @@ public class GameMaster : MonoBehaviour
     float wdtInitializeAd = 5f;
     AsyncOperation aoSceneLoad;
     bool isFinishInitializeAds = false;
-    public int playCount = 0;
+    public int playCount {
+        get { return settings.play_count; }
+        set
+        {
+            settings.play_count = (value)%5;
+            Save();
+        }
+    }
     void Awake()
     {
 #if DEBUG

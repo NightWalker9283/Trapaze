@@ -20,11 +20,11 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
+  m_AmbientSkyColor: {r: 0.108333334, g: 0.07990196, b: 0.08676471, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
-  m_AmbientIntensity: 1
-  m_AmbientMode: 0
+  m_AmbientIntensity: 0
+  m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
   m_HaloStrength: 0.5
@@ -325,8 +325,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textJUMP: {fileID: 0}
-  ac_on: {fileID: 0}
-  ac_off: {fileID: 0}
+  ac_on_SE: {fileID: 0}
+  ac_on_Voice: {fileID: 0}
+  ac_off_SE: {fileID: 0}
+  ac_off_Voice: {fileID: 0}
+  amgSE: {fileID: 0}
+  amgVoice: {fileID: 0}
   PlayerControllPoint: {fileID: 0}
   Joystick: {fileID: 0}
 --- !u!114 &40995519
@@ -1025,13 +1029,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 676065419}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalRotation: {x: 0.080624945, y: 0.6152654, z: -0.063465685, w: 0.7816139}
+  m_LocalPosition: {x: 0, y: 5.67, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 11.779, y: 76.41801, z: 0}
 --- !u!1 &690807834
 GameObject:
   m_ObjectHideFlags: 0
@@ -1044,6 +1048,7 @@ GameObject:
   - component: {fileID: 690807837}
   - component: {fileID: 690807836}
   - component: {fileID: 690807835}
+  - component: {fileID: 690807839}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
@@ -1126,6 +1131,49 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &690807839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 690807834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b91f4970bd6b4ce490e72b8f4797b81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _density: 1
+  _extent: {x: 100, y: 100}
+  _offset: {x: 0, y: 0}
+  _randomPitchAngle: 14
+  _noisePitchAngle: 14
+  _rotationNoiseFrequency: 1
+  _rotationNoiseSpeed: 0.5
+  _rotationNoiseAxis: {x: 1, y: 0, z: 1}
+  _baseScale: {x: 1, y: 1, z: 1}
+  _minRandomScale: 0.79858494
+  _maxRandomScale: 1.2339623
+  _scaleNoiseAmplitude: 0.5
+  _scaleNoiseFrequency: 0.5
+  _shapes:
+  - {fileID: 0}
+  - {fileID: 0}
+  _material: {fileID: 2100000, guid: 3f215119d17f3496a9a46251be8bb9bc, type: 2}
+  _owningMaterial: 0
+  _castShadows: 0
+  _receiveShadows: 0
+  _defaultMaterial: {fileID: 2100000, guid: 3f215119d17f3496a9a46251be8bb9bc, type: 2}
+  _kernelShader: {fileID: 4800000, guid: 1404e2fdeb8d34504b143c592d0817b3, type: 3}
+  _positionBuffer: {fileID: 0}
+  _rotationBuffer: {fileID: 0}
+  _scaleBuffer: {fileID: 0}
+  _bulkMesh: {_mesh: {fileID: 0}}
+  _kernelMaterial: {fileID: 0}
+  _rotationNoiseTime: 47.305367
+  _positionUpdateFlag: 1
+  _scaleUpdateFlag: 1
+  _needsReset: 0
 --- !u!1 &724554724
 GameObject:
   m_ObjectHideFlags: 0
@@ -1497,7 +1545,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!95 &987188542
 Animator:
   serializedVersion: 3
