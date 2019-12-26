@@ -50,9 +50,16 @@ public class InterstitialAdManager : MonoBehaviour
 
     public void Show(Action callback)
     {
-        crtnMonitorFinishShow = MonitorLoadingAd(callback);
-        StartCoroutine(crtnMonitorFinishShow);
-        return;
+        if ((GameMaster.gameMaster.playCount % 5) == 0)
+        {
+            crtnMonitorFinishShow = MonitorLoadingAd(callback);
+            StartCoroutine(crtnMonitorFinishShow);
+            return;
+        }
+        else
+        {
+            callback();
+        }
 
     }
         IEnumerator MonitorLoadingAd(Action callback)

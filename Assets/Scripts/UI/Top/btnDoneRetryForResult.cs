@@ -20,7 +20,7 @@ public class btnDoneRetryForResult : MonoBehaviour
 
         AdsManager.interstitialAdManager.Show(() =>
         {
-            PlayingManager.gameMaster.GameStart();
+            PlayingManager.gameMaster.Play();
             PlayingManager.gameMaster.MuteAudio(false);
             Destroy(FindObjectOfType<PlayingManager>().gameObject);
         });

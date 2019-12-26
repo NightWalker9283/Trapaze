@@ -20,26 +20,35 @@ public class GameMaster : MonoBehaviour
     public static GameMaster gameMaster;
     public static RankingManager rankingManager;
     public List<GameMode> gameModes = new List<GameMode>();
-    
+
 
     [SerializeField] Toggle tglModeOrigin;
     [SerializeField] GameObject cvsInputName;
     [SerializeField] GameObject imgBrack;
     [SerializeField] WndTitles wndTitles;
-    
+
     [SerializeField] Transform contentTitles, contentVoices;
     [SerializeField] GameObject prfbListElementTitle, prfbListElementVoice;
     private Transform tggModes;
     [SerializeField] public AudioMixer am;
     [SerializeField] bool ResetSaveFile = false;
     bool _oldResetSaveFile;
-    float wdtInitializeAd=5f;
-
+    float wdtInitializeAd = 5f;
+    AsyncOperation aoSceneLoad;
+    bool isFinishInitializeAds = false;
+    public int playCount = 0;
     void Awake()
     {
+#if DEBUG
+        isFinishInitializeAds = true;
+#endif
+
         gameMaster = this;
 
-        MobileAds.Initialize(initStatus => { wdtInitializeAd = 0; });
+        if (!isFinishInitializeAds) MobileAds.Initialize(initStatus => {
+            wdtInitializeAd = 0;
+            isFinishInitializeAds = true;
+        });
         gameObject.AddComponent<AdsManager>();
         CreateGameModes();
 
@@ -53,7 +62,11 @@ public class GameMaster : MonoBehaviour
 
     private void Start()
     {
-        if (imgBrack != null) imgBrack.SetActive(true);
+        if (!isFinishInitializeAds && imgBrack != null)
+        {
+            imgBrack.SetActive(true);
+            StartCoroutine(MonitorLoadingAd());
+        }
         if (settings.audio_enabled)
             SetBgmVolume(settings.audio_volume);
         else
@@ -75,14 +88,26 @@ public class GameMaster : MonoBehaviour
             CreateLibraryListViews();
         }
     }
+    IEnumerator MonitorLoadingAd()
+    {
+        while (true)
+        {
 
+
+            {
+                if (wdtInitializeAd > 0f) wdtInitializeAd -= Time.deltaTime;
+                if (wdtInitializeAd <= 0f)
+                {
+
+                    imgBrack.SetActive(false);
+                    break;
+                }
+            }
+            yield return null;
+        }
+    }
     private void Update()
     {
-        if (imgBrack != null && imgBrack.activeSelf)
-        {
-            if (wdtInitializeAd > 0f) wdtInitializeAd -= Time.deltaTime;
-            if (wdtInitializeAd <= 0f) imgBrack.SetActive(false);
-        }
         if (ResetSaveFile != _oldResetSaveFile && ResetSaveFile)
         {
             SaveData.Clear();
@@ -95,9 +120,9 @@ public class GameMaster : MonoBehaviour
     private void CreateGameModes()
     {
 
-        gameModes.Add(new GameMode(1, "ショート",1,false,false, 4f, 90f, "少しの空き時間でサクッと遊びたいときに。たったひとつのマヨネーズをどう使う？"));
-        gameModes.Add(new GameMode(2, "スタンダード", 1,true,true,9f, 180f, "ブランコをしっかり楽しみたい方に。ブランコ漕ぎの技術で差をつけろ！"));
-        gameModes.Add(new GameMode(3, "チャレンジャー",0,true,true, 20f, -1, "夢の超巨大ブランコ。異常に眠くなります。睡眠導入、精神安定などの用途にご利用ください。がんばれば一周できます。"));
+        gameModes.Add(new GameMode(1, "ショート", 1, false, false, 4f, 90f, "少しの空き時間でサクッと遊びたいときに。たったひとつのマヨネーズをどう使う？"));
+        gameModes.Add(new GameMode(2, "スタンダード", 1, true, true, 9f, 180f, "ブランコをしっかり楽しみたい方に。ブランコ漕ぎの技術で差をつけろ！"));
+        gameModes.Add(new GameMode(3, "チャレンジャー", 0, true, true, 20f, -1, "夢の超巨大ブランコ。異常に眠くなります。睡眠導入、精神安定などの用途にご利用ください。がんばれば一周できます。"));
 
     }
 
@@ -146,7 +171,7 @@ public class GameMaster : MonoBehaviour
 
     private void CreateLibListTitles()
     {
-        var lstListElementsTitles=new List<ListElementTitle>();
+        var lstListElementsTitles = new List<ListElementTitle>();
         var tggTitles = contentTitles.GetComponent<ToggleGroup>();
         for (int i = 0; i < titles.allTitles.Count; i++)
         {
@@ -162,7 +187,7 @@ public class GameMaster : MonoBehaviour
         }
         foreach (var item in acquiredTitles)
         {
-            var le=lstListElementsTitles.Find(dt => dt.id == item);
+            var le = lstListElementsTitles.Find(dt => dt.id == item);
             if (le != null)
             {
                 le.enable = true;
@@ -181,13 +206,13 @@ public class GameMaster : MonoBehaviour
             var objLe = Instantiate(prfbListElementVoice, contentVoices);
             var tgl = objLe.GetComponent<Toggle>();
             tgl.group = tggVoices;
-           
+
             objLe.GetComponentInChildren<Text>().text =
-                acquiredVoices[i].Substring(acquiredVoices[i].LastIndexOf('/')+1);
+                acquiredVoices[i].Substring(acquiredVoices[i].LastIndexOf('/') + 1);
             var le = objLe.GetComponent<ListElementVoice>();
             le.path = acquiredVoices[i];
-            
-            
+
+
         }
 
     }
@@ -227,7 +252,7 @@ public class GameMaster : MonoBehaviour
         }
         else
         {
-            if(settings.audio_enabled) SetBgmVolume(settings.audio_volume);
+            if (settings.audio_enabled) SetBgmVolume(settings.audio_volume);
         }
     }
 
@@ -280,10 +305,11 @@ public class GameMaster : MonoBehaviour
     }
 
 
-    public void GameStart()
+    public void Play()
     {
-        
-        SceneManager.LoadScene("Main");
+        Save();
+        aoSceneLoad = SceneManager.LoadSceneAsync("Main");
+        playCount++;
         Time.timeScale = 1f;
     }
 
@@ -293,5 +319,29 @@ public class GameMaster : MonoBehaviour
         Save();
         SceneManager.LoadScene("Title");
         Time.timeScale = 1f;
+    }
+
+    public void GameStart()
+    {
+        imgBrack.SetActive(true);
+
+        StartCoroutine(ShowLoadingProc());
+        return;
+
+        IEnumerator ShowLoadingProc()
+        {
+
+            var img = imgBrack.GetComponent<Image>();
+            img.color = new Color(0f, 0f, 0f);
+            for (float f = 0f; f <= 1f; f += 0.1f)
+            {
+                img.color = new Color(img.color.r, img.color.g, img.color.b, f);
+                yield return null;
+            }
+            img.color = new Color(img.color.r, img.color.g, img.color.b, 1f);
+            aoSceneLoad = SceneManager.LoadSceneAsync("Main");
+            playCount++;
+        }
+
     }
 }

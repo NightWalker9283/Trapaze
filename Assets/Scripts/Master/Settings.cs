@@ -18,7 +18,7 @@ public class Settings
         this.name = "";
         this.audio_enabled = true;
         this.audio_volume = 1f;
-        this.enable_voice = false;
+        this.enable_voice = true;
     }
 
 }

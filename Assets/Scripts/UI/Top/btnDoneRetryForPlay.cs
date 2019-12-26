@@ -15,7 +15,7 @@ public class btnDoneRetryForPlay : MonoBehaviour
     // Update is called once per frame
     void Done()
     {
-        PlayingManager.gameMaster.GameStart();
+        PlayingManager.gameMaster.Play();
         Destroy(FindObjectOfType<PlayingManager>().gameObject);
     }
 }
