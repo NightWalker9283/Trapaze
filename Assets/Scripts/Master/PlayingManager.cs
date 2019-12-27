@@ -15,7 +15,7 @@ public class PlayingManager : MonoBehaviour
     [SerializeField] UiDistance uiDistance;
     [SerializeField] CanvasGroup ugForPlay, ugController, ugForAfterJump, ugForResult;
 
-    [SerializeField] public Camera cmrPlayerView, cmrPublic, cmrPlayer, cmrUI,cmrUiPlayer, cmrFace;
+    [SerializeField] public Camera cmrPlayerView, cmrPublic, cmrPlayer, cmrUI, cmrUiPlayer, cmrFace;
     [SerializeField] CinemachineVirtualCamera vcamPublic, vcamFace, vcamResult;
     [SerializeField] Rigidbody rb_Player, rb_Trapeze;
     [SerializeField] public Canvas cvsPublic, cvsPlayer, cvsTop;
@@ -47,6 +47,9 @@ public class PlayingManager : MonoBehaviour
     public static GameMaster gameMaster;
     public static PlayingManager playingManager;
     public List<CommentsData> allComments;
+    public bool isTraining = false;
+    public bool isTutorial = false;
+
     int _mayoCount = 0;
     public int mayoCount
     {
@@ -67,15 +70,23 @@ public class PlayingManager : MonoBehaviour
         gameMaster = FindObjectOfType<GameMaster>();
         audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.outputAudioMixerGroup = amgSE;
-        
+
         if (gameMaster == null)
         {
             gameObject.AddComponent<RankingManager>();
             gameMaster = gameObject.AddComponent<GameMaster>();
-            gameMaster.gameMode = new GameMode(-1, "テスト",3,true,true,testTrapezeLengs, -1f, "");
-            gameMaster.settings = new Settings("加藤純一", true, 1f, true,0);
+            if (SceneManager.GetActiveScene().name != "Training")
+            {
+                gameMaster.gameMode = new GameMode(-1, "テスト", 3, true, true, testTrapezeLengs, -1f, "");
+            }
+            else
+            {
+                gameMaster.gameMode = gameMaster.gmTraining;
+            }
+            gameMaster.settings = new Settings("加藤純一", true, 1f, true, 0);
             gameMaster.am = am;
         }
+        if (gameMaster.gameMode.id == 99) isTraining = true;
         allComments = new List<CommentsData>();
         allComments.Add(Resources.Load<CommentsData>("Comments/CommentsData0"));
         allComments.Add(Resources.Load<CommentsData>("Comments/CommentsData1"));
@@ -88,7 +99,7 @@ public class PlayingManager : MonoBehaviour
         Stat = Stat_global.init;
         _oldStat = Stat;
         _oldPcStat = playerController.stat;
-        
+
     }
 
     void Start()
@@ -140,15 +151,24 @@ public class PlayingManager : MonoBehaviour
                 case Stat_global.fly:
                     StartCoroutine(Fadein(ugForAfterJump));
                     StartCoroutine(Fadeout(ugForPlay));
+                    if (!isTraining)
+                    {
+                        StartCoroutine(CameraRectChangeRight(cmrPlayerView, 1f));
+                        cmrPlayerView.transform.parent = rb_Player.transform;
+                    }
                     StartCoroutine(CameraRectChangeRight(cmrUI, 1f));
                     StartCoroutine(CameraRectChangeRight(cmrPublic, 1f));
-                    StartCoroutine(CameraRectChangeRight(cmrPlayerView, 1f));
                     StartCoroutine(CameraRectChangeLeft(cmrPlayer, 0f));
                     StartCoroutine(CameraRectChangeLeft(cmrUiPlayer, 0f));
                     uiDistance.StartMessDistance();
-                    cmrPlayerView.transform.parent = rb_Player.transform;
-
-                    cmrPublic.GetComponent<PublicCamera>().stat = PublicCamera.stat_publicCamera.jump;
+                    if (isTraining)
+                    {
+                        cmrPublic.GetComponent<PublicCameraPerspective>().stat = PublicCameraPerspective.stat_publicCamera.jump;
+                    }
+                    else
+                    {
+                        cmrPublic.GetComponent<PublicCamera>().stat = PublicCamera.stat_publicCamera.jump;
+                    }
                     txtVelocity.MassPoint = rb_Player;
 
                     break;
@@ -172,13 +192,23 @@ public class PlayingManager : MonoBehaviour
 
     IEnumerator ShowResultUI()
     {
-        vcamPublic.m_Lens.OrthographicSize = cmrPublic.orthographicSize;
-        vcamPublic.transform.position = cmrPublic.transform.position;
-        vcamPublic.transform.rotation = cmrPublic.transform.rotation;
-        vcamPublic.gameObject.SetActive(true);
-        cmrPublic.GetComponent<PerspectiveSwitcher>().enabled = true;
-        yield return null;
-        cmrPublic.GetComponent<PerspectiveSwitcher>().SwitchToPerspectiveMode();
+        if (isTraining)
+        {
+            vcamPublic.m_Lens.FieldOfView = cmrPublic.fieldOfView;
+            vcamPublic.transform.position = cmrPublic.transform.position;
+            vcamPublic.transform.rotation = cmrPublic.transform.rotation;
+            vcamPublic.gameObject.SetActive(true);
+        }
+        else
+        {
+            vcamPublic.m_Lens.OrthographicSize = cmrPublic.orthographicSize;
+            vcamPublic.transform.position = cmrPublic.transform.position;
+            vcamPublic.transform.rotation = cmrPublic.transform.rotation;
+            vcamPublic.gameObject.SetActive(true);
+            cmrPublic.GetComponent<PerspectiveSwitcher>().enabled = true;
+            yield return null;
+            cmrPublic.GetComponent<PerspectiveSwitcher>().SwitchToPerspectiveMode();
+        }
         cmrPublic.GetComponent<CinemachineBrain>().enabled = true;
         // StartCoroutine(SmoothChangePerspective());
         yield return new WaitForSeconds(1f);
@@ -187,26 +217,28 @@ public class PlayingManager : MonoBehaviour
         uiDistance.Finish();
         yield return new WaitForSeconds(3.5f);
         ugForResult.gameObject.SetActive(true);
-        wndResultComment.SetActive(true);
-        yield return new WaitForSeconds(1f);
-
-        var sttl=titleMonitor.Result(playerController.transform.position.z);
-        foreach (var item in titleMonitor.acquiredTitles)
+        var sttl = titleMonitor.Result(playerController.transform.position.z);
+        if (!isTraining)
         {
-            var titleObject = gameMaster.titles.allTitles.FirstOrDefault(t => t.id == item);
-            var titleElement = Instantiate(prfbTitleElement, ugTitleElements.transform);
-            var txtTitleElement = titleElement.transform.Find("txtTitleElement");
-            txtTitleElement.GetComponent<Text>().text = titleObject.name;
+            wndResultComment.SetActive(true);
+            yield return new WaitForSeconds(1f);
 
-            if (gameMaster.acquiredTitles.FirstOrDefault(i => i == item) == 0)
+            foreach (var item in titleMonitor.acquiredTitles)
             {
-                var txtNew = titleElement.transform.Find("txtNew");
-                txtNew.gameObject.SetActive(true);
-                gameMaster.acquiredTitles.Add(item);
-            }
-            yield return new WaitForSeconds(0.5f);
-        }
+                var titleObject = gameMaster.titles.allTitles.FirstOrDefault(t => t.id == item);
+                var titleElement = Instantiate(prfbTitleElement, ugTitleElements.transform);
+                var txtTitleElement = titleElement.transform.Find("txtTitleElement");
+                txtTitleElement.GetComponent<Text>().text = titleObject.name;
 
+                if (gameMaster.acquiredTitles.FirstOrDefault(i => i == item) == 0)
+                {
+                    var txtNew = titleElement.transform.Find("txtNew");
+                    txtNew.gameObject.SetActive(true);
+                    gameMaster.acquiredTitles.Add(item);
+                }
+                yield return new WaitForSeconds(0.5f);
+            }
+        }
         ugButtonsForResult.SetActive(true);
         ResultVoice.resultVoice.Play(sttl);
     }
@@ -214,6 +246,7 @@ public class PlayingManager : MonoBehaviour
 
     public void Result(float distance, float time)
     {
+        if (isTraining) return;
         bool isNewRecord = false;
         btnComment.interactable = false;
         btnCommentRush.interactable = false;

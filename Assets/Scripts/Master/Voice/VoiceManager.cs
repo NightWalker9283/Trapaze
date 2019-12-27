@@ -9,22 +9,22 @@ public class VoiceManager : MonoBehaviour
 {
 
     public static VoiceManager voiceManager;
-    Queue<AudioFile> queue=new Queue<AudioFile>();
+    Queue<AudioFile> queue = new Queue<AudioFile>();
     AudioSource audioSource;
-   
+
     // Start is called before the first frame update
     private void Awake()
     {
 
         voiceManager = this;
         audioSource = GetComponent<AudioSource>();
-        
-      
+
+
 
     }
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -35,7 +35,8 @@ public class VoiceManager : MonoBehaviour
             var af = queue.Dequeue();
 
             audioSource.PlayOneShot(af.audioClip);
-            if (GameMaster.gameMaster.acquiredVoices.Find(str => str == af.path) == null)
+            if (!PlayingManager.playingManager.isTraining &&
+                GameMaster.gameMaster.acquiredVoices.Find(str => str == af.path) == null)
             {
                 GameMaster.gameMaster.acquiredVoices.Add(af.path);
                 GameMaster.gameMaster.Save();
@@ -51,7 +52,7 @@ public class VoiceManager : MonoBehaviour
         queue.Enqueue(af);
     }
 
-    public void AddVoice(AudioFile af,Action callback)
+    public void AddVoice(AudioFile af, Action callback)
     {
         queue.Enqueue(af);
         StartCoroutine(MonitorIsPlaying());
@@ -86,11 +87,11 @@ public class VoiceManager : MonoBehaviour
     {
         var lst = new List<AudioFile>();
         var voices = Resources.LoadAll<AudioClip>(directlyPath);
-        
+
         foreach (AudioClip ac in voices)
         {
             var af = new AudioFile();
-            af.path = directlyPath+"/"+ac.name;
+            af.path = directlyPath + "/" + ac.name;
             af.audioClip = ac;
             lst.Add(af);
         }
@@ -105,7 +106,7 @@ public class VoiceManager : MonoBehaviour
         af.audioClip = voice;
         return af;
     }
-   
+
 
 }
 
@@ -115,7 +116,7 @@ public class AudioFile
     public AudioClip audioClip;
 
     public AudioFile() { }
-    public AudioFile(string path,AudioClip audioClip)
+    public AudioFile(string path, AudioClip audioClip)
     {
         this.path = path;
         this.audioClip = audioClip;

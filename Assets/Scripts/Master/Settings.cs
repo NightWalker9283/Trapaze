@@ -6,6 +6,7 @@ public class Settings
     public float audio_volume;
     public bool enable_voice;
     public int play_count;
+    
 
     public Settings(string name,bool audio_enabled, float audio_volume,bool enable_voice,int play_count)
     {
@@ -14,6 +15,7 @@ public class Settings
         this.audio_volume = audio_volume;
         this.enable_voice = enable_voice;
         this.play_count = play_count;
+        
     }
     public Settings()
     {
@@ -22,6 +24,7 @@ public class Settings
         this.audio_volume = 1f;
         this.enable_voice = true;
         this.play_count = 0;
+       
     }
 
 }

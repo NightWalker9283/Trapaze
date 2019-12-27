@@ -33,16 +33,29 @@ public class ModeChanger : MonoBehaviour
 
     public void ChangeModeNext()
     {
-        idx = (idx + 1) % gameModes.Count;
-        gameMaster.gameMode = gameModes[idx];
+        idx++;
+        if (idx > gameModes.Count) idx = 0;
+        SetGameMode(idx);
         SetModeTexts();
     }
 
     public void ChangeModePrev()
     {
-        idx = (idx - 1 + gameModes.Count) % gameModes.Count;
-        gameMaster.gameMode = gameModes[idx];
+        idx-- ;
+        if (idx < 0) idx = gameModes.Count;
+        SetGameMode(idx);
         SetModeTexts();
+    }
+    private void SetGameMode(int index)
+    {
+        if (index < gameModes.Count)
+        {
+            gameMaster.gameMode = gameModes[index];
+        }
+        if (index == gameModes.Count)
+        {
+            gameMaster.gameMode = gameMaster.gmTraining;
+        }
     }
 
     private void SetModeTexts()

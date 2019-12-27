@@ -45,7 +45,7 @@ public class UiDistance : MonoBehaviour
     }
     public void Finish()
     {
-        StartCoroutine(MoveToFinishPos());
+        if (!PlayingManager.playingManager.isTraining) StartCoroutine(MoveToFinishPos());
 
     }
 

@@ -20,12 +20,17 @@ public class BGMController : MonoBehaviour
     {
         audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.outputAudioMixerGroup = amgSE;
-        
-        for (int i = 0; i < acs.Length; i++)
+        if (PlayingManager.playingManager.isTraining)
         {
-            acs[Random.Range(0, acs.Length)] = acs[Random.Range(0, acs.Length)];
+            audioSource.loop = true;
         }
-
+        else
+        {
+            for (int i = 0; i < acs.Length; i++)
+            {
+                acs[Random.Range(0, acs.Length)] = acs[Random.Range(0, acs.Length)];
+            }
+        }
 
     }
 
@@ -36,7 +41,7 @@ public class BGMController : MonoBehaviour
         {
             
             StartCoroutine(playBGM(acs[playIdx]));
-            playIdx = (playIdx + 1) % 5;
+            playIdx = (playIdx + 1) % acs.Length;
         }
 
 

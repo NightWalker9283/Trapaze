@@ -20,6 +20,7 @@ public class GameMaster : MonoBehaviour
     public static GameMaster gameMaster;
     public static RankingManager rankingManager;
     public List<GameMode> gameModes = new List<GameMode>();
+    public GameMode gmTraining;
 
 
     [SerializeField] Toggle tglModeOrigin;
@@ -130,6 +131,7 @@ public class GameMaster : MonoBehaviour
         gameModes.Add(new GameMode(1, "ショート", 1, false, false, 4f, 90f, "少しの空き時間でサクッと遊びたいときに。たったひとつのマヨネーズをどう使う？"));
         gameModes.Add(new GameMode(2, "スタンダード", 1, true, true, 9f, 180f, "ブランコをしっかり楽しみたい方に。ブランコ漕ぎの技術で差をつけろ！"));
         gameModes.Add(new GameMode(3, "チャレンジャー", 0, true, true, 20f, -1, "夢の超巨大ブランコ。異常に眠くなります。睡眠導入、精神安定などの用途にご利用ください。がんばれば一周できます。"));
+        gmTraining= new GameMode(99, "トレーニング", 3, false, false, 4f, -1, "チュートリアル付き。初めての方はまずこちらから。ボイス・称号・ハイスコアは記録されません。");
 
     }
 
@@ -315,7 +317,7 @@ public class GameMaster : MonoBehaviour
     public void Play()
     {
         Save();
-        aoSceneLoad = SceneManager.LoadSceneAsync("Main");
+        aoSceneLoad = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
         playCount++;
         Time.timeScale = 1f;
     }
@@ -346,7 +348,14 @@ public class GameMaster : MonoBehaviour
                 yield return null;
             }
             img.color = new Color(img.color.r, img.color.g, img.color.b, 1f);
-            aoSceneLoad = SceneManager.LoadSceneAsync("Main");
+            if (gameMode.id == 99)
+            {
+                aoSceneLoad = SceneManager.LoadSceneAsync("Training");
+            }
+            else
+            {
+                aoSceneLoad = SceneManager.LoadSceneAsync("Main");
+            }
             playCount++;
         }
 
