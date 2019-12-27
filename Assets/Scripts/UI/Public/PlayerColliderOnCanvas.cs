@@ -36,7 +36,8 @@ public class PlayerColliderOnCanvas : MonoBehaviour
         {
             rigidbody.AddForce(0f, 0f, 20f, ForceMode.Impulse);
         }
-        else
+        if (PlayingManager.playingManager.Stat == PlayingManager.Stat_global.jump ||
+            PlayingManager.playingManager.Stat == PlayingManager.Stat_global.fly)
         {
             rigidbody.AddForce(0f, 2f, 5f, ForceMode.Impulse);
         }
