@@ -20,7 +20,7 @@ public class btnDoneGiveUp : MonoBehaviour
 
         AdsManager.interstitialAdManager.Show(() =>
         {
-            Debug.Log(PlayingManager.gameMaster.settings.audio_enabled);
+            
             PlayingManager.gameMaster.Title();
             PlayingManager.gameMaster.MuteAudio(false);
             Destroy(FindObjectOfType<GameMaster>().gameObject);

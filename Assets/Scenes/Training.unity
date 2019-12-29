@@ -288,7 +288,7 @@ RectTransform:
   m_GameObject: {fileID: 11154234}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.62938476, y: 1.8375, z: 1}
+  m_LocalScale: {x: 0.6, y: 1.85, z: 1}
   m_Children:
   - {fileID: 1667465454}
   m_Father: {fileID: 553551189}
@@ -296,8 +296,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.25}
   m_AnchorMax: {x: 1, y: 0.75}
-  m_AnchoredPosition: {x: -0.59999084, y: 0.010002136}
-  m_SizeDelta: {x: 36.47, y: 0}
+  m_AnchoredPosition: {x: 0.59998703, y: 0.010000229}
+  m_SizeDelta: {x: 66.45, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &24077122
 GameObject:
@@ -7022,7 +7022,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -31.93, y: 14.1}
+  m_AnchoredPosition: {x: -31.930054, y: 14.099976}
   m_SizeDelta: {x: 213.67, y: 46.46}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &1042426478
@@ -12888,7 +12888,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 178}
+  m_SizeDelta: {x: -30, y: 178}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1547938717
 MonoBehaviour:
@@ -12904,18 +12904,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 0.9669811, b: 0.9669811, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 35
+    m_FontSize: 30
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 3
     m_MaxSize: 50
-    m_Alignment: 1
+    m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
@@ -13296,7 +13296,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 10, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1667465457
 MonoBehaviour:
@@ -14439,6 +14439,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   txtSub: {fileID: 1547938717}
   sldJUMP: {fileID: 553551193}
+  stage: {fileID: 1674222143}
   btnCommentRush: {fileID: 1389248961}
   btnParachute: {fileID: 220103432}
   btnComment: {fileID: 1830684355}
@@ -14446,6 +14447,8 @@ MonoBehaviour:
   parentImgDark: {fileID: 1968874029}
   joystick: {fileID: 51752177}
   rectImgUnMask: {fileID: 1042426477}
+  rbTrapeze: {fileID: 2020679185}
+  txtDistance: {fileID: 1388957091}
 --- !u!114 &1780663431
 MonoBehaviour:
   m_ObjectHideFlags: 0

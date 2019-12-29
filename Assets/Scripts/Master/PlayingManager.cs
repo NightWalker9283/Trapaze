@@ -164,7 +164,7 @@ public class PlayingManager : MonoBehaviour
                     StartCoroutine(CameraRectChangeRight(cmrPublic, 1f));
                     StartCoroutine(CameraRectChangeLeft(cmrPlayer, 0f));
                     StartCoroutine(CameraRectChangeLeft(cmrUiPlayer, 0f));
-                    uiDistance.StartMessDistance();
+                    if(!isTutorial) uiDistance.StartMessDistance();
                     if (isTraining)
                     {
                         cmrPublic.GetComponent<PublicCameraPerspective>().stat = PublicCameraPerspective.stat_publicCamera.jump;
@@ -346,8 +346,8 @@ public class PlayingManager : MonoBehaviour
             cmrFace.gameObject.SetActive(false);
             vcamFace.gameObject.SetActive(false);
             mayoCount = gameMaster.gameMode.initialMayoCnt;
+            rb_Trapeze.isKinematic = false;
         }
-        rb_Trapeze.isKinematic = false;
         CanvasTop.canvasTop.FadeinScene();
         cmrUiPlayer.gameObject.SetActive(true);
         Stat = Stat_global.play;

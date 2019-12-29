@@ -166,7 +166,7 @@ public class PublicCameraPerspective : MonoBehaviour
         while (true)
         {
             var _y = Player.position.y + offset_y;
-            if (_y < -93f) _y = -93;
+            
             transform.position = new Vector3(transform.position.x, _y, Player.position.z + offset_z);
             if (transform.eulerAngles.x > 1.4f) transform.LookAt(Player.transform);
 
