@@ -37,6 +37,7 @@ public class GameMaster : MonoBehaviour
     float wdtInitializeAd = 5f;
     AsyncOperation aoSceneLoad;
     bool isFinishInitializeAds = false;
+    public bool isTutorial = false;
     public int playCount {
         get { return settings.play_count; }
         set
@@ -325,6 +326,7 @@ public class GameMaster : MonoBehaviour
 
     public void Title()
     {
+        isTutorial = false;
         Save();
         SceneManager.LoadScene("Title");
         Time.timeScale = 1f;

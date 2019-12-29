@@ -32,6 +32,7 @@ public class PlayingManager : MonoBehaviour
     [SerializeField] AudioMixerGroup amgSE;
     [SerializeField] AudioClip BGN, decision, hanko;
     [SerializeField] Image imgCutIn;
+    [SerializeField] bool isDebugTutorial = false;
 
     PlayerController.stat_enum _oldPcStat;
     RankingManager.Save_ranking_item save_Ranking_Item;
@@ -48,7 +49,7 @@ public class PlayingManager : MonoBehaviour
     public static PlayingManager playingManager;
     public List<CommentsData> allComments;
     public bool isTraining = false;
-    public bool isTutorial = false;
+    public bool isTutorial;
 
     int _mayoCount = 0;
     public int mayoCount
@@ -85,8 +86,11 @@ public class PlayingManager : MonoBehaviour
             }
             gameMaster.settings = new Settings("加藤純一", true, 1f, true, 0);
             gameMaster.am = am;
+            gameMaster.isTutorial = isDebugTutorial;
         }
         if (gameMaster.gameMode.id == 99) isTraining = true;
+        isTutorial = gameMaster.isTutorial;
+        if (isTutorial) GetComponent<Tutorial>().enabled = true;
         allComments = new List<CommentsData>();
         allComments.Add(Resources.Load<CommentsData>("Comments/CommentsData0"));
         allComments.Add(Resources.Load<CommentsData>("Comments/CommentsData1"));
@@ -327,23 +331,25 @@ public class PlayingManager : MonoBehaviour
 
     IEnumerator InitEffect()
     {
-
-        cmrUiPlayer.gameObject.SetActive(false);
-        CanvasTop.canvasTop.FadeinScene();
-        vcamFace.gameObject.SetActive(true);
-        cmrFace.gameObject.SetActive(true);
-        audioSource.PlayOneShot(BGN);
-        yield return new WaitForSeconds(0.7f);
-        StartVoice.startVoice.Play();
-        yield return new WaitForSeconds(4.3f);
-        CanvasTop.canvasTop.FadeoutScene();
-        yield return new WaitForSeconds(1f);
-        cmrFace.gameObject.SetActive(false);
-        vcamFace.gameObject.SetActive(false);
+        if (!isTutorial)
+        {
+            cmrUiPlayer.gameObject.SetActive(false);
+            CanvasTop.canvasTop.FadeinScene();
+            vcamFace.gameObject.SetActive(true);
+            cmrFace.gameObject.SetActive(true);
+            audioSource.PlayOneShot(BGN);
+            yield return new WaitForSeconds(0.7f);
+            StartVoice.startVoice.Play();
+            yield return new WaitForSeconds(4.3f);
+            CanvasTop.canvasTop.FadeoutScene();
+            yield return new WaitForSeconds(1f);
+            cmrFace.gameObject.SetActive(false);
+            vcamFace.gameObject.SetActive(false);
+            mayoCount = gameMaster.gameMode.initialMayoCnt;
+        }
         rb_Trapeze.isKinematic = false;
         CanvasTop.canvasTop.FadeinScene();
         cmrUiPlayer.gameObject.SetActive(true);
-        mayoCount = gameMaster.gameMode.initialMayoCnt;
         Stat = Stat_global.play;
     }
 

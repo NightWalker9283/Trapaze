@@ -40,16 +40,19 @@ public class BGMController : MonoBehaviour
         if (!audioSource.isPlaying && !inPreparation)
         {
             
-            StartCoroutine(playBGM(acs[playIdx]));
+            StartCoroutine(PlayBGM(acs[playIdx]));
             playIdx = (playIdx + 1) % acs.Length;
         }
 
 
     }
-    IEnumerator playBGM(AudioClip ac)
+    IEnumerator PlayBGM(AudioClip ac)
     {
         inPreparation = true;
-        yield return new WaitForSeconds(6f);
+        if (!PlayingManager.gameMaster.isTutorial)
+        {
+            yield return new WaitForSeconds(6f);
+        }
         audioSource.PlayOneShot(ac);
         inPreparation = false;
     }
