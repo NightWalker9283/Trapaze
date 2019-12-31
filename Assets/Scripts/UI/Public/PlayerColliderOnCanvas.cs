@@ -34,13 +34,14 @@ public class PlayerColliderOnCanvas : MonoBehaviour
     {
         if (PlayingManager.playingManager.Stat == PlayingManager.Stat_global.play)
         {
-            rigidbody.AddForce(0f, 0f, 20f, ForceMode.Impulse);
+            rigidbody.AddForce(0f, 5f, 50f, ForceMode.Impulse);
         }
         if (PlayingManager.playingManager.Stat == PlayingManager.Stat_global.jump ||
             PlayingManager.playingManager.Stat == PlayingManager.Stat_global.fly)
         {
-            rigidbody.AddForce(0f, 2f, 5f, ForceMode.Impulse);
+            rigidbody.AddForce(0f, 4f, 30f, ForceMode.Impulse);
         }
+        other.enabled = false;
     }
 
 }

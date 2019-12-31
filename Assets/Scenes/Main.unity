@@ -25923,11 +25923,13 @@ MonoBehaviour:
   decision: {fileID: 8300000, guid: 83150e79130ba4bafb7e62eed554ec08, type: 3}
   hanko: {fileID: 8300000, guid: 5595996e8a33b40aca141ae6ede03ffb, type: 3}
   imgCutIn: {fileID: 318276659}
+  isDebugTutorial: 0
   titleMonitor: {fileID: 0}
   _oldStat: 0
   elapseTime: 0
   allComments: []
   isTraining: 0
+  isTutorial: 0
 --- !u!114 &1780663427
 MonoBehaviour:
   m_ObjectHideFlags: 0
