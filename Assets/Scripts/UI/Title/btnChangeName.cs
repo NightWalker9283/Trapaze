@@ -48,7 +48,7 @@ public class btnChangeName : MonoBehaviour
             return;
         }
         GameMaster.rankingManager.RenameUser(settings.name,inptName.text, Callback);
-
+        btn.interactable = false;
     }
 
     void HideWarningMessage()
@@ -70,6 +70,7 @@ public class btnChangeName : MonoBehaviour
             settings.name = inptName.text;
            
         }
+        btn.interactable = true;
     }
 
     IEnumerator showWarning(string message)

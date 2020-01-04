@@ -6,9 +6,11 @@ public class PlayerColliderOnCanvas : MonoBehaviour
 {
     [SerializeField] Transform Target;
     [SerializeField] float x, y, z;
+   
 
     Camera cmrPublic, cmrUI;
     Rigidbody rigidbody;
+    BoxCollider bc;
 
     // Start is called before the first frame update
     void Start()
@@ -16,32 +18,42 @@ public class PlayerColliderOnCanvas : MonoBehaviour
         cmrPublic = PlayingManager.playingManager.cmrPublic;
         cmrUI = PlayingManager.playingManager.cmrUI;
         rigidbody = Target.GetComponent<Rigidbody>();
+        bc = GetComponent<BoxCollider>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        var posViewportPublic = cmrPublic.WorldToViewportPoint(Target.position);
-        var posWorldUi = cmrUI.ViewportToWorldPoint(posViewportPublic);
-        transform.position = posWorldUi;
-        transform.localPosition = new Vector3(0f, transform.localPosition.y, transform.localPosition.z);
-        transform.rotation = Target.rotation;
-        transform.Rotate(x, y, z);
-
+        if (Target.gameObject.activeSelf)
+        {
+            if (!bc.enabled) bc.enabled = true;
+            var posViewportPublic = cmrPublic.WorldToViewportPoint(Target.position);
+            var posWorldUi = cmrUI.ViewportToWorldPoint(posViewportPublic);
+            transform.position = posWorldUi;
+            transform.localPosition = new Vector3(0f, transform.localPosition.y, transform.localPosition.z);
+            transform.rotation = Target.rotation;
+            transform.Rotate(x, y, z);
+        }
+        else
+        {
+            if (bc.enabled) bc.enabled = false;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (PlayingManager.playingManager.Stat == PlayingManager.Stat_global.play)
         {
-            rigidbody.AddForce(0f, 5f, 50f, ForceMode.Impulse);
+            rigidbody.AddForce(0f, 0f, 40f, ForceMode.Impulse);
         }
         if (PlayingManager.playingManager.Stat == PlayingManager.Stat_global.jump ||
             PlayingManager.playingManager.Stat == PlayingManager.Stat_global.fly)
         {
-            rigidbody.AddForce(0f, 4f, 30f, ForceMode.Impulse);
+
+            rigidbody.AddForce(0f, 0f, 30f, ForceMode.Impulse);
+
+            other.enabled = false;
         }
-        other.enabled = false;
     }
 
 }

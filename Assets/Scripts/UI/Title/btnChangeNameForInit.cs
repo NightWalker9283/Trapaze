@@ -47,6 +47,7 @@ public class btnChangeNameForInit : MonoBehaviour
             return;
         }
         GameMaster.rankingManager.SaveNewUser(inptName.text, Callback);
+        btn.interactable = false;
 
     }
 
@@ -63,6 +64,7 @@ public class btnChangeNameForInit : MonoBehaviour
         {
             HideWarningMessage();
             showWarningCoroutine = StartCoroutine(showWarning(msgAlredy));
+            btn.interactable = true;
         }
         else
         {   
