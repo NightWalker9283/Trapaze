@@ -8153,7 +8153,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: -198.19969}
+  m_AnchoredPosition: {x: 0, y: -210.91185}
   m_SizeDelta: {x: 200, y: 60}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &736719785
@@ -11746,8 +11746,18 @@ MonoBehaviour:
     audio_enabled: 1
     audio_volume: 1
     enable_voice: 0
+    play_count: 0
   acquiredTitles: 
   gameModes: []
+  gmTraining:
+    id: 0
+    name: 
+    initialMayoCnt: 0
+    enableDropMayo: 0
+    enableEvents: 0
+    trapezeLength: 0
+    timeLimit: 0
+    detail: 
   tglModeOrigin: {fileID: 1438970552}
   cvsInputName: {fileID: 298752591}
   imgBrack: {fileID: 2064413319}
@@ -11760,6 +11770,7 @@ MonoBehaviour:
     type: 3}
   am: {fileID: 24100000, guid: 585d397d46ab84a3a999926df9b02bff, type: 2}
   ResetSaveFile: 0
+  isTutorial: 0
 --- !u!4 &1021882140
 Transform:
   m_ObjectHideFlags: 0
@@ -21736,7 +21747,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 125.61, y: -60.64235}
+  m_AnchoredPosition: {x: 125.61, y: -66.99843}
   m_SizeDelta: {x: 251.22, y: 48.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1839826520
