@@ -71,6 +71,7 @@ public class GameMaster : MonoBehaviour
 
     private void Start()
     {
+        
         if (!isFinishInitializeAds && imgBrack != null)
         {
             imgBrack.SetActive(true);
@@ -96,6 +97,7 @@ public class GameMaster : MonoBehaviour
         {
             CreateLibraryListViews();
         }
+        
     }
     IEnumerator MonitorLoadingAd()
     {
