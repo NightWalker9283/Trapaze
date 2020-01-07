@@ -9,6 +9,7 @@ using UnityEngine.Audio;
 using Cinemachine;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using TweetWithScreenShot;
 
 public class PlayingManager : MonoBehaviour
 {
@@ -50,6 +51,7 @@ public class PlayingManager : MonoBehaviour
     public List<CommentsData> allComments;
     public bool isTraining = false;
     public bool isTutorial;
+    public float resultDistance;
 
     int _mayoCount = 0;
     public int mayoCount
@@ -185,7 +187,8 @@ public class PlayingManager : MonoBehaviour
         }
         if (playerController.stat != _oldPcStat && playerController.stat == PlayerController.stat_enum.finish)
         {
-            Result(playerController.transform.position.z, elapseTime);
+            resultDistance = playerController.transform.position.z;
+            Result(resultDistance, elapseTime);
             StartCoroutine(ShowResultUI());
 
             Stat = Stat_global.result;
@@ -244,6 +247,7 @@ public class PlayingManager : MonoBehaviour
             }
         }
         ugButtonsForResult.SetActive(true);
+        
         ResultVoice.resultVoice.Play(sttl);
     }
 
