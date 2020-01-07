@@ -52,7 +52,7 @@ public class PlayingManager : MonoBehaviour
     public bool isTraining = false;
     public bool isTutorial;
     public float resultDistance;
-
+    bool isNewRecord = false;
     int _mayoCount = 0;
     public int mayoCount
     {
@@ -86,7 +86,7 @@ public class PlayingManager : MonoBehaviour
             {
                 gameMaster.gameMode = gameMaster.gmTraining;
             }
-            gameMaster.settings = new Settings("加藤純一", true, 1f, true, 0);
+            gameMaster.settings = new Settings("加藤純一", true, 1f, true, 0,Application.version,100000f);
             gameMaster.am = am;
             gameMaster.isTutorial = isDebugTutorial;
         }
@@ -166,7 +166,7 @@ public class PlayingManager : MonoBehaviour
                     StartCoroutine(CameraRectChangeRight(cmrPublic, 1f));
                     StartCoroutine(CameraRectChangeLeft(cmrPlayer, 0f));
                     StartCoroutine(CameraRectChangeLeft(cmrUiPlayer, 0f));
-                    if(!isTutorial) uiDistance.StartMessDistance();
+                    if (!isTutorial) uiDistance.StartMessDistance();
                     if (isTraining)
                     {
                         cmrPublic.GetComponent<PublicCameraPerspective>().stat = PublicCameraPerspective.stat_publicCamera.jump;
@@ -247,15 +247,22 @@ public class PlayingManager : MonoBehaviour
             }
         }
         ugButtonsForResult.SetActive(true);
-        
+
         ResultVoice.resultVoice.Play(sttl);
+        
+        if (isNewRecord && gameMaster.settings.time_to_next_review < 0f)
+        {
+            gameMaster.settings.time_to_next_review = 36000f;
+            gameMaster.Review();
+            
+        }
     }
 
 
     public void Result(float distance, float time)
     {
         if (isTraining) return;
-        bool isNewRecord = false;
+
         btnComment.interactable = false;
         btnCommentRush.interactable = false;
 
@@ -269,8 +276,9 @@ public class PlayingManager : MonoBehaviour
             return;
         }
         selectRecords.total_time += time;
+        gameMaster.settings.time_to_next_review -= time;
         selectRecords.play_count++;
-        if (distance > 0f) selectRecords.total_distance += distance;
+        selectRecords.total_distance += Mathf.Abs(distance);
         if ((distance > selectRecords.max_distance) || (distance == selectRecords.max_distance && time < selectRecords.timespan_maxdistance))
         {
             isNewRecord = true;

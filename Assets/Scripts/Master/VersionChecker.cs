@@ -52,7 +52,7 @@ public class VersionChecker : MonoBehaviour
 
     void VersionCheckIOS()
     {
-        var url = string.Format("https://itunes.apple.com/lookup?bundleId={0}", Application.identifier);
+        var url = "https://apps.apple.com/us/app/%E3%81%86%E3%82%93%E3%81%93%E3%81%A1%E3%82%83%E3%82%93%E3%81%8C%E5%B7%A8%E5%A4%A7%E3%83%96%E3%83%A9%E3%83%B3%E3%82%B3%E3%81%A7%E3%82%B8%E3%83%A3%E3%83%B3%E3%83%97%E3%81%99%E3%82%8B%E3%82%B2%E3%83%BC%E3%83%A0/id1489878241";
         GameMaster.rankingManager.GetAppLatestVer((string ver) =>
         {
 

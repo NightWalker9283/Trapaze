@@ -38,11 +38,12 @@ public class GameMaster : MonoBehaviour
     AsyncOperation aoSceneLoad;
     bool isFinishInitializeAds = false;
     public bool isTutorial = false;
-    public int playCount {
+    public int playCount
+    {
         get { return settings.play_count; }
         set
         {
-            settings.play_count = (value)%5;
+            settings.play_count = (value) % 5;
             Save();
         }
     }
@@ -54,7 +55,8 @@ public class GameMaster : MonoBehaviour
 
         gameMaster = this;
 
-        if (!isFinishInitializeAds) MobileAds.Initialize(initStatus => {
+        if (!isFinishInitializeAds) MobileAds.Initialize(initStatus =>
+        {
             wdtInitializeAd = 0;
             isFinishInitializeAds = true;
         });
@@ -64,6 +66,13 @@ public class GameMaster : MonoBehaviour
         // 以降破棄しない
         DontDestroyOnLoad(gameObject);
         Load();
+
+        if (settings.ver != Application.version)
+        {
+            settings.ver = Application.version;
+            settings.time_to_next_review = 18000f;
+            Save();
+        }
         rankingManager = GetComponent<RankingManager>();
         if (settings.name.Length <= 0) cvsInputName.gameObject.SetActive(true);
 
@@ -71,7 +80,7 @@ public class GameMaster : MonoBehaviour
 
     private void Start()
     {
-        
+
         if (!isFinishInitializeAds && imgBrack != null)
         {
             imgBrack.SetActive(true);
@@ -134,7 +143,7 @@ public class GameMaster : MonoBehaviour
         gameModes.Add(new GameMode(1, "ショート", 1, false, false, 4f, 90f, "少しの空き時間でサクッと遊びたいときに。たったひとつのマヨネーズをどう使う？"));
         gameModes.Add(new GameMode(2, "スタンダード", 1, true, true, 9f, 180f, "ブランコをしっかり楽しみたい方に。ブランコ漕ぎの技術で差をつけろ！"));
         gameModes.Add(new GameMode(3, "チャレンジャー", 0, true, true, 20f, -1, "夢の超巨大ブランコ。異常に眠くなります。睡眠導入、精神安定などの用途にご利用ください。がんばれば一周できます。"));
-        gmTraining= new GameMode(99, "トレーニング", 3, false, false, 4f, -1, "チュートリアル付き。初めての方はまずこちらから。ボイス・称号・ハイスコアは記録されません。");
+        gmTraining = new GameMode(99, "トレーニング", 3, false, false, 4f, -1, "チュートリアル付き。初めての方はまずこちらから。ボイス・称号・ハイスコアは記録されません。");
 
     }
 
@@ -295,6 +304,34 @@ public class GameMaster : MonoBehaviour
     public void VoiceOff()
     {
         am.SetFloat("VoiceVolume", -96f);
+    }
+
+    public void Review()
+    {
+#if UNITY_IOS
+        if (!UnityEngine.iOS.Device.RequestStoreReview())
+#endif
+        {
+            Ask();        // レビューするかどうか聞く
+        }
+    }
+
+    void Ask()
+    {
+        Dialog dialog = new Dialog("ストアレビュー", "開発の励みになるのでよろしければ★5の評価をお願いします！！", "ストアでレビューを書く", "あとで");
+        dialog.OnComplete += (Dialog.DialogResult result) =>
+        {
+            if (result == Dialog.DialogResult.YES)
+            {
+#if UNITY_IOS
+                string url = "itms-apps://itunes.apple.com/jp/app/id1489878241?mt=8&action=write-review";
+#else
+                string url = "market://details?id=com.NightWalker.Trapeze";
+#endif
+                Application.OpenURL(url);
+            }
+
+        };
     }
 
     public void Save()
