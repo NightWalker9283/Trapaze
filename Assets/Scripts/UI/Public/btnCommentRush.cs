@@ -39,12 +39,14 @@ public class btnCommentRush : MonoBehaviour
     // Update is called once per frame
     public void ShotComments()
     {
-        PlayingManager.playingManager.mayoCount--;
-        StartCoroutine(CutInProc(() =>
+        if (PlayingManager.playingManager.mayoCount > 0)
         {
-            StartCoroutine(CommentRush());
-        }));
-
+            PlayingManager.playingManager.mayoCount--;
+            StartCoroutine(CutInProc(() =>
+            {
+                StartCoroutine(CommentRush());
+            }));
+        }
     }
     IEnumerator CommentRush()
     {
