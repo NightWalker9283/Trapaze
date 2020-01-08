@@ -33,7 +33,7 @@ public class Settings
         this.enable_voice = true;
         this.play_count = 0;
         this.ver = "";
-        this.time_to_next_review = 0f;
+        this.time_to_next_review = 18000f;
       
 
     }

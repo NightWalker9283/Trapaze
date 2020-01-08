@@ -168,7 +168,7 @@ PlayerSettings:
     iPhone: com.NightWalker.Trapeze
   buildNumber:
     iPhone: 1
-  AndroidBundleVersionCode: 8
+  AndroidBundleVersionCode: 9
   AndroidMinSdkVersion: 19
   AndroidTargetSdkVersion: 28
   AndroidPreferredInstallLocation: 1
