@@ -345,8 +345,10 @@ public class PlayingManager : MonoBehaviour
     {
         if (!isTutorial)
         {
-            cvsPlayer.gameObject.SetActive(false);
-            cvsPublic.gameObject.SetActive(false);
+            var grCvsPlayer = cvsPlayer.GetComponent<GraphicRaycaster>();
+            var grCvsPublic = cvsPublic.GetComponent<GraphicRaycaster>();
+            grCvsPlayer.enabled = false;
+            grCvsPublic.enabled = false;
             cmrUiPlayer.gameObject.SetActive(false);
             CanvasTop.canvasTop.FadeinScene();
             vcamFace.gameObject.SetActive(true);
@@ -361,8 +363,8 @@ public class PlayingManager : MonoBehaviour
             vcamFace.gameObject.SetActive(false);
             mayoCount = gameMaster.gameMode.initialMayoCnt;
             rb_Trapeze.isKinematic = false;
-            cvsPlayer.gameObject.SetActive(true);
-            cvsPublic.gameObject.SetActive(true);
+            grCvsPlayer.enabled = true;
+            grCvsPublic.enabled = true;
         }
         CanvasTop.canvasTop.FadeinScene();
         cmrUiPlayer.gameObject.SetActive(true);
