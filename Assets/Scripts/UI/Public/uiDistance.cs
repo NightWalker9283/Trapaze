@@ -38,7 +38,7 @@ public class UiDistance : MonoBehaviour
         {
             txtDistance.text = rbPlayerControllPoint.position.z.ToString("F2") + "m";
             mtTxtDistance.EnableKeyword("_Glow");
-            mtTxtDistance.SetFloat(ShaderUtilities.ID_GlowPower, Mathf.Clamp01(rbPlayerControllPoint.position.z / 100f));
+            mtTxtDistance.SetFloat(ShaderUtilities.ID_GlowPower, Mathf.Clamp01(Mathf.Abs(rbPlayerControllPoint.position.z) / 100f));
             txtDistance.fontSize = baseFontSize + Mathf.Clamp(Mathf.Abs(rbPlayerControllPoint.position.z) / 2, 0f, canvasSize.y * 0.25f);
             yield return null;
         }

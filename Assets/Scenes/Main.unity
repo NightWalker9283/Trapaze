@@ -19342,10 +19342,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Record!!
+  m_text: NEW RECORD!!
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 42d92fd573d02479f825dba0dff2590d, type: 2}
-  m_sharedMaterial: {fileID: 21112976470473580, guid: 42d92fd573d02479f825dba0dff2590d,
+  m_fontAsset: {fileID: 11400000, guid: d87ec0a5da3d94c49a112bb87e728388, type: 2}
+  m_sharedMaterial: {fileID: 4466547900468637356, guid: d87ec0a5da3d94c49a112bb87e728388,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -25258,7 +25258,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1691574504
 RectTransform:
   m_ObjectHideFlags: 0
