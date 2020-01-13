@@ -20011,8 +20011,8 @@ GameObject:
   - component: {fileID: 1388957092}
   - component: {fileID: 1388957094}
   - component: {fileID: 1388957093}
-  - component: {fileID: 1388957095}
   - component: {fileID: 1388957096}
+  - component: {fileID: 1388957095}
   m_Layer: 5
   m_Name: txtDistance
   m_TagString: Untagged
@@ -20062,8 +20062,7 @@ MonoBehaviour:
   m_text: 100.0m
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3308d05e9355241f58b1d0a920cef75f, type: 2}
-  m_sharedMaterial: {fileID: 21319266323888284, guid: 3308d05e9355241f58b1d0a920cef75f,
-    type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: a0941b3aef69c4564a1940ec0a357f64, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -25258,7 +25257,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1691574504
 RectTransform:
   m_ObjectHideFlags: 0
