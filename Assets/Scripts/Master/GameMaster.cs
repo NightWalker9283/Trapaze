@@ -43,7 +43,7 @@ public class GameMaster : MonoBehaviour
         get { return settings.play_count; }
         set
         {
-            settings.play_count = (value) % 5;
+            settings.play_count = (value) % 4;
             Save();
         }
     }
