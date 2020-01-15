@@ -120,7 +120,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 1.40
+  bundleVersion: 1.41
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -168,7 +168,7 @@ PlayerSettings:
     iPhone: com.NightWalker.Trapeze
   buildNumber:
     iPhone: 1
-  AndroidBundleVersionCode: 10
+  AndroidBundleVersionCode: 11
   AndroidMinSdkVersion: 19
   AndroidTargetSdkVersion: 28
   AndroidPreferredInstallLocation: 1
