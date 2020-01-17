@@ -689,6 +689,7 @@ PlayerSettings:
   switchRatingsInt_9: 0
   switchRatingsInt_10: 0
   switchRatingsInt_11: 0
+  switchRatingsInt_12: 0
   switchLocalCommunicationIds_0: 
   switchLocalCommunicationIds_1: 
   switchLocalCommunicationIds_2: 
@@ -899,10 +900,10 @@ PlayerSettings:
     m_VersionCode: 1
     m_VersionName: 
   apiCompatibilityLevel: 6
-  cloudProjectId: 
+  cloudProjectId: 72465d60-c1ae-44f8-a653-e85376d7b261
   framebufferDepthMemorylessMode: 0
-  projectName: 
-  organizationId: 
+  projectName: "\u3046\u3093\u3053\u3061\u3083\u3093\u304C\u5DE8\u5927\u30D6\u30E9\u30F3\u30B3\u3067\u30B8\u30E3\u30F3\u30D7\u3059\u308B\u30B2\u30FC\u30E0"
+  organizationId: unity_8vnhpepixoawpg
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0

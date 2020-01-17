@@ -78,7 +78,7 @@ public class Mayo : MonoBehaviour
         GetComponent<AudioSource>().enabled = true;
 
         Vector3 posViewportPublic;
-        var posWorldMayo = cmrPublic.ViewportToWorldPoint(new Vector3(0.2f, 1.2f));
+        var posWorldMayo = cmrPublic.ViewportToWorldPoint(new Vector3(0.2f, 1.05f));
         var isIgnore = false;
         var direction = new Vector3(0, -0.01f, 0);
         var canvasRectsizeDeta = cvsPublic.GetComponent<RectTransform>().sizeDelta;

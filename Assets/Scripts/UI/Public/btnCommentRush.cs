@@ -53,7 +53,7 @@ public class btnCommentRush : MonoBehaviour
         for (int i = 0; i < 50; i++)
         {
             Instantiate(PrefComment, PlayingManager.playingManager.cvsPublic.transform);
-            yield return new WaitForSeconds(Random.Range(0.01f, 0.1f));
+            yield return new WaitForSeconds(Random.Range(0.02f, 0.15f));
         }
 
     }

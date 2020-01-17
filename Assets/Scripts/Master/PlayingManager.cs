@@ -15,7 +15,7 @@ public class PlayingManager : MonoBehaviour
 {
     [SerializeField] UiDistance uiDistance;
     [SerializeField] CanvasGroup ugForPlay, ugController, ugForAfterJump, ugForResult;
-
+    [SerializeField] GameObject player;
     [SerializeField] public Camera cmrPlayerView, cmrPublic, cmrPlayer, cmrUI, cmrUiPlayer, cmrFace;
     [SerializeField] CinemachineVirtualCamera vcamPublic, vcamFace, vcamResult;
     [SerializeField] Rigidbody rb_Player, rb_Trapeze;
@@ -86,7 +86,7 @@ public class PlayingManager : MonoBehaviour
             {
                 gameMaster.gameMode = gameMaster.gmTraining;
             }
-            gameMaster.settings = new Settings("加藤純一", true, 1f, true, 0,Application.version,100000f);
+            gameMaster.settings = new Settings("加藤純一", true, 1f, true, 0, Application.version, 100000f);
             gameMaster.am = am;
             gameMaster.isTutorial = isDebugTutorial;
         }
@@ -113,6 +113,7 @@ public class PlayingManager : MonoBehaviour
         titleMonitor = GetComponent<TitleMonitor>();
 
         ugForAfterJump.alpha = 0f;
+        ugForAfterJump.interactable = false;
         if (GameMaster.gameMaster.settings.audio_enabled)
             GameMaster.gameMaster.SetBgmVolume(GameMaster.gameMaster.settings.audio_volume);
         else
@@ -249,12 +250,12 @@ public class PlayingManager : MonoBehaviour
         ugButtonsForResult.SetActive(true);
 
         ResultVoice.resultVoice.Play(sttl);
-        
+
         if (isNewRecord && gameMaster.settings.time_to_next_review < 0f)
         {
             gameMaster.settings.time_to_next_review = 36000f;
             gameMaster.Review();
-            
+
         }
     }
 
@@ -345,10 +346,10 @@ public class PlayingManager : MonoBehaviour
     {
         if (!isTutorial)
         {
-            var grCvsPlayer = cvsPlayer.GetComponent<GraphicRaycaster>();
-            var grCvsPublic = cvsPublic.GetComponent<GraphicRaycaster>();
-            grCvsPlayer.enabled = false;
-            grCvsPublic.enabled = false;
+            var cgCvsPlayer = cvsPlayer.GetComponent<CanvasGroup>();
+            var cgCvsPublic = cvsPublic.GetComponent<CanvasGroup>();
+            cgCvsPlayer.interactable = false;
+            cgCvsPublic.interactable = false;
             cmrUiPlayer.gameObject.SetActive(false);
             CanvasTop.canvasTop.FadeinScene();
             vcamFace.gameObject.SetActive(true);
@@ -362,9 +363,18 @@ public class PlayingManager : MonoBehaviour
             cmrFace.gameObject.SetActive(false);
             vcamFace.gameObject.SetActive(false);
             mayoCount = gameMaster.gameMode.initialMayoCnt;
+            player.transform.parent = rb_Trapeze.transform;
+            playerController.SetAllIsKinematic(true);
+            rb_Trapeze.transform.Rotate(new Vector3(5f, 0f, 0f));
+            
+            var cj = rb_Trapeze.GetComponent<ConfigurableJoint>();
+            rb_Trapeze.transform.Translate(cj.connectedAnchor-rb_Trapeze.transform.TransformPoint(cj.anchor));
+            yield return null;
+            player.transform.parent = null;
+            playerController.SetAllIsKinematic(false);
             rb_Trapeze.isKinematic = false;
-            grCvsPlayer.enabled = true;
-            grCvsPublic.enabled = true;
+            cgCvsPlayer.interactable = true;
+            cgCvsPublic.interactable = true;
         }
         CanvasTop.canvasTop.FadeinScene();
         cmrUiPlayer.gameObject.SetActive(true);

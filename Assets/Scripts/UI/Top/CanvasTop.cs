@@ -60,6 +60,7 @@ public class CanvasTop : MonoBehaviour
 
     IEnumerator fadeoutSceneProc()
     {
+        image.gameObject.SetActive(true);
         float alpha = 0f;
         while (alpha < 1f)
         {
@@ -67,7 +68,6 @@ public class CanvasTop : MonoBehaviour
             alpha = alpha + Time.deltaTime;
             yield return null;
         }
-        image.gameObject.SetActive(false);
 
     }
 

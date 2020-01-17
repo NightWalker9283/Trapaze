@@ -38,6 +38,18 @@ public class PlayerController : MonoBehaviour
     mascle mslL_Leg, mslR_Leg;
     Trank mslL_UpLeg, mslR_UpLeg;
 
+    public void SetAllIsKinematic(bool value)
+    {
+        foreach (var item in parts)
+        {
+            var rb = item.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.isKinematic = value;
+            }
+        }
+    }
+
     List<GameObject> GetAllChildren(GameObject obj)
     {
         List<GameObject> allChildren = new List<GameObject>();

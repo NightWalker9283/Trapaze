@@ -44,7 +44,7 @@ public class PlayerColliderOnCanvas : MonoBehaviour
     {
         if (PlayingManager.playingManager.Stat == PlayingManager.Stat_global.play)
         {
-            rigidbody.AddForce(0f, 0f, 40f, ForceMode.Impulse);
+            rigidbody.AddForce(0f, 0f, 60f, ForceMode.Impulse);
         }
         if (PlayingManager.playingManager.Stat == PlayingManager.Stat_global.jump ||
             PlayingManager.playingManager.Stat == PlayingManager.Stat_global.fly)
@@ -52,8 +52,8 @@ public class PlayerColliderOnCanvas : MonoBehaviour
 
             rigidbody.AddForce(0f, 0f, 30f, ForceMode.Impulse);
 
-            other.enabled = false;
         }
+            other.enabled = false;
     }
 
 }
