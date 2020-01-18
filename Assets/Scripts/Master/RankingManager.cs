@@ -12,7 +12,7 @@ public class RankingManager : MonoBehaviour
 {
     public bool isBusy, isNameExist;
     float TIME_OUT = 3000f;
-    string rankingClassName = "RankingData";
+    string rankingClassName = "RankingDataV150";
     string usersClassName = "Users";
     string appLatestVerClassName = "LatestVerison";
 

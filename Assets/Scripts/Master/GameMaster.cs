@@ -54,7 +54,7 @@ public class GameMaster : MonoBehaviour
 #endif
 
         gameMaster = this;
-
+        if (RemoteSettingsManager.rSM == null) gameObject.AddComponent<RemoteSettingsManager>();
         if (!isFinishInitializeAds) MobileAds.Initialize(initStatus =>
         {
             wdtInitializeAd = 0;
@@ -71,6 +71,8 @@ public class GameMaster : MonoBehaviour
         {
             settings.ver = Application.version;
             settings.time_to_next_review = 18000f;
+            ChangeVerRecordDatas();
+
             Save();
         }
         rankingManager = GetComponent<RankingManager>();
@@ -181,6 +183,24 @@ public class GameMaster : MonoBehaviour
             list.Add(recordData);
         }
         return list;
+    }
+
+    public void ChangeVerRecordDatas()
+    {
+
+        foreach (var item in recordDatas)
+        {
+            item.max_distance_best = item.max_distance;
+            item.timespan_maxdistance_best = item.timespan_maxdistance;
+            item.min_distance_best = item.min_distance;
+            item.timespan_mindistance_best = item.timespan_mindistance;
+
+            item.max_distance = 0;
+            item.timespan_maxdistance = 0;
+            item.min_distance = 0;
+            item.timespan_mindistance = 0;
+
+        }
     }
 
     private void CreateLibraryListViews()
