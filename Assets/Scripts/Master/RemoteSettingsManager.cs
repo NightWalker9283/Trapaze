@@ -34,7 +34,12 @@ public class RemoteSettingsManager : MonoBehaviour
     {
 
         Debug.Log("New settings loaded this session; update values accordingly.");
-        latestVer = RemoteSettings.GetString("LatestVer");
+#if UNITY_IOS
+        latestVer = RemoteSettings.GetString("LatestVer_iOS");
+#elif UNITY_ANDROID
+        latestVer = RemoteSettings.GetString("LatestVer_Android");
+#endif
+
         rankingName = RemoteSettings.GetString("RankingName");
         rankingPeriod = RemoteSettings.GetString("RankingPeriod");
         
