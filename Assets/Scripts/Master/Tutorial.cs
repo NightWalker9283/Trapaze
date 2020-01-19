@@ -53,11 +53,15 @@ public class Tutorial : MonoBehaviour
          }));
         while (!isFinishStep) { yield return null; }
 
-        ShowMessage("重心が動くことでブランコが揺れ始めましたね。\nブランコを漕ぐにはその揺れを利用します。");
+        ShowMessage("重心が動くことでブランコが揺れ始めましたね。\n本番では最初から少しブランコが揺れています。");
         while (Time.timeScale == 0f) { yield return null; }
         ShowMessage("揺れの周期に合わせて、正しいタイミングでお尻の位置を\n上下に動かすことでブランコの揺れは大きくなります。");
         while (Time.timeScale == 0f) { yield return null; }
         ShowMessage("漕ぎ方のコツは、ブランコが最下点に進むまではお尻を低く、\n再下点を過ぎ減速が始まったらお尻を高くすることです。");
+        while (Time.timeScale == 0f) { yield return null; }
+        ShowMessage("タイミングが非常に重要です。上手く漕げない場合は\nお尻を上下させるタイミングを色々ずらしてみて、ベストなタイミングを見つけて下さい。");
+        while (Time.timeScale == 0f) { yield return null; }
+        ShowMessage("また、上手に漕げるようになったら前後方向の位置も意識してみましょう。\n重心の位置を意識すると更に効率的に漕ぐことができます。");
         while (Time.timeScale == 0f) { yield return null; }
         ShowMessage("それでは少しの間、自由に漕いでみましょう。");
         yield return new WaitForSeconds(30f);

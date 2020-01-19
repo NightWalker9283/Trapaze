@@ -1,26 +1,53 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class TitleMonitor : MonoBehaviour
 {
     Titles titles;
-    Rigidbody player;
+    Rigidbody rbPlayer, rbTrapeze;
     public List<int> acquiredTitles = new List<int>();
 
     // Start is called before the first frame update
     void Start()
     {
         titles = GameMaster.gameMaster.titles;
-        player = PlayingManager.playingManager.playerControlPoint;
+        rbPlayer = PlayingManager.playingManager.playerControlPoint;
+        rbTrapeze = PlayingManager.playingManager.rb_Trapeze;
+        if (GameMaster.gameMaster.acquiredTitles.Find(id => id == titles.ttlTrapezeMachine.id) == 0)
+        {
+            StartCoroutine(MonitorGiantSwing());
+        }
     }
-
     // Update is called once per frame
     void Update()
     {
 
     }
 
+
+    float w, old_w;
+    IEnumerator MonitorGiantSwing()
+    {
+
+        w = rbTrapeze.rotation.w;
+        old_w = w;
+        while (true)
+        {
+            if (PlayingManager.playingManager.isUsedMayo) break;
+
+            w = rbTrapeze.rotation.w;
+            if (Mathf.Sign(w) != Mathf.Sign(old_w))
+            {
+                acquiredTitles.Add(titles.ttlTrapezeMachine.id);
+                WndGetTitle.wndGetTitle.ShowMessage(titles.ttlTrapezeMachine.name);
+                break;
+            }
+            old_w = w;
+            yield return null;
+        }
+    }
     public StandardTitle Result(float distance)
     {
         List<StandardTitle> standardTitles;
@@ -41,20 +68,18 @@ public class TitleMonitor : MonoBehaviour
                 return standardTitles[i];
             }
         }
-
-
         return null;
-
-
     }
 
     public void VoiceTrigger(AudioFile af)
     {
-        if (af.audioClip.name == "ハイパー面白いくん")
+        if (GameMaster.gameMaster.acquiredTitles.Find(id => id == titles.ttlHyperOmoshiroi.id) == 0)
         {
-            acquiredTitles.Add(titles.ttlHyperOmoshiroi.id);
+            if (af.audioClip.name == "ハイパー面白いくん")
+            {
+                WndGetTitle.wndGetTitle.ShowMessage(titles.ttlHyperOmoshiroi.name);
+                acquiredTitles.Add(titles.ttlHyperOmoshiroi.id);
+            }
         }
-
     }
-
 }

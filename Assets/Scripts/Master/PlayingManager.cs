@@ -18,7 +18,7 @@ public class PlayingManager : MonoBehaviour
     [SerializeField] GameObject player;
     [SerializeField] public Camera cmrPlayerView, cmrPublic, cmrPlayer, cmrUI, cmrUiPlayer, cmrFace;
     [SerializeField] CinemachineVirtualCamera vcamPublic, vcamFace, vcamResult;
-    [SerializeField] Rigidbody rb_Player, rb_Trapeze;
+    [SerializeField] public Rigidbody rb_Player, rb_Trapeze;
     [SerializeField] public Canvas cvsPublic, cvsPlayer, cvsTop;
     [SerializeField] public Rigidbody playerControlPoint;
     [SerializeField] PlayerController playerController;
@@ -54,6 +54,7 @@ public class PlayingManager : MonoBehaviour
     public float resultDistance;
     bool isNewRecord = false;
     int _mayoCount = 0;
+    public bool isUsedMayo = false;
     public int mayoCount
     {
         get { return _mayoCount; }
@@ -285,6 +286,12 @@ public class PlayingManager : MonoBehaviour
             isNewRecord = true;
             selectRecords.max_distance = distance;
             selectRecords.timespan_maxdistance = time;
+            if ((selectRecords.max_distance_best < selectRecords.max_distance) ||
+                (selectRecords.max_distance_best == selectRecords.max_distance && selectRecords.timespan_maxdistance_best > selectRecords.timespan_maxdistance))
+            {
+                selectRecords.max_distance_best = selectRecords.max_distance;
+                selectRecords.timespan_maxdistance_best = selectRecords.timespan_maxdistance;
+            }
             save_Ranking_Item = RankingManager.Save_ranking_item.SAVE_RANKING_HIGH;
 
         }
@@ -293,6 +300,12 @@ public class PlayingManager : MonoBehaviour
             isNewRecord = true;
             selectRecords.min_distance = distance;
             selectRecords.timespan_mindistance = time;
+            if ((selectRecords.min_distance_best > selectRecords.min_distance) ||
+                (selectRecords.min_distance_best == selectRecords.min_distance && selectRecords.timespan_mindistance_best > selectRecords.timespan_mindistance))
+            {
+                selectRecords.min_distance_best = selectRecords.min_distance;
+                selectRecords.timespan_mindistance_best = selectRecords.timespan_mindistance;
+            }
             save_Ranking_Item = RankingManager.Save_ranking_item.SAVE_RANKING_LOW;
 
         }
@@ -366,9 +379,9 @@ public class PlayingManager : MonoBehaviour
             player.transform.parent = rb_Trapeze.transform;
             playerController.SetAllIsKinematic(true);
             rb_Trapeze.transform.Rotate(new Vector3(5f, 0f, 0f));
-            
+
             var cj = rb_Trapeze.GetComponent<ConfigurableJoint>();
-            rb_Trapeze.transform.Translate(cj.connectedAnchor-rb_Trapeze.transform.TransformPoint(cj.anchor));
+            rb_Trapeze.transform.Translate(cj.connectedAnchor - rb_Trapeze.transform.TransformPoint(cj.anchor));
             yield return null;
             player.transform.parent = null;
             playerController.SetAllIsKinematic(false);

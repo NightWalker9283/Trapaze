@@ -39,6 +39,7 @@ public class btnCommentRush : MonoBehaviour
     // Update is called once per frame
     public void ShotComments()
     {
+        PlayingManager.playingManager.isUsedMayo = true;
         if (PlayingManager.playingManager.mayoCount > 0)
         {
             PlayingManager.playingManager.mayoCount--;

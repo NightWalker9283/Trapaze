@@ -53,36 +53,46 @@ public class VersionChecker : MonoBehaviour
     void VersionCheckIOS()
     {
         var url = "https://apps.apple.com/us/app/%E3%81%86%E3%82%93%E3%81%93%E3%81%A1%E3%82%83%E3%82%93%E3%81%8C%E5%B7%A8%E5%A4%A7%E3%83%96%E3%83%A9%E3%83%B3%E3%82%B3%E3%81%A7%E3%82%B8%E3%83%A3%E3%83%B3%E3%83%97%E3%81%99%E3%82%8B%E3%82%B2%E3%83%BC%E3%83%A0/id1489878241";
-        GameMaster.rankingManager.GetAppLatestVer((string ver) =>
-        {
-
-            if (ver != "")
+        var rSM = RemoteSettingsManager.rSM;
+        rSM.FetchSettings();
+        StartCoroutine(VerCheck());
+            
+        IEnumerator VerCheck(){
+            while (rSM.busy)
             {
-                if (VersionComparative(ver))
+                yield return null;
+            }
+            if (rSM.latestVer != "")
+            {
+                if (VersionComparative(rSM.latestVer))
                 {
                     ShowUpdatePopup(url);
                 }
             }
-
-        });
+        }
     }
 
     void VersionCheckAndroid()
     {
         var url = string.Format("https://play.google.com/store/apps/details?id={0}", Application.identifier);
+        var rSM = RemoteSettingsManager.rSM;
+        rSM.FetchSettings();
+        StartCoroutine(VerCheck());
 
-        GameMaster.rankingManager.GetAppLatestVer((string ver) =>
+        IEnumerator VerCheck()
         {
-            
-            if (ver != "")
+            while (rSM.busy)
             {
-                if (VersionComparative(ver))
+                yield return null;
+            }
+            if (rSM.latestVer != "")
+            {
+                if (VersionComparative(rSM.latestVer))
                 {
                     ShowUpdatePopup(url);
                 }
             }
-
-        });
+        }
     }
 
     bool VersionComparative(string storeVersionText)

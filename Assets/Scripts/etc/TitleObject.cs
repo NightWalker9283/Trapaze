@@ -36,7 +36,7 @@ public class Titles
                                 minusDistanceTitles = new List<StandardTitle>();
 
     public TitleObject ttlHyperOmoshiroi = new TitleObject(5000, "ハイパー面白いくん", "ジャンプ時に特定ボイス再生", "パイパーネオDQN\nほうきで野球をして職員室に呼び出されたうんこちゃんを救う為に立ち上がる");
-
+    public TitleObject ttlTrapezeMachine = new TitleObject(5010, "ブランコを漕ぐ機械", "弾幕を使用せず一周", "おまえはこれからブランコを漕ぐ機械として生きてくれ");
     public Titles()
     {
         plusDistanceTitles.Add(new StandardTitle(10000, "本当のgm", "飛距離10m未満", "一歩も踏み出せない本当のgm",0f));
@@ -85,6 +85,7 @@ public class Titles
         allTitles.AddRange(plusDistanceTitles);
         allTitles.AddRange(minusDistanceTitles);
         allTitles.Add(ttlHyperOmoshiroi);
+        allTitles.Add(ttlTrapezeMachine);
        
 
     }

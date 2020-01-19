@@ -35,6 +35,7 @@ public class VoiceManager : MonoBehaviour
             var af = queue.Dequeue();
 
             audioSource.PlayOneShot(af.audioClip);
+            PlayingManager.playingManager.titleMonitor.VoiceTrigger(af);
             if (!PlayingManager.playingManager.isTraining &&
                 GameMaster.gameMaster.acquiredVoices.Find(str => str == af.path) == null)
             {
