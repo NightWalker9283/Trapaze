@@ -86,9 +86,9 @@ namespace TweetWithScreenShot
             // ツイッター投稿用URL
             string TweetURL = "http://twitter.com/intent/tweet?text=" + text + hashtags;
 
-#if UNITY_WEBGL && !UNITY_EDITOR
-            Application.ExternalEval(string.Format("window.open('{0}','_blank')", TweetURL));
-#elif UNITY_EDITOR
+//#if UNITY_WEBGL && !UNITY_EDITOR
+            //Application.ExternalEval(string.Format("window.open('{0}','_blank')", TweetURL));
+#if UNITY_EDITOR
             System.Diagnostics.Process.Start (TweetURL);
 #else
             Application.OpenURL(TweetURL);
