@@ -18,7 +18,7 @@ public class Parachute : MonoBehaviour
     {
         // 空気抵抗を与える
         var resistance = GetComponent<Rigidbody>().velocity;
-        resistance.Set(resistance.x * -coefficient * 0.1f, resistance.y * -coefficient, resistance.z * -coefficient * 0.1f);
+        resistance.Set(resistance.x * -coefficient * 0.1f, resistance.y * -coefficient, resistance.z * -coefficient * 0.05f);
         GetComponent<Rigidbody>().AddForce(resistance);
     }
 

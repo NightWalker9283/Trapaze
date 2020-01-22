@@ -6,7 +6,7 @@ public class PlayerColliderOnCanvas : MonoBehaviour
 {
     [SerializeField] Transform Target;
     [SerializeField] float x, y, z;
-   
+
 
     Camera cmrPublic, cmrUI;
     Rigidbody rigidbody;
@@ -26,7 +26,11 @@ public class PlayerColliderOnCanvas : MonoBehaviour
     {
         if (Target.gameObject.activeSelf)
         {
-            if (!bc.enabled) bc.enabled = true;
+            if (!bc.enabled)
+            {
+                bc.enabled = true;
+
+            }
             var posViewportPublic = cmrPublic.WorldToViewportPoint(Target.position);
             var posWorldUi = cmrUI.ViewportToWorldPoint(posViewportPublic);
             transform.position = posWorldUi;
@@ -39,21 +43,32 @@ public class PlayerColliderOnCanvas : MonoBehaviour
             if (bc.enabled) bc.enabled = false;
         }
     }
-
+    bool isHitBack = false;
     private void OnTriggerEnter(Collider other)
     {
         if (PlayingManager.playingManager.Stat == PlayingManager.Stat_global.play)
         {
-            rigidbody.AddForce(0f, 0f, 60f, ForceMode.Impulse);
+            if (rigidbody.velocity.z >= 0f)
+            {
+                rigidbody.AddForce(0f, 5f, 20f, ForceMode.Impulse);
+                other.enabled = false;
+            }
+            else
+            {
+                if (!isHitBack)
+                {
+                    rigidbody.AddForce(0f, 0f, 5f, ForceMode.Impulse);
+                    isHitBack = true;
+                }
+            }
         }
         if (PlayingManager.playingManager.Stat == PlayingManager.Stat_global.jump ||
             PlayingManager.playingManager.Stat == PlayingManager.Stat_global.fly)
         {
 
             rigidbody.AddForce(0f, 0f, 30f, ForceMode.Impulse);
-
-        }
             other.enabled = false;
+        }
     }
 
 }
