@@ -50,7 +50,7 @@ public class PlayerColliderOnCanvas : MonoBehaviour
         {
             if (rigidbody.velocity.z >= 0f)
             {
-                rigidbody.AddForce(0f, 5f, 20f, ForceMode.Impulse);
+                rigidbody.AddForce(0f, 3f, 25f, ForceMode.Impulse);
                 other.enabled = false;
             }
             else

@@ -8,14 +8,14 @@ public class ModeChanger : MonoBehaviour
 {
     [SerializeField] GameMaster gameMaster;
     [SerializeField] Text txtModeName, txtModeLength, txtModeTimeLimit, txtModeDetail;
-
-    List<GameMode> gameModes ;
+    [SerializeField] GameObject cgChangeTrainingLen;
+    List<GameMode> gameModes;
 
     int idx = 0;
-   
+
     private void Awake()
     {
-        
+
     }
     // Start is called before the first frame update
     void Start()
@@ -36,25 +36,47 @@ public class ModeChanger : MonoBehaviour
         idx++;
         if (idx > gameModes.Count) idx = 0;
         SetGameMode(idx);
-        SetModeTexts();
+
     }
 
     public void ChangeModePrev()
     {
-        idx-- ;
+        idx--;
         if (idx < 0) idx = gameModes.Count;
         SetGameMode(idx);
-        SetModeTexts();
     }
-    private void SetGameMode(int index)
+    public void SetGameMode(int index)
     {
         if (index < gameModes.Count)
         {
+            cgChangeTrainingLen.SetActive(false);
             gameMaster.gameMode = gameModes[index];
         }
         if (index == gameModes.Count)
         {
+            cgChangeTrainingLen.SetActive(true);
             gameMaster.gameMode = gameMaster.gmTraining;
+        }
+        SetModeTexts();
+    }
+
+    public void UpTrainingLen()
+    {
+        var len = gameMaster.gmTraining.trapezeLength;
+        if (len < 15f)
+        {
+            gameMaster.gmTraining.trapezeLength += 1f;
+            SetGameMode(idx);
+        }
+    }
+
+    public void DownTrainingLen()
+    {
+        var len = gameMaster.gmTraining.trapezeLength;
+        if (len >4f)
+        {
+            gameMaster.gmTraining.trapezeLength -= 1f;
+            SetGameMode(idx);
         }
     }
 

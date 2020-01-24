@@ -190,11 +190,16 @@ public class GameMaster : MonoBehaviour
 
         foreach (var item in recordDatas)
         {
-            item.max_distance_best = item.max_distance;
-            item.timespan_maxdistance_best = item.timespan_maxdistance;
-            item.min_distance_best = item.min_distance;
-            item.timespan_mindistance_best = item.timespan_mindistance;
-
+            if (item.max_distance_best < item.max_distance)
+            {
+                item.max_distance_best = item.max_distance;
+                item.timespan_maxdistance_best = item.timespan_maxdistance;
+            }
+            if (item.min_distance_best > item.min_distance)
+            {
+                item.min_distance_best = item.min_distance;
+                item.timespan_mindistance_best = item.timespan_mindistance;
+            }
             item.max_distance = 0;
             item.timespan_maxdistance = 0;
             item.min_distance = 0;

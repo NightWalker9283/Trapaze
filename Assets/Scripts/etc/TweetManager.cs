@@ -76,22 +76,26 @@ namespace TweetWithScreenShot
                 UploadedURL = url;
             }
 
-            text += " " + UploadedURL;
+            text = UnityWebRequest.EscapeURL(text + " ") + UploadedURL;
+
             string hashtags = "&hashtags=";
+
             if (sinstance.hashTags.Length > 0)
             {
-                hashtags += string.Join (",", sinstance.hashTags);
+                var txt = string.Join(",", sinstance.hashTags);
+                hashtags += UnityWebRequest.EscapeURL(txt);
             }
 
             //#if UNITY_WEBGL && !UNITY_EDITOR
             //Application.ExternalEval(string.Format("window.open('{0}','_blank')", TweetURL));
-#if UNITY_EDITOR
             string TweetURL = "http://twitter.com/intent/tweet?text=" + text + hashtags;
-            System.Diagnostics.Process.Start (TweetURL);
-#else
-            string TweetURL = "twitter://post?message=" + UnityWebRequest.EscapeURL(text + hashtags);
             Application.OpenURL(TweetURL);
-#endif
+//#if UNITY_EDITOR
+//            //System.Diagnostics.Process.Start (TweetURL);
+//#else
+//           // string TweetURL = "twitter://post?message=" + UnityWebRequest.EscapeURL(text) + UnityWebRequest.EscapeURL(hashtags+"\n");
+            
+//#endif
         }
     }
 }
