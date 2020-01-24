@@ -26815,7 +26815,7 @@ MonoBehaviour:
   playerControlPoint: {fileID: 1415684321}
   playerController: {fileID: 1415684318}
   txtVelocity: {fileID: 315774214}
-  testTrapezeLengs: 4
+  testTrapezeLengs: 15
   ugNewRecord: {fileID: 1691574503}
   ugButtonsForResult: {fileID: 1168282274}
   prfbTitleElement: {fileID: 7695546090192328940, guid: 660e5663bedda40d3ba90c00c1a83054,
