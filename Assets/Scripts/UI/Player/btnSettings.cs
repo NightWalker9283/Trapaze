@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+//プレイ画面。設定（歯車）ボタン
 public class btnSettings : MonoBehaviour
 {
 

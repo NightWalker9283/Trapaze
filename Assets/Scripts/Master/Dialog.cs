@@ -4,10 +4,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR;
 
+//汎用ダイアログ。現状はレビュー依頼とアプリ更新通知用。某汎用ダイアログアセットと同等の使い方ができるよう設計
 public class Dialog
 {
     public delegate void OnCompleteHandler(DialogResult result);
-    public event OnCompleteHandler OnComplete;
+    public event OnCompleteHandler OnComplete;　//ダイアログ使用前にこのハンドラにダイアログを閉じた際の処理を追加しておく。resultから押されたボタンを取得可。
     public enum DialogResult
     {
         YES, NO

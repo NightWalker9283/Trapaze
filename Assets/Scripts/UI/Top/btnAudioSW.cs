@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+//プレイ画面設定ウィンドウのオーディオON/OFF切り替えボタン
 public class btnAudioSW : MonoBehaviour
 {
     [SerializeField] Image image;

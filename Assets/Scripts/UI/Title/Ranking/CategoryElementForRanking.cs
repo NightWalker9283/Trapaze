@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+//ランキング画面。トップ、ライバルの表示の切り替え用トグルグループの制御
 public class CategoryElementForRanking : MonoBehaviour
 {
     

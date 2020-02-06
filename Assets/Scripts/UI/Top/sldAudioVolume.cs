@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+//設定ウィンドウ。音量調整スライダー
 public class sldAudioVolume : MonoBehaviour
 {
     Slider sld;

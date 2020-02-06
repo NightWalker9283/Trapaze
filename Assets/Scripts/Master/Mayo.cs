@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//プレイ中に降ってくるマヨネーズの制御
 public class Mayo : MonoBehaviour
 {
-    [SerializeField] RectTransform virtualMayo;
-    [SerializeField] GameObject particles;
-    [SerializeField] float deadTime = 20f;
+    Button btn; //マヨの位置をキャンバスに転写したボタンオブジェクト
+    [SerializeField] RectTransform virtualMayo;　//マヨの位置をキャンバスに転写したボタンオブジェクトのRectTransform
+    [SerializeField] GameObject particles; //キラキラ演出用パーティクル
+    [SerializeField] float deadTime = 20f; //次のマヨのドロップ判定が開始するまでの時間（deadTimeが0になると一定時間ごとに確率でマヨドロップ）
     Coroutine crtnJudge = null, crtnDrop = null;
     Camera cmrPublic, cmrUI;
     Canvas cvsPublic;
-    Rect rect = new Rect(0, -0.5f, 1, 1.8f);
-    Button btn;
+    Rect rect = new Rect(0, -0.5f, 1, 1.8f); //マヨが画面外に出たことを判定するためのRect
 
     // Start is called before the first frame update
     void Start()
@@ -54,6 +55,7 @@ public class Mayo : MonoBehaviour
         }
     }
 
+    //一定間隔ごとに一定確率でマヨドロップを開始
     IEnumerator JudgeStartMayo()
     {
         bool isStart = false;
@@ -70,6 +72,7 @@ public class Mayo : MonoBehaviour
         crtnJudge = null;
     }
 
+    //マヨドロップ処理
     IEnumerator DropMayo()
     {
         GetComponent<MeshRenderer>().enabled = true;
@@ -87,6 +90,7 @@ public class Mayo : MonoBehaviour
         {
             if (Time.timeScale > 0)
             {
+                //画面上のマヨの位置からキャンバス上の見えないボタンの位置を計算
                 transform.position += direction;
                 posViewportPublic = cmrPublic.WorldToViewportPoint(transform.position);
                
@@ -100,7 +104,7 @@ public class Mayo : MonoBehaviour
 
             yield return null;
         }
-        deadTime = 180f;
+        deadTime = 180f; //取得、スルー後にデッドタイムを設ける
         GetComponent<MeshRenderer>().enabled = false;
         GetComponent<AudioSource>().enabled = false;
         btn.interactable = false;
@@ -108,6 +112,7 @@ public class Mayo : MonoBehaviour
         if (crtnDrop != null) crtnDrop = null;
     }
 
+    //マヨ取得後やスルー後の後処理
     public void Finish()
     {
         if (crtnDrop != null)

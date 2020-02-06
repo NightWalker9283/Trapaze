@@ -8,8 +8,8 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     // PUBLIC
-    public bool JUMP_on = false;
-    public float velocity { get; protected set; }
+    public bool JUMP_on = false; //ジャンプ待機スライダーからの有効通知用
+    public float velocity { get; protected set; } //プレイヤーの移動速度（ブランコの計測点の速度。ジャンプ後はHipの速度）
 
     // PRIVATE
 
@@ -19,13 +19,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float JumpMultiplier = 100f;
     [SerializeField] float Scale = 0.25f;
     [SerializeField] float offset_z, offset_y;
-    [SerializeField] Rigidbody rb_tracePoint;
+    [SerializeField] Rigidbody rb_tracePoint; //計測点
     [SerializeField] float y, z;
     [SerializeField] Transform Parachute;
 
     Rigidbody rb;
     Vector3 base_pos;
-    Vector3 destination;    //目的地のワールド座標
+    Vector3 destination;    //Hipの目標位置のワールド座標
     LineRenderer line;
     GameObject parent;
     List<GameObject> parts;
@@ -38,6 +38,7 @@ public class PlayerController : MonoBehaviour
     mascle mslL_Leg, mslR_Leg;
     Trank mslL_UpLeg, mslR_UpLeg;
 
+    //全部位IsKinematic一括操作
     public void SetAllIsKinematic(bool value)
     {
         foreach (var item in parts)
@@ -49,14 +50,14 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-
+    //GetChildrenでリスト化した全部位ゲームオブジェクトを返す
     List<GameObject> GetAllChildren(GameObject obj)
     {
         List<GameObject> allChildren = new List<GameObject>();
         GetChildren(obj, ref allChildren);
         return allChildren;
     }
-
+    //再帰的に全部位ゲームオブジェクトをメンバ変数のリストに追加する
     void GetChildren(GameObject obj, ref List<GameObject> allChildren)
     {
         Transform children = obj.GetComponentInChildren<Transform>();
@@ -71,7 +72,7 @@ public class PlayerController : MonoBehaviour
             GetChildren(ob.gameObject, ref allChildren);
         }
     }
-
+    //姿勢制御用の各種ジョイントをリスト化して返す
     List<Component> GetAllClingJoint()
     {
         List<Component> allClingJoint = new List<Component>();
@@ -95,7 +96,7 @@ public class PlayerController : MonoBehaviour
         return allClingJoint;
 
     }
-
+    //全部位にアタッチされているmuscleをリスト化して返す
     List<mascle> GetAllMascle()
     {
         List<mascle> allMascles = new List<mascle>();
@@ -109,7 +110,7 @@ public class PlayerController : MonoBehaviour
         return allMascles;
 
     }
-
+    //名称で指定した部位のゲームオブジェクトを返す（先にGetAllChildrenを呼び出しておくこと）
     GameObject FindChild(string targetName)
     {
         foreach (var item in parts)
@@ -122,17 +123,17 @@ public class PlayerController : MonoBehaviour
         return null;
     }
 
-
+    //ジャンプ（ジャンプ待機）
     void Jump()
     {
         StartCoroutine(PreJumpProc());
     }
-
+    //ジャンプ待機
     IEnumerator PreJumpProc()
     {
         bool oldDrag = false;
-        float draggingSpan = 0f;
-        float draggingSpanLimit = 0.5f;
+        float draggingSpan = 0f; //ドラッグ開始からの時間[s]
+        float draggingSpanLimit = 0.5f; //ドラッグ終了までの制限時間。ゆっくりドラッグすると無視する。
         Vector3 jumpForce;
 
         while (DragMonitor.Drag)
@@ -148,9 +149,9 @@ public class PlayerController : MonoBehaviour
             //Debug.Log(preForce);
 
             //フリック監視
-            if (DragMonitor.Drag)
+            if (DragMonitor.Drag) //ドラッグ中
             {
-                if (Vector3.Distance(DragMonitor.TapPosition, DragMonitor.DragPosition) > 30f)
+                if (Vector3.Distance(DragMonitor.TapPosition, DragMonitor.DragPosition) > 30f) //一定距離以上ドラッグ
                 {
                     draggingSpan += Time.deltaTime;
                 }
@@ -159,7 +160,7 @@ public class PlayerController : MonoBehaviour
 
             if (oldDrag && !DragMonitor.Drag)
             {
-                if (draggingSpan <= draggingSpanLimit && draggingSpan > 0)
+                if (draggingSpan <= draggingSpanLimit && draggingSpan > 0) //一定時間以内にドラッグ終了
                 {
                    
 
@@ -175,7 +176,7 @@ public class PlayerController : MonoBehaviour
                 }
                 else
                 {
-                    draggingSpan = 0f;
+                    draggingSpan = 0f; //ゆっくりドラッグされたことを検知した場合最初から
                 }
 
             }
@@ -185,7 +186,7 @@ public class PlayerController : MonoBehaviour
 
         }
     }
-
+    //ジャンプ（実際のジャンプ）
     IEnumerator JumpProc(Vector3 jumpForce, Vector3 forcePos)
     {
         rb.AddForceAtPosition(jumpForce * Multiplier, forcePos, ForceMode.Force);
@@ -205,7 +206,7 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(FlyProc());
         yield break;
     }
-
+    //ジャンプ後
     IEnumerator FlyProc()
     {
         Vector3 stopPos;
@@ -236,7 +237,7 @@ public class PlayerController : MonoBehaviour
             yield return null;
         }
     }
-
+    //ジャンプ後のブランコ引っかかり検知
     IEnumerator MonitorDistancefromTrapeze()
     {
 
@@ -252,7 +253,7 @@ public class PlayerController : MonoBehaviour
             {
                 if (wdt > LIMIT_WDT)
                 {
-                    stat = stat_enum.finish;
+                    stat = stat_enum.finish; //ブランコから一定範囲内に一定時間とどまっていると強制的にリザルト
                     yield break;
                 }
                 wdt += Time.deltaTime;
@@ -261,7 +262,7 @@ public class PlayerController : MonoBehaviour
             yield return null;
         }
     }
-
+    //全身の筋肉を脱力。遅延付き
     IEnumerator DelayFreeHoldMasclesProc()
     {
         yield return new WaitForSeconds(1f);
@@ -273,7 +274,7 @@ public class PlayerController : MonoBehaviour
         GetComponent<PlayerSound>().isCrackSound = false;
 
     }
-
+    //姿勢制御用各種ジョイントを開放
     void FreeClingJoints()
     {
         foreach (Component joint in clingJoints)
@@ -282,6 +283,7 @@ public class PlayerController : MonoBehaviour
         }
 
     }
+    //全身の筋肉（Trank以外）を脱力
     void FreeHoldMascles()
     {
         foreach (var _mascle in mascles)
@@ -290,6 +292,8 @@ public class PlayerController : MonoBehaviour
 
         }
     }
+
+    //準備
     void Preparation()
     {
         parent = transform.root.gameObject;
@@ -320,13 +324,14 @@ public class PlayerController : MonoBehaviour
         base_pos.x = 0f;
     }
 
+    //仮想コントローラーの入力からHipの目標位置を計算
     void SetDestination()
     {
         destination = rb_Trapaze.transform.TransformPoint(base_pos.x,
             base_pos.y + (Controller.GetTouchPosition.y * Scale) + offset_y,
             base_pos.z - (Controller.GetTouchPosition.x * Scale) + offset_z);
     }
-
+    //Hipの目標位置を指定
     void SetDestination(float z, float y)
     {
         destination = rb_Trapaze.transform.TransformPoint(base_pos.x,
@@ -347,6 +352,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        //速度表示
         if (stat == stat_enum.row || stat == stat_enum.pre_jump)
         {
             this.velocity = rb_tracePoint.velocity.magnitude * 3.6f;
@@ -355,6 +361,8 @@ public class PlayerController : MonoBehaviour
         {
             this.velocity = rb.velocity.magnitude * 3.6f;
         }
+
+        //漕いでいる最中
         if (stat == stat_enum.row)
         {
             SetDestination();
@@ -365,11 +373,14 @@ public class PlayerController : MonoBehaviour
             }
 
         }
+
+        //ジャンプ待機
         else if (stat == stat_enum.pre_jump)
         {
 
             if (!JUMP_on) stat = stat_enum.row;
         }
+        //ジャンプ後
         else if (stat == stat_enum.fly)
         {
 
@@ -408,18 +419,18 @@ public class PlayerController : MonoBehaviour
     ) ;
     */
 
-
+    //パラシュートを開く
     public void OpenParachute()
     {
         StartCoroutine(openParachuteProc());
     }
-
+    //パラシュートを開く実際の処理
     IEnumerator openParachuteProc()
     {
         Parachute.gameObject.SetActive(true);
         yield break;
     }
-
+    //デバッグ用
     void PointDraw(Vector3 pos)
     {
 
@@ -427,6 +438,7 @@ public class PlayerController : MonoBehaviour
         line.SetPosition(0, pos); // オブジェクトの位置情
     }
 
+    //未使用
     private class MascalSim
     {
         List<GameObject> _parts;

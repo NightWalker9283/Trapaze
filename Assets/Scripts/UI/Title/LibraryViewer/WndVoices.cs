@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
-
+//アーカイブ画面。取得ボイス一覧表示部
 public class WndVoices : MonoBehaviour
 {
     [SerializeField] ToggleGroup tggVoices;

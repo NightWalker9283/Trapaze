@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
-
+//成績画面のUI制御
 public class UiRecord : MonoBehaviour
 {
     [SerializeField] ToggleGroup tggModes;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+//コメント（単体）制御用クラス
 public class CommentObject : MonoBehaviour
 {
 
@@ -36,12 +36,12 @@ public class CommentObject : MonoBehaviour
             isChangedColliderRect = true;
         }
         rectObjComment.localPosition = new Vector3(rectObjComment.localPosition.x - Time.deltaTime * 150f, rectObjComment.localPosition.y, 0f);
-        var isOut = (rectCvsPublic.rect.width + (rectObjComment.localPosition.x + rectObjComment.rect.width - rectCvsPublic.rect.width / 2f)) < 0f;
+        var isOut = (rectCvsPublic.rect.width + (rectObjComment.localPosition.x + rectObjComment.rect.width - rectCvsPublic.rect.width / 2f)) < 0f; //画面外に出たか判定
 
         if (isOut) Destroy(gameObject);
     }
 
-
+    //現在の状況から対応するカテゴリに属するコメントのテキストデータをひとつランダム取得
     string GetComment()
     {
         var posPlayer = PlayingManager.playingManager.playerControlPoint.position;

@@ -6,6 +6,7 @@ using UnityEngine;
 using GoogleMobileAds.Api;
 using UnityEngine.SceneManagement;
 
+//広告全体の管理用クラス
 public class AdsManager : MonoBehaviour
 {
     public static AdsManager adsManager;

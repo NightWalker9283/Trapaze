@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
-
+//プレーヤーの動作により発生する効果音の管理
 public class PlayerSound : MonoBehaviour
 {
     public bool isCrackSound = true;
@@ -30,7 +30,7 @@ public class PlayerSound : MonoBehaviour
     {
 
     }
-
+    //ブランコのギシギシ音。１フレーム前の尻の速度と現在の尻の速度を比較している
     IEnumerator CrackSound()
     {
         while (isCrackSound)

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
-
+//コメントボタン
 public class btnComment : MonoBehaviour
 {
     
@@ -24,7 +24,7 @@ public class btnComment : MonoBehaviour
 
     }
 
-    // Update is called once per frame
+    //コメント発射
     void OneShotComment()
     {
         Instantiate(PrefComment, PlayingManager.playingManager.cvsPublic.transform);

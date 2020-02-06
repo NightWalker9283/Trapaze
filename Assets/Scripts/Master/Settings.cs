@@ -1,15 +1,16 @@
 ﻿using UnityEngine;
 
+//設定ファイル用
 [System.Serializable]
 public class Settings
 {
-    public string name;
-    public bool audio_enabled;
-    public float audio_volume;
-    public bool enable_voice;
-    public int play_count;
-    public string ver;
-    public float time_to_next_review;
+    public string name; //ユーザー名
+    public bool audio_enabled; //オーディオ全体のON・OFF
+    public float audio_volume; //オーディオ全体の音量
+    public bool enable_voice; //ボイスのみのON・OFF
+    public int play_count; //広告表示判定用のプレイ回数
+    public string ver; //セーブ時のアプリのVer.
+    public float time_to_next_review; //次のレビューまでの残りプレイ時間[s]
     
 
 

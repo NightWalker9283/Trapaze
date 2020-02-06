@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//カットイン表示用
 public class CutIn : MonoBehaviour
 {
     public bool busy = false;
@@ -20,6 +21,7 @@ public class CutIn : MonoBehaviour
     void Start()
     {
         rectTransform = GetComponent<RectTransform>();
+        //予め停止位置を計算
         witdh = rectTransform.rect.width;
         startPosX = rectTransform.localPosition.x;
         InPosX = startPosX - witdh;

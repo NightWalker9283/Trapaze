@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-
+//未使用。太陽制御実験用
 public class Sun : MonoBehaviour
 {
 

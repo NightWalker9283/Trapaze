@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+//アーカイブ画面。称号一覧の要素オブジェクト雛形
 public class ListElementTitle : MonoBehaviour
 {
     public int id;　

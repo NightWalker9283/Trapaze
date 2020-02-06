@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//体幹制御用筋肉のシミュレート（腿にアタッチ）
 public class Trank : MonoBehaviour
 {
     float angle;
@@ -47,12 +48,13 @@ public class Trank : MonoBehaviour
         if(isHold) Hold(Vector3.Angle(direction, TrapezeDirection));
 
     }
-
+    //脱力
     public void Free()
     {
         if (holdCoroutine != null) StopCoroutine(holdCoroutine);
         holdCoroutine = null;
     }
+    //指定した角度を保持
     public void Hold(float holdAngle)
     {
         Free();
@@ -74,7 +76,7 @@ public class Trank : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
     }
-
+    //伸ばす
     void Stretch(float mp)
     {
 
@@ -90,7 +92,7 @@ public class Trank : MonoBehaviour
         rb_parent.AddForceAtPosition(-force, parentCenter);
 
     }
-
+    //曲げる
     void Bend(float mp)
     {
         var force = (parentCenter - center) * mp;

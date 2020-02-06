@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+//ハイスコア登録ウィンドウのDONEボタン
 public class btnRegisterHighScore : MonoBehaviour
 {
     [SerializeField] Transform cnvsRanking,wndBackGround, wndRegisterHighScore, wndWaitMessage;

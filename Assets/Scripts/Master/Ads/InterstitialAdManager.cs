@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using GoogleMobileAds.Api;
 
+//インタースティシャル広告管理用
 public class InterstitialAdManager : MonoBehaviour
 {
     private InterstitialAd interstitial;
@@ -50,7 +51,7 @@ public class InterstitialAdManager : MonoBehaviour
 
     public void Show(Action callback)
     {
-        if ((GameMaster.gameMaster.playCount % 4) == 1)
+        if ((GameMaster.gameMaster.playCount % 4) == 1) //４回プレイ終了毎に表示
         {
             crtnMonitorFinishShow = MonitorLoadingAd(callback);
             StartCoroutine(crtnMonitorFinishShow);
@@ -65,7 +66,7 @@ public class InterstitialAdManager : MonoBehaviour
         IEnumerator MonitorLoadingAd(Action callback)
         {
             var wdt = 3f;
-            while (!this.interstitial.IsLoaded() && !isFailedLoad && wdt>0f)
+            while (!this.interstitial.IsLoaded() && !isFailedLoad && wdt>0f) //表示がうまく出来なかったときのためのおまじない
             {
                 wdt -= Time.deltaTime;
                 yield return new WaitForSeconds(0.1f);

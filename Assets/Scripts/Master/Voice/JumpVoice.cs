@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//ジャンプ時のカットインで再生されるボイスを管理
 public class JumpVoice : MonoBehaviour
 {
     string path = "Voice/Jump";

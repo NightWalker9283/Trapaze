@@ -3,11 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//称号取得条件監視クラス
 public class TitleMonitor : MonoBehaviour
 {
     Titles titles;
     Rigidbody rbPlayer, rbTrapeze;
-    public List<int> acquiredTitles = new List<int>();
+    public List<int> acquiredTitles = new List<int>(); //１ゲーム中に取得した称号ID一覧
 
     // Start is called before the first frame update
     void Start()
@@ -28,6 +29,7 @@ public class TitleMonitor : MonoBehaviour
 
 
     float w, old_w;
+    //ブランコ１周判定
     IEnumerator MonitorGiantSwing()
     {
 
@@ -35,7 +37,7 @@ public class TitleMonitor : MonoBehaviour
         old_w = w;
         while (true)
         {
-            if (PlayingManager.playingManager.isUsedMayo) break;
+            if (PlayingManager.playingManager.isUsedMayo) break; //マヨ使用で監視終了
 
             w = rbTrapeze.rotation.w;
             if (Mathf.Sign(w) != Mathf.Sign(old_w))
@@ -48,6 +50,7 @@ public class TitleMonitor : MonoBehaviour
             yield return null;
         }
     }
+    //リザルト画面での判定
     public StandardTitle Result(float distance)
     {
         List<StandardTitle> standardTitles;
@@ -70,7 +73,7 @@ public class TitleMonitor : MonoBehaviour
         }
         return null;
     }
-
+    //ボイス再生をトリガとした称号の取得条件判定
     public void VoiceTrigger(AudioFile af)
     {
         if (GameMaster.gameMaster.acquiredTitles.Find(id => id == titles.ttlHyperOmoshiroi.id) == 0)

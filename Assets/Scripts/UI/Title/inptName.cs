@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+//タイトル画面。プレイヤー名入力InputField
 public class inptName : MonoBehaviour
 {
     // Start is called before the first frame update

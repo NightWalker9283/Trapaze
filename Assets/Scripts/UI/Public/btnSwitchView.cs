@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+//始点切り替えボタン。
 public class btnSwitchView : MonoBehaviour
 {
     enum stat_view { playerView, publicView };

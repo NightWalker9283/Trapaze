@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+//マヨ残数表示UI
 public class TxtMayoStock : MonoBehaviour
 {
     Text text;

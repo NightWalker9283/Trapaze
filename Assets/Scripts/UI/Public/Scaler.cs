@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+//プレイヤーを転写したキャンバス上のコライダーのサイズを、カメラの表示に合わせて調整。コライダーのトップアッシーにアタッチ
 public class Scaler : MonoBehaviour
 {
     Camera cmrPublic;

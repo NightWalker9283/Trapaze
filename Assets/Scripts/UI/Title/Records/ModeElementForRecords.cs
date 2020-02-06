@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
-
+//成績画面。モード切り替え用トグルグループのトグルオブジェクトにアタッチ。ゲームモードIDをそれぞれが保持
 public class ModeElementForRecords : MonoBehaviour
 {
     [SerializeField] ToggleGroup tggModes;

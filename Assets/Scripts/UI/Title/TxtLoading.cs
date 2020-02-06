@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Timeline;
 using UnityEngine.UI;
-
+//ロード画面用テキスト
 public class TxtLoading : MonoBehaviour
 {
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-
+//速度表示UI
 public class uiVelocity : MonoBehaviour
 {
     TextMeshProUGUI textVelocity;

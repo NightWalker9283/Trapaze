@@ -11,50 +11,52 @@ using GoogleMobileAds.Api;
 [System.Serializable]
 public class GameMaster : MonoBehaviour
 {
-    public GameMode gameMode;
-    public List<string> acquiredVoices;
-    public List<RecordData> recordDatas;
-    public Settings settings;
-    public Titles titles = new Titles();
-    public List<int> acquiredTitles;
+    public GameMode gameMode; //選択中のゲームモード
+    public List<string> acquiredVoices; //取得済みボイス
+    public List<RecordData> recordDatas; //各ゲームモードの成績
+    public Settings settings; //設定データ
+    public Titles titles = new Titles(); //称号一覧
+    public List<int> acquiredTitles; //取得済み称号（IDのみ保持）
     public static GameMaster gameMaster;
     public static RankingManager rankingManager;
-    public List<GameMode> gameModes = new List<GameMode>();
-    public GameMode gmTraining;
-
-
-    [SerializeField] Toggle tglModeOrigin;
-    [SerializeField] GameObject cvsInputName;
-    [SerializeField] GameObject imgBrack;
-    [SerializeField] WndTitles wndTitles;
-
-    [SerializeField] Transform contentTitles, contentVoices;
-    [SerializeField] GameObject prfbListElementTitle, prfbListElementVoice;
-    private Transform tggModes;
+    public List<GameMode> gameModes = new List<GameMode>(); //ゲームモード一覧
+    public GameMode gmTraining; //トレーニングモード用のGameModeオブジェクト
     [SerializeField] public AudioMixer am;
-    [SerializeField] bool ResetSaveFile = false;
-    bool _oldResetSaveFile;
+
+
+    [SerializeField] Toggle tglModeOrigin;  //成績画面用のモード選択トグルオブジェクトのコピー元
+    [SerializeField] GameObject cvsInputName; //初回起動時ユーザ名入力UI用キャンバス
+    [SerializeField] GameObject imgBrack; //ロード画面用背景
+    [SerializeField] WndTitles wndTitles; //アーカイブ画面の称号一覧生成処理実装クラス
+    [SerializeField] Transform contentTitles, contentVoices; //アーカイブ画面の称号一覧、取得済みボイス一覧
+    [SerializeField] GameObject prfbListElementTitle, prfbListElementVoice; //アーカイブ画面の称号一覧、取得済みボイス一覧の要素プレハブ
+    [SerializeField] bool ResetSaveFile = false; //デバッグ用。trueでセーブデータ削除。
+    bool _oldResetSaveFile; //デバッグ用。
+    Transform tggModes; //成績画面のモード選択用トグルグループ(スクリプト中で取得）
     float wdtInitializeAd = 5f;
-    AsyncOperation aoSceneLoad;
-    bool isFinishInitializeAds = false;
-    public bool isTutorial = false;
+    AsyncOperation aoSceneLoad; //非同期シーン読み込み用
+    bool isFinishInitializeAds = false; //trueで広告初期化完了
+    public bool isTutorial = false; //trueでトレーニングモードをチュートリアル化
+
+    //広告表示間隔管理用のプレイ回数カウンタ
     public int playCount
     {
         get { return settings.play_count; }
         set
         {
-            settings.play_count = (value) % 4;
+            settings.play_count = (value) % 4; //0〜3でループ
             Save();
         }
     }
     void Awake()
     {
-#if DEBUG
-        isFinishInitializeAds = true;
-#endif
 
         gameMaster = this;
         if (RemoteSettingsManager.rSM == null) gameObject.AddComponent<RemoteSettingsManager>();
+        //広告初期化
+#if DEBUG
+        isFinishInitializeAds = true;
+#endif
         if (!isFinishInitializeAds) MobileAds.Initialize(initStatus =>
         {
             wdtInitializeAd = 0;
@@ -67,28 +69,29 @@ public class GameMaster : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         Load();
 
+        //バージョンチェック。
         if (settings.ver != Application.version)
         {
             settings.ver = Application.version;
-            settings.time_to_next_review = 18000f;
-            ChangeVerRecordDatas();
+            settings.time_to_next_review = 18000f;　//次回レビュー依頼ダイアログ表示までのプレイ時間(s)
+            ChangeVerRecordDatas(); //ランキング登録用のレコードをクリア
 
             Save();
         }
         rankingManager = GetComponent<RankingManager>();
-        if (settings.name.Length <= 0) cvsInputName.gameObject.SetActive(true);
+        if (settings.name.Length <= 0) cvsInputName.gameObject.SetActive(true);　//ユーザー名が初期値の場合設定ダイアログ表示
 
     }
 
     private void Start()
     {
 
-        if (!isFinishInitializeAds && imgBrack != null)
+        if (!isFinishInitializeAds && imgBrack != null) //広告初期化完了待ち
         {
             imgBrack.SetActive(true);
             StartCoroutine(MonitorLoadingAd());
         }
-        if (settings.audio_enabled)
+        if (settings.audio_enabled) //設定から音量を復元
             SetBgmVolume(settings.audio_volume);
         else
             SetBgmVolume(0f);
@@ -110,6 +113,7 @@ public class GameMaster : MonoBehaviour
         }
         
     }
+    //広告初期化待機（念の為）
     IEnumerator MonitorLoadingAd()
     {
         while (true)
@@ -130,6 +134,7 @@ public class GameMaster : MonoBehaviour
     }
     private void Update()
     {
+        //デバッグ用。ローカルセーブデータの削除
         if (ResetSaveFile != _oldResetSaveFile && ResetSaveFile)
         {
             SaveData.Clear();
@@ -138,7 +143,7 @@ public class GameMaster : MonoBehaviour
 
         _oldResetSaveFile = ResetSaveFile;
     }
-
+    //ゲームモードリスト生成
     private void CreateGameModes()
     {
 
@@ -148,7 +153,7 @@ public class GameMaster : MonoBehaviour
         gmTraining = new GameMode(99, "トレーニング", 3, false, false, 4f, -1, "チュートリアル付き。初めての方はまずこちらから。ボイス・称号・ハイスコアは記録されません。");
 
     }
-
+    //成績画面のUI生成
     private void CreateRecordUI(Transform toggleGroup)
     {
 
@@ -173,8 +178,8 @@ public class GameMaster : MonoBehaviour
 
         toggleGroup.GetComponentInChildren<Button>().transform.SetAsLastSibling();
     }
-
-    private List<RecordData> InitRecordDatas(List<RecordData> list, int num) //セーブデータが存在しないときに使用するrecordDatas初期値の設定
+    //セーブデータが存在しないときに使用するrecordDatas初期値の設定
+    private List<RecordData> InitRecordDatas(List<RecordData> list, int num) 
     {
         for (int i = 0; i < num; i++)
         {
@@ -184,7 +189,7 @@ public class GameMaster : MonoBehaviour
         }
         return list;
     }
-
+    //（バージョンアップ時用）ランキング登録用レコードをクリア。過去のレコードはベスト記録として保持
     public void ChangeVerRecordDatas()
     {
 
@@ -207,14 +212,14 @@ public class GameMaster : MonoBehaviour
 
         }
     }
-
+    //アーカイブ画面用のリストビューの要素を生成
     private void CreateLibraryListViews()
     {
         CreateLibListTitles();
         CreateLibListVoices();
 
     }
-
+    //アーカイブ画面用の称号リスト（取得の有無を反映）を生成
     private void CreateLibListTitles()
     {
         var lstListElementsTitles = new List<ListElementTitle>();
@@ -242,7 +247,7 @@ public class GameMaster : MonoBehaviour
         }
 
     }
-
+    //アーカイブ画面用の取得済みボイスリストを生成
     private void CreateLibListVoices()
     {
 
@@ -262,6 +267,7 @@ public class GameMaster : MonoBehaviour
         }
 
     }
+    //ミュート切り替え。呼ばれるたびにON/OFF
     public void SwitchAudio()
     {
 
@@ -275,7 +281,7 @@ public class GameMaster : MonoBehaviour
             SetBgmVolume(settings.audio_volume);
         }
     }
-
+    //ミュート切り替え。falseでミュート。
     public void SwitchAudio(bool value)
     {
 
@@ -289,7 +295,7 @@ public class GameMaster : MonoBehaviour
             SetBgmVolume(settings.audio_volume);
         }
     }
-
+    //演出用強制ミュート。設定でミュートにしていない場合はfalseを与えると元のボリュームに戻る。
     public void MuteAudio(bool enable)
     {
         if (enable)
@@ -298,10 +304,11 @@ public class GameMaster : MonoBehaviour
         }
         else
         {
-            if (settings.audio_enabled) SetBgmVolume(settings.audio_volume);
+            if (settings.audio_enabled) SetBgmVolume(settings.audio_volume);　//元々ミュートの場合は戻さない
         }
     }
 
+    //現在の音量設定値を取得
     public float GetBgmVolume()
     {
         float decibel;
@@ -309,6 +316,7 @@ public class GameMaster : MonoBehaviour
         return Mathf.Pow(10f, decibel / 20f);
     }
 
+    //BGMのみのボリューム調整
     public void SetBgmVolume(float volume)
     {
 
@@ -320,12 +328,12 @@ public class GameMaster : MonoBehaviour
         am.SetFloat("BGMVolumeMaster", decibel);
 
     }
-
+    //ボイスON
     public void VoiceOn()
     {
         am.SetFloat("VoiceVolume", 20.0f * Mathf.Log10(10f));
     }
-
+    //ボイスOFF
     public void VoiceOff()
     {
         am.SetFloat("VoiceVolume", -96f);
@@ -334,13 +342,14 @@ public class GameMaster : MonoBehaviour
     public void Review()
     {
 #if UNITY_IOS
-        if (!UnityEngine.iOS.Device.RequestStoreReview())
+        if (!UnityEngine.iOS.Device.RequestStoreReview())　//ReuestStoreReviewが使える場合は自作ダイアログを使用しない
 #endif
         {
             Ask();        // レビューするかどうか聞く
         }
     }
 
+    //ストアレビュー依頼ダイアログ表示
     void Ask()
     {
         Dialog dialog = new Dialog("ストアレビュー", "開発の励みになるのでよろしければ★5の評価をお願いします！！", "ストアでレビューを書く", "あとで");
@@ -359,6 +368,7 @@ public class GameMaster : MonoBehaviour
         };
     }
 
+    //ローカルセーブ
     public void Save()
     {
         SaveData.SetList<RecordData>("recordDatas", recordDatas);
@@ -368,6 +378,7 @@ public class GameMaster : MonoBehaviour
         SaveData.Save();
     }
 
+    //ローカルロード
     void Load()
     {
         var list = new List<RecordData>(gameModes.Count);
@@ -378,24 +389,25 @@ public class GameMaster : MonoBehaviour
         Debug.Log(settings.name);
     }
 
-
+    //リトライ用
     public void Play()
     {
         Save();
         aoSceneLoad = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
         playCount++;
-        Time.timeScale = 1f;
+        Time.timeScale = 1f;　//念の為
     }
 
-
+    //タイトルに移動
     public void Title()
     {
         isTutorial = false;
         Save();
         SceneManager.LoadScene("Title");
-        Time.timeScale = 1f;
+        Time.timeScale = 1f;　//念の為
     }
 
+    //プレイ画面に移動
     public void GameStart()
     {
         imgBrack.SetActive(true);
@@ -405,7 +417,7 @@ public class GameMaster : MonoBehaviour
 
         IEnumerator ShowLoadingProc()
         {
-
+            //ロード画面遷移
             var img = imgBrack.GetComponent<Image>();
             img.color = new Color(0f, 0f, 0f);
             for (float f = 0f; f <= 1f; f += 0.1f)

@@ -8,13 +8,16 @@ using System.Runtime.CompilerServices;
 using System;
 using System.Runtime.InteropServices.WindowsRuntime;
 
+
+//ランキングマネージャー
+//NCMBとの通信部分の処理
 public class RankingManager : MonoBehaviour
 {
     public bool isBusy, isNameExist;
     float TIME_OUT = 3000f;
-    string rankingClassName = "RankingDataV155";
-    string usersClassName = "Users";
-    string appLatestVerClassName = "LatestVerison";
+    string rankingClassName = "RankingDataV155"; //ランキング参照先クラス名
+    string usersClassName = "Users"; //ユーザーデータ管理用クラス名
+    string appLatestVerClassName = "LatestVerison"; //ストア公開中の最新バージョン取得先クラス名
 
     public List<RecordData> recordDatas
     {
@@ -32,16 +35,18 @@ public class RankingManager : MonoBehaviour
         }
     }
 
-    public enum Save_ranking_item { SAVE_RANKING_HIGH, SAVE_RANKING_LOW }
+    public enum Save_ranking_item { SAVE_RANKING_HIGH, SAVE_RANKING_LOW }　//飛距離の正負で別の記録として扱うための切り分け用
     bool isNameExistFetched = false;
     bool isScoreFetched = false;
     bool isRankFetched = false;
+    int currentRank;　//指定したレコードのランク保持用
+
+    //取得・登録処理後に呼び出すコールバック各種
     public delegate void CallbackVoid();
     public delegate void CallbackBool(bool flg);
     public delegate void CallbackInt(int num);
     public delegate void CallbackStr(string str);
     public delegate void CallbackRecordsList(List<RankingRecord> lst);
-    int currentRank;
 
     private void Start()
     {
@@ -52,6 +57,7 @@ public class RankingManager : MonoBehaviour
     {
 
     }
+    //NCMBからストア公開中の最新Verを取得。RemoteSettingsに移行したため現在は未使用
     public void GetAppLatestVer(CallbackStr callback)
     {
         string latestVer="";
@@ -82,6 +88,7 @@ public class RankingManager : MonoBehaviour
         return;
     }
 
+    //新規ユーザー登録
     public void SaveNewUser(string name, CallbackBool callback)
     {
         isNameExist = false;
@@ -114,6 +121,7 @@ public class RankingManager : MonoBehaviour
 
     }
 
+    //ユーザ名変更
     public void RenameUser(string previousName, string newName, CallbackBool callback)
     {
         isNameExist = false;
@@ -167,6 +175,7 @@ public class RankingManager : MonoBehaviour
         return;
     }
 
+    //ローカルの全記録をランキングに登録
     public void SaveRankingAll(CallbackVoid callback)
     {
         int cntProc = 0;
@@ -195,6 +204,7 @@ public class RankingManager : MonoBehaviour
 
     }
 
+    //指定したレコードデータをランキングに登録
     public void SaveRanking(RecordData recordData, Save_ranking_item save_Ranking_Item, CallbackVoid callback)
     {
         NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject>(rankingClassName);
@@ -264,7 +274,8 @@ public class RankingManager : MonoBehaviour
         });
     }
 
-    public void fetchRank(string name, int gameModeId, Save_ranking_item save_Ranking_Item, CallbackInt callback) //ランキングに自身の名前が見つからなければ-1を返す。
+    //指定したレコードのランクを取得
+    public void fetchRank(string name, int gameModeId, Save_ranking_item save_Ranking_Item, CallbackInt callback) 
     {
         currentRank = 0;
         RankingRecord myRecord = null;
@@ -325,7 +336,7 @@ public class RankingManager : MonoBehaviour
 
     }
 
-
+    //指定したモードのランキングトップ10を取得
     public void getRankingTop(int gameModeId, Save_ranking_item save_Ranking_Item, CallbackRecordsList callback)
     {
         List<RankingRecord> rankingRecords = new List<RankingRecord>();
@@ -373,7 +384,7 @@ public class RankingManager : MonoBehaviour
 
 
 
-
+    //指定したレコードの前後のレコード取得
     public void getRankingNeighbors(string name, int gameModeId, Save_ranking_item save_Ranking_Item, CallbackRecordsList callback)
     {
         fetchRank(name, gameModeId, save_Ranking_Item, (int currentRank) =>
@@ -424,6 +435,7 @@ public class RankingManager : MonoBehaviour
         return;
     }
 
+    //指定したユーザー名がランキング上に存在するかチェック（モード問わず）
     public void IsNameExistAll(string name, CallbackBool callback)
     {
         isBusy = true;
@@ -456,7 +468,7 @@ public class RankingManager : MonoBehaviour
 
 
 
-
+    //指定したユーザー名がランキング上に存在するかチェック（指定したモード）
     public void IsNameExistInRanking(string name, int gameModeId, Save_ranking_item save_Ranking_Item, CallbackBool callback)
     {
 

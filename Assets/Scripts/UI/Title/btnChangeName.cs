@@ -6,7 +6,7 @@ using UnityEngine;
 using System.Text;
 using System.CodeDom;
 using System;
-
+//タイトル画面。設定ウィンドウのプレイヤー名変更ボタン
 public class btnChangeName : MonoBehaviour
 {
     [SerializeField] Canvas cvsInputName;

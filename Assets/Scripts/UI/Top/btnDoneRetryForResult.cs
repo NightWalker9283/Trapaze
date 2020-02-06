@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+//リザルト画面。リトライボタン
 public class btnDoneRetryForResult : MonoBehaviour
 {
 

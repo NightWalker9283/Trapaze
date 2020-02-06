@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Audio;
-
+//ジャンプ待機スライダー
 public class uiJUMP : MonoBehaviour
 {
     public static Color txtcol_JUMPoff = new Color(80f / 255f, 80f / 255f, 80f / 255f);
@@ -47,7 +47,7 @@ public class uiJUMP : MonoBehaviour
 
     }
 
-
+    //スライダーの値監視
     public void monitorValue() //onEndDrag
     {
         if (sld_JUMP.value >= 0.5f)
@@ -62,7 +62,7 @@ public class uiJUMP : MonoBehaviour
             sld_JUMP.value = 1f;
             textJUMP.color = txtcol_JUMPon;
             fadeout(Joystick);
-            PlayerControllPoint.GetComponent<PlayerController>().JUMP_on = true;
+            PlayerControllPoint.GetComponent<PlayerController>().JUMP_on = true; //PlayerControllerに通知
         }
         else
         {
@@ -73,12 +73,12 @@ public class uiJUMP : MonoBehaviour
             sld_JUMP.value = 0f;
             fadein(Joystick);
             textJUMP.color = txtcol_JUMPoff;
-            PlayerControllPoint.GetComponent<PlayerController>().JUMP_on = false;
+            PlayerControllPoint.GetComponent<PlayerController>().JUMP_on = false; //PlayerControllerに通知
         }
         oldVal = sld_JUMP.value;
     }
 
-
+    //フェードアウト
     void fadeout(GameObject obj)
     {
         StartCoroutine(fadeout_proc(obj));
@@ -97,6 +97,7 @@ public class uiJUMP : MonoBehaviour
 
     }
 
+    //フェードイン
     void fadein(GameObject obj)
     {
         StartCoroutine(fadein_proc(obj));

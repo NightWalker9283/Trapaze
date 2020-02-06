@@ -5,7 +5,8 @@ using System.Xml;
 
 using UnityEngine.Networking;
 
-
+//アプリ起動時にRemoteSettingsから取得した最新Verコードと自信のバージョンコードを比較
+//更新があった場合にストアを開く確認のダイアログの表示まで担当
 public class VersionChecker : MonoBehaviour
 {
     string _storeUrl = "";
@@ -50,7 +51,7 @@ public class VersionChecker : MonoBehaviour
         }
     }
 
-    void VersionCheckIOS()
+    void VersionCheckIOS() //iOS用
     {
         var url = "https://apps.apple.com/us/app/%E3%81%86%E3%82%93%E3%81%93%E3%81%A1%E3%82%83%E3%82%93%E3%81%8C%E5%B7%A8%E5%A4%A7%E3%83%96%E3%83%A9%E3%83%B3%E3%82%B3%E3%81%A7%E3%82%B8%E3%83%A3%E3%83%B3%E3%83%97%E3%81%99%E3%82%8B%E3%82%B2%E3%83%BC%E3%83%A0/id1489878241";
         var rSM = RemoteSettingsManager.rSM;
@@ -72,7 +73,7 @@ public class VersionChecker : MonoBehaviour
         }
     }
 
-    void VersionCheckAndroid()
+    void VersionCheckAndroid() //Android用
     {
         var url = string.Format("https://play.google.com/store/apps/details?id={0}", Application.identifier);
         var rSM = RemoteSettingsManager.rSM;
@@ -95,6 +96,7 @@ public class VersionChecker : MonoBehaviour
         }
     }
 
+    //自信のVerと指定したVerを比較。異なればtrue。
     bool VersionComparative(string storeVersionText)
     {
         if (string.IsNullOrEmpty(storeVersionText))
@@ -119,6 +121,7 @@ public class VersionChecker : MonoBehaviour
         return false;
     }
 
+    //更新用ダイアログ表示
     void ShowUpdatePopup(string url)
     {
         if (string.IsNullOrEmpty(url))
@@ -149,7 +152,7 @@ public class VersionChecker : MonoBehaviour
 #endif
     }
 
-
+    //更新ダイアログクローズ時の処理
     private void OnPopUpClose(Dialog.DialogResult result)
     {
         switch (result)

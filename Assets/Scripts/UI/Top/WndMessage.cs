@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 
-
+//プレイ画面。汎用メッセージ通知ダイアログ
 public class WndMessage : MonoBehaviour
 {
     public static WndMessage wndMessage;

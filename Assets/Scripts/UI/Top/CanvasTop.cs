@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
-
+//CanvasTop制御用
 public class CanvasTop : MonoBehaviour
 {
     [SerializeField]Image image;

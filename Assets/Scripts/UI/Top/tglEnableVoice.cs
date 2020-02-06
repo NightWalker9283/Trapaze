@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-
+//設定ウィンドウ。ボイスON・OFFチェックボックス
 public class tglEnableVoice : MonoBehaviour
 {
     Toggle tgl;

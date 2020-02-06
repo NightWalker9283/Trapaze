@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+//パラシュート
 public class Parachute : MonoBehaviour
 {
     public float coefficient = 10f;   // 空気抵抗係数
@@ -29,7 +30,7 @@ public class Parachute : MonoBehaviour
         {
 
             if (!isCollision && Player.velocity.y > -1f) isCollision = true;
-            if (isCollision)
+            if (isCollision)　//何かに接触するとパラシュートが閉じる
             {
                 isFinish = true;
                 StartCoroutine(desableParachute());

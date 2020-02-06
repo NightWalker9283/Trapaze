@@ -5,11 +5,12 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
+//ボイス再生機能の実装
 public class VoiceManager : MonoBehaviour
 {
 
     public static VoiceManager voiceManager;
-    Queue<AudioFile> queue = new Queue<AudioFile>();
+    Queue<AudioFile> queue = new Queue<AudioFile>(); //再生予約キュー
     AudioSource audioSource;
 
     // Start is called before the first frame update
@@ -47,12 +48,12 @@ public class VoiceManager : MonoBehaviour
 
 
     }
-
+    //ボイスをキューに登録(再生予約)
     public void AddVoice(AudioFile af)
     {
         queue.Enqueue(af);
     }
-
+    //ボイスをキューに登録(再生予約)。コールバック付き
     public void AddVoice(AudioFile af, Action callback)
     {
         queue.Enqueue(af);
@@ -73,7 +74,7 @@ public class VoiceManager : MonoBehaviour
 
     }
 
-
+    //ボイス強制停止
     public void Reset()
     {
         audioSource.Stop();
@@ -83,7 +84,7 @@ public class VoiceManager : MonoBehaviour
     {
         return queue.Count;
     }
-
+    //指定したフォルダ内のボイスを全てロードしAudioFile化
     public static List<AudioFile> LoadAllAudioFile(string directlyPath)
     {
         var lst = new List<AudioFile>();
@@ -98,7 +99,7 @@ public class VoiceManager : MonoBehaviour
         }
         return lst;
     }
-
+    //指定したボイスをロードしAudioFile化
     public static AudioFile LoadAudioFile(string filePath)
     {
         var voice = Resources.Load<AudioClip>(filePath);
@@ -111,6 +112,7 @@ public class VoiceManager : MonoBehaviour
 
 }
 
+//AudioClipのパスを保持するためのクラス
 public class AudioFile
 {
     public string path;

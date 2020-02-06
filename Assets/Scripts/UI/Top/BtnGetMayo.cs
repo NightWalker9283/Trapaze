@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+//広告再生確認ウィンドウのGetボタン。押すと広告再生後マヨ取得
 public class BtnGetMayo : MonoBehaviour
 {
     [SerializeField] GameObject wndBackGround, wndMayo;

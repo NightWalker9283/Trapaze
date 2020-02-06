@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
-
+//弾幕コメントボダン。マヨ1つ以上所持で有効化
 public class btnCommentRush : MonoBehaviour
 {
 
@@ -36,7 +36,7 @@ public class btnCommentRush : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
+    //弾幕コメ発射
     public void ShotComments()
     {
         PlayingManager.playingManager.isUsedMayo = true;
@@ -58,7 +58,7 @@ public class btnCommentRush : MonoBehaviour
         }
 
     }
-
+    //弾幕コメ発射時のカットイン演出
     IEnumerator CutInProc(System.Action action)
     {
         if (GameMaster.gameMaster.settings.enable_voice)

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using GoogleMobileAds.Api;
 
+//バナー広告管理用
 public class BannerAdManager : MonoBehaviour
 {
 	public BannerView bannerView;

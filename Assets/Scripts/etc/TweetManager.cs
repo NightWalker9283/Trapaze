@@ -42,6 +42,7 @@ namespace TweetWithScreenShot
             }
         }
 
+        //このコルーチンを呼ぶと画像リンクまで作成後、ツイート投稿画面が起動される
         public static IEnumerator TweetWithScreenShot(string text)
         {
             yield return new WaitForEndOfFrame();
@@ -86,16 +87,10 @@ namespace TweetWithScreenShot
                 hashtags += UnityWebRequest.EscapeURL(txt);
             }
 
-            //#if UNITY_WEBGL && !UNITY_EDITOR
-            //Application.ExternalEval(string.Format("window.open('{0}','_blank')", TweetURL));
+           
             string TweetURL = "http://twitter.com/intent/tweet?text=" + text + hashtags;
             Application.OpenURL(TweetURL);
-//#if UNITY_EDITOR
-//            //System.Diagnostics.Process.Start (TweetURL);
-//#else
-//           // string TweetURL = "twitter://post?message=" + UnityWebRequest.EscapeURL(text) + UnityWebRequest.EscapeURL(hashtags+"\n");
-            
-//#endif
+
         }
     }
 }

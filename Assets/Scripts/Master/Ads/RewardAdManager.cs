@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using GoogleMobileAds.Api;
 
+//リワード広告管理用
 public class RewardAdManager : MonoBehaviour
 {
 
@@ -73,7 +74,7 @@ public class RewardAdManager : MonoBehaviour
     }
 
 
-
+    //広告の再生開始。リワード広告再生が選択された場合に呼び出す。
     public void UserChoseToWatchRewardedAd()
     {
         StartCoroutine(MonitorLoadingAd());

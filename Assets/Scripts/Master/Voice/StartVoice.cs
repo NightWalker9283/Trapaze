@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//ゲーム開始時演出で再生するボイスの管理
 public class StartVoice : MonoBehaviour
 {
     string path = "Voice/Start";

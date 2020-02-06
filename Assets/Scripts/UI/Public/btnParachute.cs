@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+//パラシュートオープンボタン。下降中のみ有効。一度押すと消える
 public class btnParachute : MonoBehaviour
 {
 

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using TweetWithScreenShot;
 using System.Linq;
 
-
+//ツイートボタン
 public class BtnTweet : MonoBehaviour
 {
     string cr = "\n";

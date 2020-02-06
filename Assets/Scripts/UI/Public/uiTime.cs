@@ -5,7 +5,7 @@ using System.Data;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-
+//現在時刻表示UI
 public class uiTime : MonoBehaviour
 {
     

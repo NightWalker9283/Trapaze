@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+//ゲームモード表示UI
 public class uiGameMode : MonoBehaviour
 {
 

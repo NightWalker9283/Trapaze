@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//弾幕コメ使用時のカットインで再生するボイスの管理
 public class CommentVoice : MonoBehaviour
 {
     string path = "Voice/Comment";

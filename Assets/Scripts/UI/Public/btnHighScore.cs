@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+//リザルト画面。ランキングへのハイスコア登録ボタン。登録後or記録更新時以外はランキングボード表示
 public class BtnHighScore : MonoBehaviour
 {
     [SerializeField] GameObject wndBackGround, wndHighScore,cvsRanking;
@@ -21,7 +21,7 @@ public class BtnHighScore : MonoBehaviour
             btn.onClick.AddListener(() =>
             {
                 wndBackGround.SetActive(true);
-                wndHighScore.SetActive(true);
+                wndHighScore.SetActive(true); //ハイスコア登録ウィンドウ表示
             });
         }
     }
@@ -33,7 +33,7 @@ public class BtnHighScore : MonoBehaviour
     {
         
     }
-
+    //ランキングボード表示へリスナー変更
     public void ChangeListener()
     {
         var btn = GetComponent<Button>();

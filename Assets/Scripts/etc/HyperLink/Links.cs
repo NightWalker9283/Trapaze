@@ -3,6 +3,7 @@ using Hypertext;
 using UnityEngine;
 using UnityEngine.UI;
 
+//クレジットのテキストの指定箇所をリンク化
 public class Links : MonoBehaviour
 {
     

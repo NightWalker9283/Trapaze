@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
-
+//ランキング画面のUI制御用メソッドを提供
 public class UIRanking : MonoBehaviour
 {
     public static UIRanking uIRanking;
@@ -174,7 +174,7 @@ public class UIRanking : MonoBehaviour
 
 
     }
-
+    //ライバル表示可能か判定(そのモードと方向で自身の記録が存在する場合は表示可)
     public void JudgmentTggCategory()
     {
         var tglCatNeighbors = tggCategory.transform.Find("tglCatNeighbors").GetComponent<Toggle>();

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 
+//アーカイブ画面。称号リスト表示部制御。取得済み称号を反映する
 public class WndTitles : MonoBehaviour
 {
     [SerializeField] ToggleGroup tggTitles;

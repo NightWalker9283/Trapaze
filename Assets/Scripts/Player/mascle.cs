@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+//プレイヤーの各パーツの筋肉をシミュレート
 public class mascle : MonoBehaviour
 {
 
@@ -44,12 +44,13 @@ public class mascle : MonoBehaviour
         angle = Vector3.Angle(direction, parentDirection);
 
     }
-
+    //脱力
     public void Free()
     {
         if (holdCoroutine != null) StopCoroutine(holdCoroutine);
         holdCoroutine = null;
     }
+    //指定した角度を保持
     public void Hold(float holdAngle)
     {
         Free();
@@ -71,7 +72,7 @@ public class mascle : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
     }
-
+    //伸ばす
     void Stretch(float mp)
     {
 
@@ -82,7 +83,7 @@ public class mascle : MonoBehaviour
         rb_parent.AddForceAtPosition(-force, parentCenter);
 
     }
-
+    //曲げる
     void Bend(float mp)
     {
         var force = (parentCenter - center) * mp;
@@ -93,7 +94,7 @@ public class mascle : MonoBehaviour
 
      }
 
-
+    //デバッグ用
         void DrawPoint(Vector3 point)
     {
         Vector3 point2 = new Vector3(point.x, point.y, point.z + 0.1f);

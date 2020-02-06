@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-
+//飛距離表示UI
 public class UiDistance : MonoBehaviour
 {
     public static UiDistance uiDistance;

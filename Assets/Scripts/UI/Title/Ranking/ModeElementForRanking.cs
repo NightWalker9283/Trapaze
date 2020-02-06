@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-
+//ランキング画面。モード切り替え用トグルグループの制御
 public class ModeElementForRanking : MonoBehaviour
 {
 

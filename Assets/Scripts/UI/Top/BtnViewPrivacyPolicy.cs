@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+//タイトル画面。プライバシーポリシー表示ボタン
 public class BtnViewPrivacyPolicy : MonoBehaviour
 {
     // Start is called before the first frame update

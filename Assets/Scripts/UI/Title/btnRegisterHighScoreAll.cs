@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
-
+//成績画面。トロフィーボタン。全モードの成績をランキングに登録
 public class btnRegisterHighScoreAll : MonoBehaviour
 {
     [SerializeField] Transform canvasRegisterHiscoreAll,wndRegisterHighScoreAll,wndWaitMessage;

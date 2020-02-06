@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+//プレイ画面。称号取得通知メッセージ表示
 public class WndGetTitle : MonoBehaviour
 {
     public static WndGetTitle wndGetTitle;

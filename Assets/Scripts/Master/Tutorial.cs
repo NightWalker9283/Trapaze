@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//チュートリアルの一連のフローを管理
 public class Tutorial : MonoBehaviour
 {
     [SerializeField] Text txtSub;
@@ -210,7 +211,7 @@ public class Tutorial : MonoBehaviour
     }
 
 
-
+    //メッセージ表示
     void ShowMessage(string message)
     {
         parentImgDark.SetActive(true);
@@ -231,6 +232,7 @@ public class Tutorial : MonoBehaviour
             btnCloseSub.gameObject.SetActive(true);
         }
     }
+    //UI要素ハイライト機能付きメッセージ表示
     void ShowMessage(string message, GameObject highLight)
     {
         var parent = highLight.transform.parent;
@@ -254,6 +256,7 @@ public class Tutorial : MonoBehaviour
         var ratio = PlayingManager.playingManager.cvsTop.GetComponent<RectTransform>().sizeDelta.y / sizeParentCanvas.y;
         //        var ratioVector2 = PlayingManager.playingManager.cvsTop.GetComponent<RectTransform>().sizeDelta / (sizeParentCanvas * ratio);
         rectImgUnMask.sizeDelta = sizeHighLight * ratio * rectHighLight.localScale;
+        //指定したuGUI要素が属するキャンバスで切り分け
         if (parent.name == "Canvas_player")
         {
             posTopViewPort = new Vector3(0.7f + posLocalViewPort.x * 0.3f, posLocalViewPort.y);

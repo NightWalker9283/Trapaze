@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-
+//経過時間表示UI
 public class uiElapseTime : MonoBehaviour
 {
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 using UnityEngine.UI;
-
+//トレーニングモード。チュートリアル開始ボタン
 public class BtnStartTutorial : MonoBehaviour
 {
     Button btn;

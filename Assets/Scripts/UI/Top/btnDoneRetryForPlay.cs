@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+//プレイ画面設定ウィンドウから呼び出すリトライウィンドウのDONEボタン
 public class btnDoneRetryForPlay : MonoBehaviour
 {
 

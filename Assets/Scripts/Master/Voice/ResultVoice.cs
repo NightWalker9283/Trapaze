@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//リザルト画面で再生されるボイスの管理
 public class ResultVoice : MonoBehaviour
 {
     string[] path = {
@@ -33,7 +34,7 @@ public class ResultVoice : MonoBehaviour
         {
             voices[i].AudioFiles = VoiceManager.LoadAllAudioFile(path[i]);
         }
-
+        //再生するボイスを切り分けるための飛距離カテゴリ設定
         voices[0].DistanceL = 0;
         voices[0].DistanceU = 40f;
 
@@ -49,11 +50,11 @@ public class ResultVoice : MonoBehaviour
         voices[4].DistanceL = 140f;
         voices[4].DistanceU = 10000f;
     }
-
     public void Play(TitleObject titleObject)
     {
         bool isSpecialTitle = false;
 
+        //特定称号取得時に特定ボイスを再生
         if (titleObject.id == 200)
         {
             VoiceManager.voiceManager.AddVoice(vicDaichiSansho);
